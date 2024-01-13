@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+  <div class="container">
+  <a class="navbar-brand text-light" href="/">Home</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link text-light" href="/account/signup">Sign up</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-light" href="/account/signin">Sign in</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+
+     <ul class="navbar-nav mr-10 ml-5">
+      <li class="nav-item dropdown">
+        
+        <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa-regular fa-user text-light display-username">{{#if un}} {{un}} {{/if}}</i>
+        </a>
+       
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          {{#if un}}
+          <a class="dropdown-item" href="/product/create">Thêm sản phẩm</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/product/show">Xem danh sách sản phẩm</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/account/signout">Đăng xuất</a>
+          {{/if}}
+        </div>
+      </li>
+    </ul>
+  </div>
+  </div>
+</nav>
