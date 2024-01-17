@@ -61,4 +61,18 @@ module.exports={
                 dbcn.done();
             }
     },
+
+    getBooks: async () => {
+        let dbcn = null;
+        try {
+            dbcn = await db.connect();
+            const tbName = "Book";
+            const books = await dbcn.any(`SELECT * FROM $1:name`, tbName);
+            return books;
+        } catch (error) {
+            throw error;
+        } finally {
+            dbcn.done();
+        }
+    },
 }

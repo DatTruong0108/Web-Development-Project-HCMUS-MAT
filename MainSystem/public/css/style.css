@@ -1,0 +1,60 @@
+.category-bg {
+    background-color: #F8F1E8; /* Màu nền mong muốn cho category */
+}
+
+.roboto-font-size-18 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px; 
+}
+
+.black-hr {
+    border-top: 1px solid #000000;
+}
+
+.pointer{
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.custom-pagination-background {
+    background-color: #FAE6D4; 
+}
+
+.custom-page-number {
+    color: #000000; 
+    font-weight: bold;
+    margin: 0 5px;
+}
+
+.footer-background {
+    background-color: #FAE6D4; 
+}
+
+.font-footer {
+    font-family: 'Hannari', sans-serif; 
+    font-size: 2em; 
+    margin-left: 10px;
+}
+
+.font-footer2 {
+    font-family: 'Hannari', sans-serif; 
+    font-size: 1em;
+    color: #897272;
+}
+
+.footer-height {
+    height: 200px;
+}
+
+.smart-text, .book-text {
+    white-space: nowrap; /* Viết liền */
+}
+
+.smart-text {
+    color: #000000; /* Màu chữ đen cho phần "Smart" */
+}
+
+.book-text {
+    color: #585353; /* Màu chữ cho phần "Book" */
+}
+
