@@ -58,3 +58,43 @@
     color: #585353; /* Màu chữ cho phần "Book" */
 }
 
+
+.search__bar {
+    border-radius: 10px;
+    width: 500px;
+  }
+
+
+  .no-border {
+    border: none;
+  }
+
+  .no-border {
+    border: none;
+    box-shadow: none;
+  }
+  
+  /* Màu khi hover */
+  .btn-outline-success:hover {
+    color: #fff; /* Màu chữ khi hover */
+    background-color: #eaeaea00; /* Màu nền khi hover */
+  }
+  .btn-signin{
+    background-color: #d1ae6d;
+    width: 30;
+    height: 30;
+    color: #fff;
+    border-radius: 10px;
+  }
+
+.nav-item{
+    color:#000000;
+    font-weight: 400;
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+  
+
+  
+
