@@ -18,7 +18,7 @@ const route=require("./routes");
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
-app.use('/public/image',express.static(__dirname+'/public/image'));
+app.use('/public/Images',express.static(__dirname+'/public/Images'));
 app.use('/public/js',express.static(__dirname+'/public/js'));
 app.use('/public/css',express.static(__dirname+'/public/css'));
 app.use(express.static(path.join(__dirname,'public')));
@@ -38,7 +38,25 @@ app.engine(
                 if(!this._sections){this._sections = {}};
                 this._sections[name] = options.fn(this);
                 return null;
-            }
+            },
+            ifEquals: function (a, opts) {
+                if (parseInt(a)%5==0) {
+                  return opts.fn(this);
+                }
+                return opts.inverse(this);
+              },
+            ifEqual: function (a, opts) {
+                if (parseInt(a)%5==4) {
+                  return opts.fn(this);
+                }
+                return opts.inverse(this);
+              },
+            ifE: function (a,b, opts) {
+                if (a.toString()==b.toString()) {
+                  return opts.fn(this);
+                }
+                return opts.inverse(this);
+              }
         }
     })
 );

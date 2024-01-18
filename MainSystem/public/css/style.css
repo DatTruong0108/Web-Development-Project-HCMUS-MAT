@@ -94,6 +94,19 @@
     margin-left: 10px;
 }
 
+.carousel-control-prev, .carousel-control-next {
+    color: #000; /* Set the color to black */
+  }
+
+  .book-item {
+    width: 16rem;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm shadow */
+    margin-bottom: 16px; /* Thêm khoảng cách giữa các phần tử */
+  }
+
+
   
 
   

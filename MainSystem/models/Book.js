@@ -20,4 +20,25 @@ module.exports=class Book{
         const data=await db.getAll(tbName);
         return data;
     };
+
+    static async getBestSelling(){
+        const movies = await db.getAll(tbName);
+       // Sắp xếp mảng theo thuộc tính "sold" giảm dần
+       movies.sort((a, b) => b.sold - a.sold);
+        // Lấy ra 10 phần tử đầu tiên
+        const bestSellingMovies = movies.slice(0, 20);
+        return bestSellingMovies;
+    }
+
+    static async getLatestRelease() {
+        const movies = await db.getAll(tbName);
+      
+        // Sắp xếp danh sách theo releaseDate từ thấp đến cao
+        movies.sort((a, b) => new Date(a.releaseDate) - new Date(b.releaseDate));
+      
+        // Lấy ra 10 phim đầu tiên
+        const bestSellingMovies = movies.slice(0, 20);
+      
+        return bestSellingMovies;
+      }
 }
