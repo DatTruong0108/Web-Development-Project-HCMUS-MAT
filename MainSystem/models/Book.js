@@ -21,6 +21,13 @@ module.exports=class Book{
         return data;
     };
 
+    static async getBookByIDCategory(cateID) {
+        const books = await db.getAll(tbName);
+        const booksInCategory = books.filter(book => book.catID === cateID);
+    
+        return booksInCategory;
+    }    
+
     static async getBestSelling(){
         const movies = await db.getAll(tbName);
        // Sắp xếp mảng theo thuộc tính "sold" giảm dần
@@ -41,4 +48,61 @@ module.exports=class Book{
       
         return bestSellingMovies;
       }
+
+    static async getAllWithPagination(currentPage, itemsPerPage) {
+        currentPage = parseInt(currentPage.split("=")[1], 10);
+        const offset = (currentPage - 1) * itemsPerPage;
+        const query = `SELECT * FROM  "Book" LIMIT ${itemsPerPage} OFFSET ${offset}`;
+        const books = await db.query(query);
+        return books;
+    }
+
+    static async getCount() {
+        const query = 'SELECT COUNT(*) as totalBooks FROM  "Book"';
+        const result = await db.query(query);
+        const rs = result[0].totalbooks;
+        return rs;
+    }
+
+    static async getBookByIDCategoryWithPagination(categoryID, currentPage, itemsPerPage) {
+        try {
+            if (currentPage && typeof currentPage === 'string') {
+                currentPage = parseInt(currentPage.split("=")[1], 10);
+            } else {
+                currentPage = 1; // Giá trị mặc định nếu không có hoặc không phải là chuỗi
+            }
+    
+            const offset = (currentPage - 1) * itemsPerPage;
+            const query = `
+                SELECT *
+                FROM "Book"
+                WHERE "catID" = $1
+                OFFSET $2
+                LIMIT $3;
+            `;
+    
+            const data = await db.any(query, [categoryID, offset, itemsPerPage]);
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }    
+
+    static async getCountByCategory(categoryID) {
+        try {
+            const query = `
+                SELECT COUNT(*)
+                FROM "Book"
+                WHERE "catID" = $1;
+            `;
+    
+            const result = await db.one(query, [categoryID]);
+            const count = parseInt(result.count, 10);
+    
+            return count;
+        } catch (error) {
+            throw error;
+        }
+    }    
+
 }
