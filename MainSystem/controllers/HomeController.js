@@ -1,11 +1,12 @@
 const db=require('../utils/db')
+const Movie=require('../models/Book')
 
 
 class HomeController{
     async index(req,res,next){ 
-        const rs=await db.getAll();   
-        console.log(rs);
-        res.render('homepage');
+        const latestRelease=await Movie.getLatestRelease();
+        const bestSelling=await Movie.getBestSelling();
+        res.render('homepage',{bestSelling: bestSelling,latestRelease:latestRelease});
     }
 }
 

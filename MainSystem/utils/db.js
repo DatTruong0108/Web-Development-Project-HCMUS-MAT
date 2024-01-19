@@ -47,12 +47,11 @@ qXS/Otfr0EQbCkrePNLlpoZK7NviwQryfnbSmo4zFQkfD1eGfQ==
 const db=pgp(cn);
 
 module.exports={
-    getAll: async ()=>{
+    getAll: async (tbName)=>{
         let dbcn=null;
             try{
                 dbcn=await db.connect();
                 console.log("Connect database successfully");
-                const tbName="Category";
                 const data=await dbcn.any(`SELECT * FROM $1:name`,tbName);
                 return data;
             } catch (error){
@@ -62,17 +61,5 @@ module.exports={
             }
     },
 
-    getBooks: async () => {
-        let dbcn = null;
-        try {
-            dbcn = await db.connect();
-            const tbName = "Book";
-            const books = await dbcn.any(`SELECT * FROM $1:name`, tbName);
-            return books;
-        } catch (error) {
-            throw error;
-        } finally {
-            dbcn.done();
-        }
-    },
+    
 }
