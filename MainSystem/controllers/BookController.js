@@ -17,9 +17,24 @@ class BookController{
         }
         else{
             res.send('No book found');
-        }
+        }  
+    }
 
-       
+    async search(req, res, next) {
+        const name = req.body.inputName;
+        // console.log("name: ", name);
+        const book = await Book.getBookByName(name);
+        // console.log("book: ", book);
+        if(book) {
+            return res.render('book/searchresultpage', { 
+                book: book,
+                msg: ''
+            });
+        }
+        return res.render('book/searchresultpage', { 
+            book: undefined,
+            msg: 'No book found'
+        });
     }
 }
 
