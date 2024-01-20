@@ -42,20 +42,36 @@
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
-                        {{#each (range 1 totalPages)}}
-                            <li class="page-item {{#if (eq this ../currentPage)}}active{{/if}}">
-                                <a class="page-link custom-pagination-background custom-page-number" href="/category/{{cateName}}/page={{this}}">{{this}}</a>
+                       {{#each (range 1 totalPages)}}
+                            <li class="page-item {{#isEqualCategory cateName}}active{{/isEqualCategory}}">
+                                {{#isEqualCategory cateName}}
+                                    {{#if cateName}}
+                                        <a class="page-link custom-pagination-background custom-page-number" 
+                                            href="/category/{{cateName}}/page={{this}}">
+                                            {{this}}
+                                        </a>
+                                    {{else}}
+                                        <a class="page-link custom-pagination-background custom-page-number" 
+                                            href="/category/all/page={{this}}">
+                                            {{this}}
+                                        </a>
+                                    {{/if}}
+                                {{else}}
+                                    <a class="page-link custom-pagination-background custom-page-number" 
+                                        href="/category/all/page={{this}}">
+                                        {{this}}
+                                    </a>
+                                {{/isEqualCategory}}
                             </li>
                         {{/each}}
                         <li class="page-item">
-                            <a class="page-link custom-pagination-background custom-page-number" href="/category/{{cateName}}/{{addinOne currentPage}}"
+                            <a class="page-link custom-pagination-background custom-page-number" href="/category/{{cateName}}/{{addinOne currentPage totalPages}}"
                                 aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
                     </ul>
                 </nav>
-       
             </div>
         </div>
     </div>

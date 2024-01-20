@@ -20,10 +20,10 @@ handlebars.registerHelper('subtractOne', function(value) {
     return rs;
 })
 
-handlebars.registerHelper('addinOne', function(value) {
+handlebars.registerHelper('addinOne', function(value, totalPages) {
     const page = value;
     const pageNumber = parseInt(page.split('=')[1], 10);
-    if(pageNumber == 4){
+    if(pageNumber == totalPages){
         return value;
     }
     const nextPage = pageNumber + 1;
@@ -44,8 +44,13 @@ handlebars.registerHelper('eq', function (a, b) {
     return a === b;
 });
 
-handlebars.registerHelper('getCatName', function (catName) {
-    return { catName: catName };
+handlebars.registerHelper('isEqualCategory', function(cateName, options, totalPages) {
+    console.log(cateName);
+    if (cateName === 'all') {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
 });
 
 class CategoryController{
@@ -53,14 +58,14 @@ class CategoryController{
         const catgories=await Category.getAll();
         const currentPageReq = req.params.page || 1;
         const currentPage = 'page=' + currentPageReq;
-        //console.log(currentPage);
         const itemsPerPage = 9;
 
         const books = await Book.getAllWithPagination(currentPage, itemsPerPage);
         const totalBooks = await Book.getCount();
         const totalPages = Math.ceil(totalBooks / itemsPerPage);
+        const cateName = "all";
 
-        res.render('categorypage', { catgories,  books, currentPage, totalPages });
+        res.render('categorypage', { catgories,  books, currentPage, totalPages, cateName });
     }
 
     async indexPage(req,res,next){ 
@@ -72,8 +77,9 @@ class CategoryController{
         const books = await Book.getAllWithPagination(currentPage, itemsPerPage);
         const totalBooks = await Book.getCount();
         const totalPages = Math.ceil(totalBooks / itemsPerPage);
+        const cateName = "all";
 
-        res.render('categorypage', { catgories,  books, currentPage, totalPages });
+        res.render('categorypage', { catgories,  books, currentPage, totalPages, cateName });
     }
 
     async getCategoryProducts(req, res, next){
@@ -102,6 +108,7 @@ class CategoryController{
             const catgories = await Category.getAll(); 
             const cateName = req.params.categoryName;
             const cateID = await Category.getCatIDByName(cateName);
+            console.log(cateName);
     
             const currentPage = req.params.page || 1;
             // console.log(currentPage);
