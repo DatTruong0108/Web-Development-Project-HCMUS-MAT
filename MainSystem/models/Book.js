@@ -117,4 +117,16 @@ module.exports=class Book{
         }
     }    
 
+    static async getBookByName(name) {
+        try {
+            const query = `
+                SELECT *
+                FROM "Book"
+                WHERE "name" = $1;`;
+            const data = await db.one(query, [name]);
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
