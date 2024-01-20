@@ -5,20 +5,22 @@
                 <div class="card-body">
                     <h1 class="roboto-font-size-18 text-center">Category</h1>
                     <hr class="black-hr">
-                    {{#each cateNames}}
-                    <a class="roboto-font-size-18 pointer">{{this}}</a><br>
+                    {{#each catgories}}
+                    <a onclick="categoryType('{{name}}')" class="roboto-font-size-18 pointer">{{name}}</a><br>
                     {{/each}}
                 </div>
             </div>
         </div>
         <div class="col-md-9 d-flex">
             <div class="container">
-                <div class="row">
+                <div class="row mb-4" id="bookListContainer">
                     {{#each books}}
-                    <div class="col-4">
+                    <div class="col-4 mb-4">
                         <div class="card h-100" style="width: 14rem; margin-right: 12px;">
-                            <div class="container" style="width: 100%; height: 200px; background-color: #f5f5f5; align-items: center; justify-content: center;">
-                                <img src="{{image}}" class="card-img-top" alt="{{name}}" style="width: 100%; height: 100%; object-fit: contain;">
+                            <div class="container"
+                                style="width: 100%; height: 200px; background-color: #f5f5f5; align-items: center; justify-content: center;">
+                                <img src="/{{image}}" class="card-img-top" alt="{{name}}"
+                                    style="width: 100%; height: 100%; object-fit: contain;">
                             </div>
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">{{name}}</h5>
@@ -35,17 +37,38 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
                         <li class="page-item">
-                        <a class="page-link custom-pagination-background custom-page-number" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
+                            <a class="page-link custom-pagination-background custom-page-number" href="/category/{{cateName}}/{{subtractOne currentPage}}"
+                                aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
                         </li>
-                        <li class="page-item"><a class="page-link custom-pagination-background custom-page-number" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link custom-pagination-background custom-page-number" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link custom-pagination-background custom-page-number" href="#">3</a></li>
+                       {{#each (range 1 totalPages)}}
+                            <li class="page-item {{#isEqualCategory cateName}}active{{/isEqualCategory}}">
+                                {{#isEqualCategory cateName}}
+                                    {{#if cateName}}
+                                        <a class="page-link custom-pagination-background custom-page-number" 
+                                            href="/category/{{cateName}}/page={{this}}">
+                                            {{this}}
+                                        </a>
+                                    {{else}}
+                                        <a class="page-link custom-pagination-background custom-page-number" 
+                                            href="/category/all/page={{this}}">
+                                            {{this}}
+                                        </a>
+                                    {{/if}}
+                                {{else}}
+                                    <a class="page-link custom-pagination-background custom-page-number" 
+                                        href="/category/all/page={{this}}">
+                                        {{this}}
+                                    </a>
+                                {{/isEqualCategory}}
+                            </li>
+                        {{/each}}
                         <li class="page-item">
-                        <a class="page-link custom-pagination-background custom-page-number" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
+                            <a class="page-link custom-pagination-background custom-page-number" href="/category/{{cateName}}/{{addinOne currentPage totalPages}}"
+                                aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
                         </li>
                     </ul>
                 </nav>
@@ -53,3 +76,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    function categoryType(name){
+        window.location.href = `/category/${name}`;
+    }
+
+
+</script>

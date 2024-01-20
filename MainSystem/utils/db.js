@@ -46,6 +46,7 @@ qXS/Otfr0EQbCkrePNLlpoZK7NviwQryfnbSmo4zFQkfD1eGfQ==
 
 const db=pgp(cn);
 
+
 module.exports={
     getAll: async (tbName)=>{
         let dbcn=null;
@@ -61,5 +62,48 @@ module.exports={
             }
     },
 
+    any: async (query, values) => {
+        let dbcn = null;
+        try {
+            dbcn = await db.connect();
+            const data = await dbcn.any(query, values);
+            return data;
+        } catch (error) {
+            throw error;
+        } finally {
+            if (dbcn) {
+                dbcn.done();
+            }
+        }
+    },
     
+    one: async (query, values) => {
+        let dbcn = null;
+        try {
+            dbcn = await db.connect();
+            const data = await dbcn.one(query, values);
+            return data;
+        } catch (error) {
+            throw error;
+        } finally {
+            if (dbcn) {
+                dbcn.done();
+            }
+        }
+    },
+
+    query: async (query, values) => {
+        let dbcn = null;
+        try {
+            dbcn = await db.connect();
+            const data = await dbcn.query(query, values);
+            return data;
+        } catch (error) {
+            throw error;
+        } finally {
+            if (dbcn) {
+                dbcn.done();
+            }
+        }
+    },
 }
