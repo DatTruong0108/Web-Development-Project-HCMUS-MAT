@@ -9,6 +9,18 @@ class HomeController{
         const bestSelling=await Book.getBestSelling();
         res.render('homepage',{bestSelling: bestSelling,latestRelease:latestRelease});
     }
+    
+    // async search(req,res,next){
+    //     const key=req.body.key;
+    //     const rs=await Book.searchBook(key);
+    //     if (rs){
+    //         res.send(rs);
+    //     }
+    //     else{
+    //         res.send("Error");
+    //     }
+        
+    // }
 
 
 }

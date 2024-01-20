@@ -90,6 +90,25 @@ module.exports={
           }
     },
 
+    // search: async (value) => {
+    //     const tbName = "Book";
+    //     const clName1 = "name";
+    //     const clName2 = "author";
+    //     let dbcn = null;
+    //     try {
+    //         dbcn = await db.connect();
+    //         const result = await dbcn.any('SELECT * FROM $1:name WHERE $2:name ILIKE $3 OR $4:name ILIKE $3', [tbName, clName1, clName2, `%${value}%`]);
+    //         return result;
+    //     } catch (error) {
+    //         console.error('ERROR:', error);
+    //         throw error; // Re-throw the error to handle it in the calling function
+    //     } finally {
+    //         if (dbcn) {
+    //             dbcn.done(); // Release the connection only if it was acquired successfully
+    //         }
+    //     }
+    // },
+
 
 
     any: async (query, values) => {

@@ -33,6 +33,13 @@ module.exports=class Book{
         return data;
     }
 
+    // static async searchBook(key){
+    //     const data=await db.search(key);
+    //     console.log(data);
+
+    //     return data;
+    // }
+
     static async getBookByIDCategory(cateID) {
         const books = await db.getAll(tbName);
         const booksInCategory = books.filter(book => book.catID === cateID);
