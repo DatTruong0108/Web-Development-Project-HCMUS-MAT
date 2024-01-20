@@ -107,6 +107,47 @@
   }
 
 
+/* Book detail */
+
+.product-detail {
+    max-width: 100%;
+    margin: 50px auto;
+    background-color: #fae6d47d;
+    padding: 30px;
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-detail img {
+    max-width:350px;
+    height:350px;
+}
+
+.product-info {
+    margin-top: 20px;
+}
+
+.btn-add-to-cart{
+    margin-right: 20px;
+    
+}
+.product-info h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.product-info p {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.product-info .btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+}
+
+
   
 
   

@@ -21,6 +21,18 @@ module.exports=class Book{
         return data;
     };
 
+    static async get(clName,value){
+        const data=await db.get(tbName,clName,value);
+
+        return data;
+    }
+
+    static async search(clName,value){
+        const data=await db.getMany(tbName,clName,value);
+
+        return data;
+    }
+
     static async getBookByIDCategory(cateID) {
         const books = await db.getAll(tbName);
         const booksInCategory = books.filter(book => book.catID === cateID);
