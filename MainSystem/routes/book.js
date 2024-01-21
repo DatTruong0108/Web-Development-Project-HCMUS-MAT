@@ -7,5 +7,6 @@ route.get('/:id/view',BookController.viewDetail);
 route.get('/search/paginate',BookController.paginateSearchResults);
 route.post('/search',BookController.search);
 route.get('/filterAll', BookController.filterAll);
+route.get('/filterAuthorIndex', BookController.filterAuthorIndex);
 
 module.exports=route;
