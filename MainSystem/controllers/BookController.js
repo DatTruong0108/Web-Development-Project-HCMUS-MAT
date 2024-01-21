@@ -71,6 +71,24 @@ class BookController{
             currentPage: page
         });
     }
+
+    async filterAll(req, res, next) {
+        const itemsPerPage = 8;
+        const page = req.query.page || 1;
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+    
+        const book = await Book.getAll();
+        const totalPages = Math.ceil(book.length / itemsPerPage);
+    
+        const paginatedBook = book.slice(startIndex, endIndex);
+    
+        res.render('book/searchresultpage', {
+            book: paginatedBook,
+            totalPages: totalPages,
+            currentPage: page
+        });
+    }
 }
 
 module.exports=new BookController;
