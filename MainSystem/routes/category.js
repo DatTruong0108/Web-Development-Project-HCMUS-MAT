@@ -3,9 +3,7 @@ const route=express.Router();
 
 const CategoryController=require('../controllers/CategoryController');
 
-route.get('/all/:page?', CategoryController.indexPage);
-route.get('/:categoryName', CategoryController.getCategoryProducts);
-route.get('/:categoryName/:page?', CategoryController.getCategoryProductsPage);
+route.get('/ajax/:categoryName/:page?', CategoryController.getBooksByCategory);
 route.get('/', CategoryController.index);
 
 module.exports=route;
