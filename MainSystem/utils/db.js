@@ -62,6 +62,36 @@ module.exports={
             }
     },
 
+    get: async(tbName,clName, value)=>{
+        let dbcn=null;
+        try {
+            dbcn=await db.connect();
+            const result=await dbcn.oneOrNone(`SELECT * FROM $1:name WHERE $2:name=$3`,[tbName,clName,value]);
+            return result;
+          } catch (error) {
+            console.error('ERROR:', error);
+          } 
+          finally{
+            dbcn.done();
+          }
+    }, 
+
+    getMany: async(tbName,clName, value)=>{
+        let dbcn=null;
+        try {
+            dbcn=await db.connect();
+            const result=await dbcn.any(`SELECT * FROM $1:name WHERE $2:name=$3`,[tbName,clName,value]);
+            return result;
+          } catch (error) {
+            console.error('ERROR:', error);
+          } 
+          finally{
+            dbcn.done();
+          }
+    },
+
+
+
     any: async (query, values) => {
         let dbcn = null;
         try {

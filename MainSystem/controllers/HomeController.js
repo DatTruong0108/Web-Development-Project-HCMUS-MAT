@@ -1,13 +1,16 @@
 const db=require('../utils/db')
-const Movie=require('../models/Book')
+const Book=require('../models/Book')
 
 
 class HomeController{
     async index(req,res,next){ 
-        const latestRelease=await Movie.getLatestRelease();
-        const bestSelling=await Movie.getBestSelling();
+
+        const latestRelease=await Book.getLatestRelease();
+        const bestSelling=await Book.getBestSelling();
         res.render('homepage',{bestSelling: bestSelling,latestRelease:latestRelease});
     }
+
+
 }
 
 module.exports=new HomeController;

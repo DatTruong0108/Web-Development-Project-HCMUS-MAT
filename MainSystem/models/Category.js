@@ -13,6 +13,12 @@ module.exports=class Category{
         return data;
     };
 
+    static async get(){
+        const data=await db.get(tbName);
+        return data;
+    };
+
+
     static async getCatIDByName(cateName){
         const categories =await db.getAll(tbName);
         const category = categories.find(category => category.name === cateName);

@@ -21,6 +21,18 @@ module.exports=class Book{
         return data;
     };
 
+    static async get(clName,value){
+        const data=await db.get(tbName,clName,value);
+
+        return data;
+    }
+
+    static async search(clName,value){
+        const data=await db.getMany(tbName,clName,value);
+
+        return data;
+    }
+
     static async getBookByIDCategory(cateID) {
         const books = await db.getAll(tbName);
         const booksInCategory = books.filter(book => book.catID === cateID);
@@ -105,4 +117,16 @@ module.exports=class Book{
         }
     }    
 
+    static async getBookByName(name) {
+        try {
+            const query = `
+                SELECT *
+                FROM "Book"
+                WHERE "name" = $1;`;
+            const data = await db.one(query, [name]);
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
