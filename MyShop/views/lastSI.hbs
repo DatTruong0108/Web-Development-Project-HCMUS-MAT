@@ -1,0 +1,97 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-light align-items-center">
+    <form id="signin-form">
+    <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username">
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password">
+    </div>
+    <input type="hidden"  id="cID" value='{{clientID}}'>
+    <input type="hidden"  id="cCallback" value='{{callbackURL}}'>
+    <input type="hidden"  id="cSecret" value='{{clientSecret}}'>
+
+    <div class="mb-3">
+        {{#if gameRequest}}
+            <input type="hidden" id="gameReq" value="true">      
+            <div class="form-outline custom-control custom-control mb-4">
+                <label for="tokenLife">Life time login</label>   
+                    <select class="custom-select" id="tokenLife" name="tokenLife">
+                        <option value="1" selected>1 day</option>
+                        <option value="7">7 days</option>
+                        <option value="30">30 days</option>
+                    </select>
+            </div>
+            <label for="checkbox">Cho phép sử dụng Avatar</label>
+            <input type="checkbox" id="checkbox" name="checkbox" checked>
+        {{/if}}
+    </div>
+                    
+    <div id="form-message"></div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#signin-form').on('submit', function(e) {
+            e.preventDefault(); 
+
+            const username = $('#username').val();
+            const password = $('#password').val();
+            const clID = $('#cID').val();
+            const clCb = $('#cCallback').val();
+            const clSc = $('#cSecret').val();
+
+            const tokenLife = $('#tokenLife').val();
+            var acpA;
+            if(!$('#checkbox').prop('checked')){
+                acpA = false;
+            }else{
+                acpA = true;
+            }
+            var postUrl;
+            var callbackUrl;
+            if($('#gameReq').val()=='true'){
+                postUrl = 'https://localhost:3003/auth/signin'
+                callbackUrl = clCb;
+            }
+            else{
+                postUrl = 'https://localhost:3003/signin'
+                callbackUrl = "./user/account";
+            }
+            $.ajax({
+                url: postUrl, // Địa chỉ endpoint để kiểm tra validate
+                method: 'POST',
+                data: {
+                username: username,
+                password: password,
+                tokenLife: tokenLife,
+                acpA: acpA,
+                clientID: clID,
+                clientSecret: clSc,
+                callbackUrl: clCb,
+                },
+                dataType: 'json',
+                success: function(response) {
+                // Xử lý kết quả trả về từ server sau khi kiểm tra validate
+                if (response.isValid) {
+                    // Nếu thông tin hợp lệ, tiến hành đăng ký
+                    window.location.href = callbackUrl + '?token=' + response.token + '&tokenLife=' + response.tokenLife;
+                } else {
+                    // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
+                    $('#form-message').text(response.message);
+                }
+                },
+                error: function(xhr, status, error) {
+                    // Xử lý lỗi nếu có
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>
