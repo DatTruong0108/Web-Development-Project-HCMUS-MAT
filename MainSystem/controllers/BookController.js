@@ -27,15 +27,48 @@ class BookController{
         const book2=await Book.searchLike('author',name);
         const book=book1.concat(book2);
 
+        const itemsPerPage=8;
+
         if(book) {
+            const totalPages = Math.ceil(book.length / itemsPerPage);
+            const page = req.query.page || 1;
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const currentPage=1;
+
+            const paginatedBook = book.slice(startIndex, endIndex);
             return res.render('book/searchresultpage', { 
-                book: book,
-                msg: ''
+                book: paginatedBook,
+                totalPages: totalPages,
+                key: name,
+                currentPage: currentPage
             });
         }
-        return res.render('book/searchresultpage', { 
-            book: undefined,
-            msg: 'No book found'
+        else{
+           return res.send("No book found");
+        }     
+    }
+
+    async paginateSearchResults(req, res, next) {
+        const name = req.query.inputName;
+        const book1 = await Book.searchLike('name', name);
+        const book2 = await Book.searchLike('author', name);
+        const book = book1.concat(book2);
+    
+        const itemsPerPage = 8;
+        const totalPages = Math.ceil(book.length / itemsPerPage);
+    
+        const page = req.query.page || 1;
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+       
+    
+        const paginatedBook = book.slice(startIndex, endIndex);
+    
+        res.json({
+            book: paginatedBook,
+            totalPages: totalPages,
+            currentPage: page
         });
     }
 }

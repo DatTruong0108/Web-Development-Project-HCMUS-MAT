@@ -56,7 +56,43 @@ app.engine(
                   return opts.fn(this);
                 }
                 return opts.inverse(this);
+            },
+            currentPage: function () {
+              return this.currentPage;
+            },
+            subtractOne: function (value) {
+              const page = value;
+              const pageNumber = parseInt(page.split('=')[1], 10);
+              if (pageNumber === 1) {
+                  return value;
               }
+              const prePage = pageNumber - 1;
+              const rs = 'page=' + prePage;
+              return rs;
+          },
+      
+          addinOne: function (value, totalPages) {
+              const page = value;
+              const pageNumber = parseInt(page.split('=')[1], 10);
+              if (pageNumber === totalPages) {
+                  return value;
+              }
+              const nextPage = pageNumber + 1;
+              const rs = 'page=' + nextPage;
+              return rs;
+          },
+      
+          range: function (start, end) {
+              const result = [];
+              for (let i = start; i <= end; i++) {
+                  result.push(i);
+              }
+              return result;
+          },
+      
+          eq: function (a, b) {
+              return a === b;
+          }
         }
     })
 );
