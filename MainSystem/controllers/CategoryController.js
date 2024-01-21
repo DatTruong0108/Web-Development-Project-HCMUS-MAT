@@ -44,15 +44,6 @@ handlebars.registerHelper('eq', function (a, b) {
     return a === b;
 });
 
-handlebars.registerHelper('isEqualCategory', function(cateName, options, totalPages) {
-    console.log(cateName);
-    if (cateName === 'all') {
-        return options.fn(this);
-    } else {
-        return options.inverse(this);
-    }
-});
-
 class CategoryController{
     async index(req,res,next){ 
         const catgories=await Category.getAll();
@@ -68,59 +59,33 @@ class CategoryController{
         res.render('categorypage', { catgories,  books, currentPage, totalPages, cateName });
     }
 
-    async indexPage(req,res,next){ 
-        const catgories=await Category.getAll();
-        const currentPage = req.params.page;
-        // console.log(currentPage);
-        const itemsPerPage = 9;
-
-        const books = await Book.getAllWithPagination(currentPage, itemsPerPage);
-        const totalBooks = await Book.getCount();
-        const totalPages = Math.ceil(totalBooks / itemsPerPage);
-        const cateName = "all";
-
-        res.render('categorypage', { catgories,  books, currentPage, totalPages, cateName });
-    }
-
-    async getCategoryProducts(req, res, next){
+    async getBooksByCategory(req, res, next) {
         try {
-            const catgories=await Category.getAll(); 
             const cateName = req.params.categoryName;
-            const cateID = await Category.getCatIDByName(cateName);
-
-            const currentPageReq = req.params.page || 1;
-            const currentPage = 'page=' + currentPageReq;
-            // console.log(currentPage);
-            const itemsPerPage = 3; // Số sản phẩm trên mỗi trang
-
-            const books = await Book.getBookByIDCategoryWithPagination(cateID, currentPage, itemsPerPage);
-            const totalBooks = await Book.getCountByCategory(cateID);
-            const totalPages = Math.ceil(totalBooks / itemsPerPage);
-
-            res.render('categorypage', { catgories, books, cateName, currentPage, totalPages});
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    async getCategoryProductsPage(req, res, next){
-        try {
-            const catgories = await Category.getAll(); 
-            const cateName = req.params.categoryName;
-            const cateID = await Category.getCatIDByName(cateName);
-            console.log(cateName);
+            let cateID;
+    
+            if (cateName.toLowerCase() === 'all') {
+                const itemsPerPage = 9;
+                const currentPage = req.params.page || 1;
+                const books = await Book.getAllWithPagination(currentPage, itemsPerPage);
+                const totalBooks = await Book.getCount();
+                const totalPages = Math.ceil(totalBooks / itemsPerPage);
+    
+                return res.json({ books, totalPages });
+            } else {
+                cateID = await Category.getCatIDByName(cateName);
+            }
     
             const currentPage = req.params.page || 1;
-            // console.log(currentPage);
-            const itemsPerPage = 3; // Số sản phẩm trên mỗi trang
+            const itemsPerPage = 3;
     
             const books = await Book.getBookByIDCategoryWithPagination(cateID, currentPage, itemsPerPage);
             const totalBooks = await Book.getCountByCategory(cateID);
             const totalPages = Math.ceil(totalBooks / itemsPerPage);
     
-            res.render('categorypage', { catgories, books, cateName, currentPage, totalPages });
+            res.json({ books, totalPages, currentPage });
         } catch (error) {
-            next(error);
+            res.status(500).json({ error: error.message });
         }
     }    
 }
