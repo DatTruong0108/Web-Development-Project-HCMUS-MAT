@@ -33,12 +33,11 @@ module.exports=class Book{
         return data;
     }
 
-    // static async searchBook(key){
-    //     const data=await db.search(key);
-    //     console.log(data);
-
-    //     return data;
-    // }
+    static async searchLike(clName,_id){
+        const data=await db.searchLike(tbName,clName,_id);
+        return data;
+    }
+    
 
     static async getBookByIDCategory(cateID) {
         const books = await db.getAll(tbName);
@@ -124,4 +123,16 @@ module.exports=class Book{
         }
     }    
 
+    static async getBookByName(name) {
+        try {
+            const query = `
+                SELECT *
+                FROM "Book"
+                WHERE "name" = $1;`;
+            const data = await db.any(query, [name]);
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
