@@ -148,6 +148,89 @@
 }
 
 
+/*Cart Page*/
+.title-font{
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px; 
+    font-weight: 540;
+}
+
+.checkout-font{
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px; 
+}
+
+.checkout-font2{
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px; 
+    font-weight: 550;
+}
+
+.namebook-font{
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px; 
+    font-weight: 550;
+}
+
+.line{    
+    height: 0.5px; 
+    background-color: #000; 
+}
+
+.custom-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 200px; /* Chiều cao cố định của hàng */
+}
+
+.custom-checkbox {
+    width: 1.4rem; 
+    height: 1.4rem; 
+}
+
+.card-total{
+    width: 24rem; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-list{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-input-group {
+    max-width: 140px;
+}
+
+.btn-cart{
+    background-color: #DEAB8F; 
+    color: white;
+}
+
+.voucher{
+    height: 50px;
+}
+
+.custom-input {
+    font-size: 16px; /* Đặt kích thước chữ */
+    color: #333; /* Đặt màu chữ */
+    border: 2px solid #6c757d; /* Đặt màu viền */
+    border-radius: 8px; /* Bo tròn góc */
+}
+
+.custom-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.25); /* Hiệu ứng khi input được focus */
+}
+
+.namebook {
+    width: 200px; /* Đặt chiều rộng mong muốn, bạn có thể thay đổi giá trị này */
+    min-width: 200px; /* Chiều rộng tối thiểu */
+    max-width: 200px; /* Chiều rộng tối đa */
+    overflow: hidden; /* Ẩn phần vượt quá chiều rộng */
+    
+    text-overflow: ellipsis; /* Hiển thị dấu elipsis (...) khi văn bản quá dài */
+}
+
   
 
   
