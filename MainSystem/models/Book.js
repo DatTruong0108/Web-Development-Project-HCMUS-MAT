@@ -135,4 +135,18 @@ module.exports=class Book{
             throw error;
         }
     }
+
+    static async getAllAuthors() {
+        try {
+            const query = `
+                SELECT DISTINCT "author"
+                FROM "Book";
+            `;
+    
+            const data = await db.any(query);
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
