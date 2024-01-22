@@ -111,6 +111,8 @@ route(app);
 
 app.use(cookieParser());
 
+const passportConfig = require('./configs/PassportConfig');
+passportConfig(app);
 const credentials = {
     key: process.env.PRIVATE_KEY,
     cert: process.env.CERTIFICATE,
