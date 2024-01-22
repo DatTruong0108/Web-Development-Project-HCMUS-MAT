@@ -1,0 +1,113 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-light align-items-center">
+            <article class="card-body w-75">
+                <h4 class="card-title mt-3 text-center">Create Account</h4>
+                <form id="signup-form">
+                    <div class="form-group input-group py-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><b>Fullname:</b></span>
+                        </div>
+                        <input id="fullname" name="fullname" class="form-control" placeholder="Full name" type="text">
+                    </div> <!-- form-group// -->
+
+                    <div class="form-group input-group py-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><b>Username:</b></span>
+                        </div>
+                        <input id="username" name="username" class="form-control" placeholder="Username" type="text">
+                    </div> <!-- form-group// -->
+
+                    <div class="form-group input-group py-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <b>Password:</b> </span>
+                        </div>
+                        <input id="password" name="password" class="form-control" placeholder="Create password" type="password">
+                    </div> <!-- form-group// -->
+
+                    <div class="form-group input-group py-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><b>Email:</b></span>
+                        </div>
+                        <input id="email" name="email" class="form-control" placeholder="Email" type="email">
+                    </div> <!-- form-group// -->
+
+                    <div class="form-group input-group py-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><b>Address:</b></span>
+                        </div>
+                        <input id="address" name="address" class="form-control" placeholder="Address" type="text">
+                    </div> <!-- form-group// -->
+
+                    <div class="form-group input-group py-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><b>Date of Birth:</b></span>
+                        </div>
+                        <input id="dob" name="dob" class="form-control" placeholder="Date of Birth" type="date">
+                    </div> <!-- form-group// -->
+
+                    <div class="form-group input-group py-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><b>Gender:</b></span>
+                        </div>
+                        <select id="gender" name="gender" class="form-control">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div> <!-- form-group// -->
+                    
+                    <div class="form-group mt-2 d-flex flex-column align-items-center">
+                        <button id="submitbtn" type="submit" class="btn btn-primary btn-block"> Create Account </button>
+                        <div id="form-message"></div>
+                    </div> <!-- form-group// -->
+                </form>
+            </article>
+        </div> <!-- card.// -->
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#signup-form').on('submit', function(e) {
+            e.preventDefault(); // Ngăn chặn form gửi thông tin mặc định
+            // Gửi yêu cầu Ajax để kiểm tra validate
+            // Lấy giá trị từ các trường nhập liệu
+            const fullname = $('#fullname').val();
+            const username = $('#username').val();
+            const password = $('#password').val();
+            const email = $('#email').val();
+            const address = $('#address').val();
+            const dob = $('#dob').val();
+            const gender = $('#gender').val();
+            $.ajax({
+                url: 'https://localhost:3003/signup', // Địa chỉ endpoint để kiểm tra validate
+                method: 'POST',
+                data: {
+                    fullname: fullname,
+                    username: username,
+                    password: password,
+                    email: email,
+                    address: address,
+                    dob: dob,
+                    gender: gender
+                },
+                dataType: 'json',
+                success: function(response) {
+                    // Xử lý kết quả trả về từ server sau khi kiểm tra validate
+                    if (response.isValid) {
+                        // Nếu thông tin hợp lệ, tiến hành đăng ký
+                        window.location.href = "./signin";
+                    } else {
+                        // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
+                        $('#form-message').text(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Xử lý lỗi nếu có
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>
