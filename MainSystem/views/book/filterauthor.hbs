@@ -1,17 +1,19 @@
 <div class="container mt-5">
     <div class="row">
-        <form method="post" action="/filterAuthor">
-            <div class="col-md-3">
-                <div class="dropdown input-group mb-3">
-                    <span class="input-group-text">Author</span>
-                    <select name="author" class="form-control" id="author">
-                        {{#each authors}}
-                            <option value="{{this}}" {{#eq ../term this}}selected{{/eq}}>{{this}}</option>
-                        {{/each}}
-                    </select>
-                </div>
+        <div class="col-md-3">
+            <div class="dropdown mb-3">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Author
+                </button>
+                <ul class="dropdown-menu">
+                    {{#each authors}}
+                    <li><a class="dropdown-item" onclick="authorNameFunc('{{author}}')">{{author}}</a><br>
+                    </li>
+                    {{/each}}
+                </ul>
             </div>
-        </form>
+        </div>
         <div class="col-md-9 d-flex">
             <div class="container">
                 <div class="row mb-4" id="bookListContainer">
@@ -21,12 +23,13 @@
                             <div class="container"
                                 style="width: 100%; height: 200px; background-color: #f5f5f5; align-items: center; justify-content: center;">
                                 <a href="/book/{{id}}/view">
-                                <img src="/{{image}}" class="card-img-top" alt="{{name}}"
-                                    style="width: 100%; height: 100%; object-fit: contain;">
+                                    <img src="/{{image}}" class="card-img-top" alt="{{name}}"
+                                        style="width: 100%; height: 100%; object-fit: contain;">
                                 </a>
                             </div>
                             <div class="card-body d-flex flex-column">
-                                <h5 class="card-title"><a style="color: #000000;" href="/book/{{id}}/view">{{name}}</a></h5>
+                                <h5 class="card-title"><a style="color: #000000;" href="/book/{{id}}/view">{{name}}</a>
+                                </h5>
                                 <h6 class="card-title">{{author}}</h6>
                                 <div class="d-flex justify-content-between mt-auto">
                                     <a class="card-text pointer">{{sold}} sold</a>
@@ -40,21 +43,24 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
                         <li class="page-item">
-                            <a class="page-link custom-pagination-background custom-page-number" href="javascript:void(0);" onclick="categoryType('{{cateName}}', '{{subtractOne currentPage}}')">
+                            <a class="page-link custom-pagination-background custom-page-number"
+                                href="javascript:void(0);"
+                                onclick="authorNameFunc('{{cateName}}', '{{subtractOne currentPage}}')">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
                         {{#each (range 1 totalPages)}}
-                            <li class="page-item">
-                                <a class="page-link custom-pagination-background custom-page-number" 
-                                href="javascript:void(0);" 
-                                onclick="categoryType('{{cateName}}', {{this}})">
-                                    {{this}}
-                                </a>
-                            </li>
+                        <li class="page-item">
+                            <a class="page-link custom-pagination-background custom-page-number"
+                                href="javascript:void(0);" onclick="authorNameFunc('{{cateName}}', {{this}})">
+                                {{this}}
+                            </a>
+                        </li>
                         {{/each}}
                         <li class="page-item">
-                            <a class="page-link custom-pagination-background custom-page-number" href="javascript:void(0);" onclick="categoryType('{{cateName}}', '{{addinOne currentPage totalPages}}')">
+                            <a class="page-link custom-pagination-background custom-page-number"
+                                href="javascript:void(0);"
+                                onclick="authorNameFunc('{{cateName}}', '{{addinOne currentPage totalPages}}')">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
@@ -66,8 +72,9 @@
 </div>
 
 <script>
-    function categoryType(name, page = 1) {
-        const url = `/category/ajax/${name}/page=${page}`;
+    function authorNameFunc(authorname, page = 1) {
+        console.log("Click authorNameFunc with authorname = " + authorname + " and page = " + page);
+        const url = `/book/ajax/filterAuthor/${authorname}/page=${page}`;
         fetch(url)
             .then(response => response.json())
             .then(data => {
@@ -75,11 +82,11 @@
                 updateBookList(data.books);
 
                 // Cập nhật phân trang
-                updatePagination(data.totalPages, name, page);
+                updatePagination(data.totalPages, authorname, page);
 
                 // Cập nhật đường dẫn mà không load lại trang
-                const newUrl = `/category/${name}/page=${page}`;
-                history.pushState({ page: page, name: name }, '', newUrl);
+                const newUrl = `/book/filterAuthor/${authorname}/page=${page}`;
+                history.pushState({ page: page, name: authorname }, '', newUrl);
             })
             .catch(error => console.error('Error:', error));
     }
@@ -115,7 +122,7 @@
         });
     }
 
-    function updatePagination(totalPages, cateName, currentPage) {
+    function updatePagination(totalPages, authorName, currentPage) {
         const paginationContainer = document.querySelector('.pagination');
 
         // Xóa tất cả các phần tử con trong container
@@ -131,7 +138,7 @@
         prevLink.href = `javascript:void(0);`;
         prevLink.textContent = '«';
         const prePage = subtractOne(currentPage)
-        prevLink.onclick = () => categoryType(cateName, prePage);
+        prevLink.onclick = () => authorNameFunc(authorName, prePage);
         prevLi.appendChild(prevLink);
         paginationContainer.appendChild(prevLi);
 
@@ -144,7 +151,7 @@
             link.className = 'page-link custom-pagination-background custom-page-number';
             link.href = `javascript:void(0);`;
             link.textContent = i;
-            link.onclick = () => categoryType(cateName, i);
+            link.onclick = () => authorNameFunc(authorName, i);
 
             li.appendChild(link);
             paginationContainer.appendChild(li);
@@ -157,50 +164,50 @@
         nextLink.className = 'page-link custom-pagination-background custom-page-number';
         nextLink.href = `javascript:void(0);`;
         nextLink.textContent = '»';
-        nextLink.onclick = () => categoryType(cateName, addinOne(currentPage, totalPages));
+        nextLink.onclick = () => authorNameFunc(authorName, addinOne(currentPage, totalPages));
         nextLi.appendChild(nextLink);
         paginationContainer.appendChild(nextLi);
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const currentPage = '{{currentPage}}';
         const totalPages = '{{totalPages}}';
-        
+
         document.querySelectorAll('.page-link').forEach(link => {
-            link.addEventListener('click', function(event) {
+            link.addEventListener('click', function (event) {
                 event.preventDefault();
                 const page = this.textContent.trim();
-                categoryType('{{cateName}}', page);
+                authorNameFunc('{{authorname}}', page);
             });
         });
 
         // Thêm xử lý sự kiện cho nút "Previous"
         const prevButton = document.querySelector('.pagination .page-item:first-child .page-link');
-        prevButton.addEventListener('click', function(event) {
+        prevButton.addEventListener('click', function (event) {
             event.preventDefault();
-            categoryType('{{cateName}}', subtractOne('{{currentPage}}'));
+            authorNameFunc('{{authorname}}', subtractOne('{{currentPage}}'));
         });
 
         // Thêm xử lý sự kiện cho nút "Next"
         const nextButton = document.querySelector('.pagination .page-item:last-child .page-link');
-        nextButton.addEventListener('click', function(event) {
+        nextButton.addEventListener('click', function (event) {
             event.preventDefault();
-            categoryType('{{cateName}}', addinOne(currentPage, totalPages));
+            authorNameFunc('{{authorname}}', addinOne(currentPage, totalPages));
         });
     });
 
     function subtractOne(currentPage) {
-        if(currentPage === 1){
+        if (currentPage === 1) {
             return currentPage;
         }
         return currentPage - 1;
     }
 
     function addinOne(currentPage, totalPages) {
-        if(currentPage === totalPages){
+        if (currentPage === totalPages) {
             return currentPage;
         }
         return currentPage + 1;
-    }   
+    }
 
 </script>

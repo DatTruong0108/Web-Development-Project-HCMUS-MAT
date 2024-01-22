@@ -9,6 +9,7 @@ route.get('/search/paginate',BookController.paginateSearchResults);
 route.post('/search',BookController.search);
 route.get('/filterAll/paginate', BookController.filterAllPaginate);
 route.get('/filterAll', BookController.filterAll);
-// route.get('/filterAuthorIndex', BookController.filterAuthorIndex);
+route.get('/ajax/filterAuthor/:authorname/:page?', BookController.filterAuthor);
+route.get('/filterAuthor', BookController.filterAuthorIndex);
 
 module.exports=route;
