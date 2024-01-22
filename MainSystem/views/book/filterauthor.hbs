@@ -6,7 +6,7 @@
                     aria-expanded="false">
                     Author
                 </button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu" style="max-height: 200px; overflow-y: auto;">
                     {{#each authors}}
                     <li><a class="dropdown-item" onclick="authorNameFunc('{{author}}')">{{author}}</a><br>
                     </li>
