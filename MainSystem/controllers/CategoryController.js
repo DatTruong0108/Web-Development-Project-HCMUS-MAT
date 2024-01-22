@@ -77,7 +77,7 @@ class CategoryController{
             }
     
             const currentPage = req.params.page || 1;
-            const itemsPerPage = 3;
+            const itemsPerPage = 6;
     
             const books = await Book.getBookByIDCategoryWithPagination(cateID, currentPage, itemsPerPage);
             const totalBooks = await Book.getCountByCategory(cateID);

@@ -1,0 +1,216 @@
+<div class="container mt-5 mb-5">
+    <div class="card card-list mt-4">
+        <div class="row ml-4 mr-4 mt-4">
+            <div class="col-5 text-center">
+                <h1 class="title-font">PRODUCT</h1>
+            </div>
+            <div class="col-2 text-center">
+                <h1 class="title-font">PRICE</h1>
+            </div>
+            <div class="col-3 text-center">
+                <h1 class="title-font">QTY</h1>
+            </div>
+            <div class="col-2 text-center">
+                <h1 class="title-font">UNIT PRICE</h1>
+            </div>
+        </div>
+        <hr class="line ml-4 mr-4">
+        <div id="bookList" class="ml-4 mr-4">
+
+        </div>
+    </div>
+    <div class="row justify-content-between mt-4 mr-5">
+        <div class="col-4">
+            <div class="input-group mt-5 voucher">
+                <input type="text" class="form-control" placeholder="Voucher code">
+                <div class="input-group-append">
+                    <button class="btn btn-cart" type="button" id="applyVoucherBtn">Redeem</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4">
+            <div class="card card-total mt-4">
+                <div class="container">
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <p class="checkout-font ml-5">Subtotal</p>
+                        </div>
+                        <div class="col-6 text-right">
+                            <p id="subtotal" class="checkout-font mr-5">$0</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="checkout-font ml-5">Shipping fee</p>
+                        </div>
+                        <div class="col-6 text-right">
+                            <p id="shipfree" class="checkout-font mr-5">$2</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="checkout-font ml-5">Coupon</p>
+                        </div>
+                        <div class="col-6 text-right">
+                            <p class="checkout-font mr-5">No</p>
+                        </div>
+                    </div>
+                    <hr class="my-0">
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <p class="checkout-font2 ml-5">Total</p>
+                        </div>
+                        <div class="col-6 text-right">
+                            <p id="total" class="checkout-font2 mr-5">$0</p>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mb-4 ml-5 mr-5">
+                        <button type="button" class="btn btn-block btn-cart">Check out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function parsePrice(priceString) {
+        return parseFloat(priceString.replace('$', ''));
+    }
+
+    // Hàm lấy giá trị của cookie
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) {
+            return decodeURIComponent(parts.pop().split(';').shift());  // Sử dụng decodeURIComponent để giải mã
+        }
+    }
+
+    // Hàm thiết lập giá trị của cookie
+    function setCookie(name, value) {
+        const now = new Date();
+        const expirationDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // Cookie sẽ tồn tại trong 30 ngày
+        document.cookie = `${name}=${value}; expires=${expirationDate.toUTCString()}; path=/`;
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        const bookList = document.getElementById('bookList');
+        const subtotalDisplay = document.getElementById('subtotal'); 
+        const totalDisplay = document.getElementById('total');
+        const shippingFeeDisplay = document.getElementById('shipfree');
+        const shippingFee = parsePrice(shippingFeeDisplay.textContent);
+
+        // Lấy giỏ hàng từ cookies
+        let cart = getCookie("cart") ? JSON.parse(getCookie("cart")) : [];
+
+        function updateCart() {
+            // Lưu giỏ hàng vào cookies
+            setCookie("cart", JSON.stringify(cart));
+            displayCart(); // Hiển thị lại giỏ hàng
+        }
+
+        function displayCart() {
+            bookList.innerHTML = ''; 
+            cart.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'row custom-row';
+                card.innerHTML = `
+                    <div class="col-5">
+                        <div class="row d-flex align-items-center justify-content-center">
+                            <div class="form-check mr-3 mb-4">
+                                <input class="form-check-input custom-checkbox" type="checkbox" value="${book.name}" id="checkPayment">
+                            </div>
+                            <div class="mr-4">
+                                <img src="${book.image}" class="img-thumbnail rounded" alt="${book.name}"
+                                    style="width: 120px; height: 180px; object-fit: cover;">
+                            </div>
+                            <h1 class="namebook-font namebook">${book.name}</h1>
+                        </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <p>$${book.price}</p>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div class="row text-center d-flex align-items-center justify-content-center">
+                            <div class="input-group custom-input-group mr-3">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-secondary minusBtn" type="button">-</button>
+                                </div>
+                                <input type="text" class="form-control text-center custom-input" value="${book.quantity}" id="quantityInput" disabled>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary plusBtn" type="button">+</button>
+                                </div>
+                            </div>
+                            <i class="fas fa-trash-alt trashBtn" style="color: red;"></i>
+                        </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <p>$${book.total}</p>
+                    </div>
+                `;
+                bookList.appendChild(card);
+
+                // Thêm hr vào sau div
+                const hrElement = document.createElement('hr');
+                hrElement.className = 'line';
+                bookList.appendChild(hrElement);
+
+                // Gán sự kiện cho nút "+" và "-" tương ứng với sách
+                const plusBtn = card.querySelector('.plusBtn');
+                const minusBtn = card.querySelector('.minusBtn');
+                const quantityInput = card.querySelector('#quantityInput');
+                const trashBtn = card.querySelector('.trashBtn');
+                const checkbox = card.querySelector('.custom-checkbox');
+
+                plusBtn.addEventListener('click', function () {
+                    book.quantity++;
+                    quantityInput.value = book.quantity;
+                    book.total = book.quantity * book.price;
+                    updateCart();
+                    updateSubtotal();
+                });
+
+                minusBtn.addEventListener('click', function () {
+                    if (book.quantity > 1) {
+                        book.quantity--;
+                        quantityInput.value = book.quantity;
+                        book.total = book.quantity * book.price;
+                        updateCart();
+                        updateSubtotal();
+                    }else {
+                        cart = cart.filter(item => item.name !== book.name);
+                        updateCart();
+                        updateSubtotal();
+                    }
+                });
+
+                trashBtn.addEventListener('click', function () {
+                    // Xóa sách khỏi giỏ hàng khi ấn nút Trash
+                    cart = cart.filter(item => item.name !== book.name);
+                    updateCart();
+                    updateSubtotal();
+                });
+
+                checkbox.addEventListener('change', function () {
+                    updateSubtotal();
+                });
+            });
+        }
+
+        function updateSubtotal() {
+            const checkedBooks = cart.filter(book => {
+                const checkbox = bookList.querySelector(`input[value="${book.name}"]`);
+                return checkbox && checkbox.checked; 
+            });
+
+            const subtotal = checkedBooks.reduce((total, book) => total + book.total, 0);
+            const total = subtotal + shippingFee;
+
+            subtotalDisplay.textContent = `$${subtotal.toFixed(2)}`;
+            totalDisplay.textContent = `$${total.toFixed(2)}`;
+        }
+
+        displayCart();
+    });
+</script>

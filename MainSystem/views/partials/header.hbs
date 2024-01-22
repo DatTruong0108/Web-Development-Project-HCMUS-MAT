@@ -16,7 +16,7 @@
   </div>
 
   <div class="header__right order-2">
-    <img class="mr-2" src="/Images/cart.png" alt="Logo" width="30" height="30">
+    <img  id="cartImage" class="mr-2 pointer" src="/Images/cart.png" alt="Logo" width="30" height="30">
     <button type="button" class="btn btn-warning btn-signin">Sign In</button>
   </div>
 </nav>
@@ -31,3 +31,10 @@
     </div>
   </div>
 </nav>
+
+<script>
+  document.getElementById('cartImage').addEventListener('click', function(){
+    const destinationURL = '/cart';
+    window.location.href = destinationURL;
+  });
+</script>
