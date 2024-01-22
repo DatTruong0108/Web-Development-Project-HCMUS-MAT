@@ -90,7 +90,19 @@ module.exports={
           }
     },
 
-
+    searchLike: async(tbName,clName, _id)=>{
+        let dbcn=null;
+        try {
+            dbcn=await db.connect();
+            const result=await dbcn.any(`SELECT * FROM $1:name WHERE $2:name ILIKE '%$3:value%'`,[tbName,clName,_id]);
+            return result;
+          } catch (error) {
+            console.error('ERROR:', error);
+          } 
+          finally{
+            dbcn.done();
+          }
+    },
 
     any: async (query, values) => {
         let dbcn = null;

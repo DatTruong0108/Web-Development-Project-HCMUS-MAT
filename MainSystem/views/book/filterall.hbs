@@ -47,7 +47,6 @@
 </div>
 
 <script>
-
     document.addEventListener('DOMContentLoaded', function () {
         const bookListContainer = document.getElementById('bookListContainer');
         const paginationContainer = document.getElementById('paginationContainer');
@@ -65,7 +64,7 @@
         const input = `{{key}}`;
 
         const fetchData = async (page) => {
-            const response = await fetch(`/book/search/paginate?inputName=${input}&page=${page}`, {
+            const response = await fetch(`/book/filterAll/paginate?page=${page}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

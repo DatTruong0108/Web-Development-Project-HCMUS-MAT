@@ -1,48 +1,6 @@
 const db=require('../utils/db')
 const Book=require('../models/Book')
 const Category=require('../models/Category')
-const handlebars = require('handlebars');
-
-handlebars.registerHelper('currentPage', function() {
-    return this.currentPage;
-});
-
-
-handlebars.registerHelper('subtractOne', function(value) {
-    const page = value;
-    const pageNumber = parseInt(page.split('=')[1], 10);
-    if(pageNumber == 1){
-        return value;
-    }
-    const prePage = pageNumber - 1;
-    const rs = 'page=' + prePage
-
-    return rs;
-})
-
-handlebars.registerHelper('addinOne', function(value, totalPages) {
-    const page = value;
-    const pageNumber = parseInt(page.split('=')[1], 10);
-    if(pageNumber == totalPages){
-        return value;
-    }
-    const nextPage = pageNumber + 1;
-    const rs = 'page=' + nextPage
-
-    return rs;
-})
-
-handlebars.registerHelper('range', function (start, end) {
-    const result = [];
-    for (let i = start; i <= end; i++) {
-        result.push(i);
-    }
-    return result;
-});
-
-handlebars.registerHelper('eq', function (a, b) {
-    return a === b;
-});
 
 class CategoryController{
     async index(req,res,next){ 

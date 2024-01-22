@@ -22,20 +22,114 @@ class BookController{
 
     async search(req, res, next) {
         const name = req.body.inputName;
-        // console.log("name: ", name);
-        const book = await Book.getBookByName(name);
-        // console.log("book: ", book);
+       
+        const book1=await Book.searchLike('name',name);
+        const book2=await Book.searchLike('author',name);
+        const book=book1.concat(book2);
+
+        const itemsPerPage=8;
+
         if(book) {
+            const totalPages = Math.ceil(book.length / itemsPerPage);
+            const page = req.query.page || 1;
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const currentPage=1;
+
+            const paginatedBook = book.slice(startIndex, endIndex);
             return res.render('book/searchresultpage', { 
-                book: book,
-                msg: ''
+                book: paginatedBook,
+                totalPages: totalPages,
+                key: name,
+                currentPage: currentPage
             });
         }
-        return res.render('book/searchresultpage', { 
-            book: undefined,
-            msg: 'No book found'
+        else{
+           return res.send("No book found");
+        }     
+    }
+
+    async paginateSearchResults(req, res, next) {
+        const name = req.query.inputName;
+        const book1 = await Book.searchLike('name', name);
+        const book2 = await Book.searchLike('author', name);
+        const book = book1.concat(book2);
+    
+        const itemsPerPage = 8;
+        const totalPages = Math.ceil(book.length / itemsPerPage);
+    
+        const page = req.query.page || 1;
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+       
+    
+        const paginatedBook = book.slice(startIndex, endIndex);
+    
+        res.json({
+            book: paginatedBook,
+            totalPages: totalPages,
+            currentPage: page
         });
     }
+
+    async filterAllPaginate(req, res, next) {
+        const book = await Book.getAll();
+
+        const itemsPerPage = 8;
+        const totalPages = Math.ceil(book.length / itemsPerPage);
+
+        const page = req.query.page || 1;
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+
+        const paginatedBook = book.slice(startIndex, endIndex);
+
+        res.json({
+            book: paginatedBook,
+            totalPages: totalPages,
+            currentPage: page
+        });
+    }
+
+    async filterAll(req, res, next) {
+        const book = await Book.getAll();
+
+        const itemsPerPage = 8;
+        const totalPages = Math.ceil(book.length / itemsPerPage);
+        const page = req.query.page || 1;
+        const currentPage = 1;
+
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+
+        const paginatedBook = book.slice(startIndex, endIndex);
+        return res.render('book/filterall', {
+            book: paginatedBook,
+            totalPages: totalPages,
+            currentPage: currentPage
+        });
+    }
+
+    // async filterAuthorIndex(req, res, next) {
+    //     const authors = await Book.getAllAuthors();
+
+    //     const itemsPerPage = 8;
+    //     const page = req.query.page || 1;
+    //     const startIndex = (page - 1) * itemsPerPage;
+    //     const endIndex = startIndex + itemsPerPage;
+    
+    //     const book = await Book.getAll();
+    //     const totalPages = Math.ceil(book.length / itemsPerPage);
+    
+    //     const paginatedBook = book.slice(startIndex, endIndex);
+
+    //     res.render('book/filterauthor', {
+    //         authors: authors,
+    //         book: paginatedBook,
+    //         totalPages: totalPages,
+    //         currentPage: page
+    //     });
+    // }
 }
 
 module.exports=new BookController;
