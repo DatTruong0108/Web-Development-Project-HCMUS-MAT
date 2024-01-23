@@ -148,4 +148,62 @@ module.exports={
             }
         }
     },
+
+    /*Admin CRU category*/
+    insertCategory: async (tbName, cateName, id) => {
+        let dbcn = null;
+        try {
+            dbcn = await db.connect();
+            const query = `
+                INSERT INTO "Category" (id, name)
+                VALUES($1, $2) RETURNING *;
+            `;
+            const values = [id, cateName];
+            const result = await db.one(query, values);
+
+            return result;
+        } catch (error) {
+            throw error;
+        } finally {
+            if (dbcn) {
+                dbcn.done();
+            }
+        }
+    },
+
+    deleteCategory: async (tbName, id) => {
+        let dbcn = null;
+        try {
+            dbcn = await db.connect();
+            const query = `DELETE FROM $1:name WHERE id = $2 RETURNING *;`;
+            const values = [tbName, id];
+            const result = await db.one(query, values);
+
+            return result;
+        } catch (error) {
+            throw error;
+        } finally {
+            if (dbcn) {
+                dbcn.done();
+            }
+        }
+    },
+
+    editCategory: async (tbName, cateName, id) => {
+        let dbcn = null;
+        try {
+            dbcn = await db.connect();
+            const query = `UPDATE $1:name SET name=$2 WHERE id = $3 RETURNING *;`;
+            const values = [tbName, cateName, id];
+            const result = await db.one(query, values);
+
+            return result;
+        } catch (error) {
+            throw error;
+        } finally {
+            if (dbcn) {
+                dbcn.done();
+            }
+        }
+    },
 }
