@@ -37,6 +37,12 @@ module.exports = class Account {
     }
     static async addCustomer(signUpInfor, id){
         try {
+            if(signUpInfor.dob == null){
+                await db.query(`INSERT INTO "Customer"(
+                    "customer_id", "fullname", "email", "gender", "address", "avatar")
+                    VALUES (${id}, '${signUpInfor.fullname}','${signUpInfor.email}','${signUpInfor.gender}', '${signUpInfor.address}', '${signUpInfor.avatar}');`);
+                return true;
+            }
             await db.query(`INSERT INTO "Customer"(
                                 "customer_id", "fullname", "dob", "email", "gender", "address", "avatar")
                                 VALUES (${id}, '${signUpInfor.fullname}','${signUpInfor.dob}','${signUpInfor.email}','${signUpInfor.gender}', '${signUpInfor.address}', '${signUpInfor.avatar}');`);

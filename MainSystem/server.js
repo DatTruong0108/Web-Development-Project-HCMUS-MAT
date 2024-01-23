@@ -113,6 +113,8 @@ app.use(cookieParser());
 
 const passportConfig = require('./configs/PassportConfig');
 passportConfig(app);
+const passportGoogle = require('./configs/PassportGGConfig');
+passportGoogle(app);
 
 const credentials = {
     key: process.env.PRIVATE_KEY,
