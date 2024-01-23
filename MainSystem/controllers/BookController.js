@@ -110,26 +110,51 @@ class BookController{
         });
     }
 
-    // async filterAuthorIndex(req, res, next) {
-    //     const authors = await Book.getAllAuthors();
+    async filterAuthorIndex(req, res, next) {
+        console.log("filter author index")
+        const authors = await Book.getAllAuthors();
+        const author = authors[0].author;
+        const itemsPerPage = 12;
+        const currentPageReq = req.params.page || 1;
+        const currentPage = 'page=' + currentPageReq;
 
-    //     const itemsPerPage = 8;
-    //     const page = req.query.page || 1;
-    //     const startIndex = (page - 1) * itemsPerPage;
-    //     const endIndex = startIndex + itemsPerPage;
-    
-    //     const book = await Book.getAll();
-    //     const totalPages = Math.ceil(book.length / itemsPerPage);
-    
-    //     const paginatedBook = book.slice(startIndex, endIndex);
+        // const books = await Book.getAllWithPagination(currentPage, itemsPerPage);
+        // const totalBooks = await Book.getCount();
+        const books = await Book.getBookByAuthorWithPagination(author, currentPage, itemsPerPage);
+        const totalBooks = await Book.getCountByAuthor(author);
+        const totalPages = Math.ceil(totalBooks / itemsPerPage);
+        const authorname = "";
 
-    //     res.render('book/filterauthor', {
-    //         authors: authors,
-    //         book: paginatedBook,
-    //         totalPages: totalPages,
-    //         currentPage: page
-    //     });
-    // }
+        res.render('book/filterauthor', { authors, books, currentPage, totalPages, authorname });
+    }
+
+    async filterAuthor(req, res, next) {
+        console.log("go into filter author");
+        try {
+            const authorName = req.params.authorname;
+
+            if(authorName === "") {
+                const itemsPerPage = 12;
+                const currentPage = req.params.page || 1;
+                const books = await Book.getAllWithPagination(currentPage, itemsPerPage);
+                const totalBooks = await Book.getCount();
+                const totalPages = Math.ceil(totalBooks / itemsPerPage);
+
+                return res.json({ books, totalPages });
+            }
+            else {
+                const itemsPerPage = 12;
+                const currentPage = req.params.page || 1;
+                const books = await Book.getBookByAuthorWithPagination(authorName, currentPage, itemsPerPage);
+                const totalBooks = await Book.getCountByAuthor(authorName);
+                const totalPages = Math.ceil(totalBooks / itemsPerPage);
+
+                return res.json({ books, totalPages, currentPage });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 }
 
 module.exports=new BookController;

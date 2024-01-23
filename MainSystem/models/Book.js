@@ -149,4 +149,45 @@ module.exports=class Book{
             throw error;
         }
     }
+
+    static async getBookByAuthorWithPagination(author, currentPage, itemsPerPage) {
+        try {
+            if (currentPage && typeof currentPage === 'string') {
+                currentPage = parseInt(currentPage.split("=")[1], 10);
+            } else {
+                currentPage = 1; // Giá trị mặc định nếu không có hoặc không phải là chuỗi
+            }
+    
+            const offset = (currentPage - 1) * itemsPerPage;
+            const query = `
+                SELECT *
+                FROM "Book"
+                WHERE "author" = $1
+                OFFSET $2
+                LIMIT $3;
+            `;
+    
+            const data = await db.any(query, [author, offset, itemsPerPage]);
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async getCountByAuthor(author) {
+        try {
+            const query = `
+                SELECT COUNT(*)
+                FROM "Book"
+                WHERE "author" = $1;
+            `;
+    
+            const result = await db.one(query, [author]);
+            const count = parseInt(result.count, 10);
+    
+            return count;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
