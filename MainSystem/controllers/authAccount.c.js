@@ -5,7 +5,7 @@ require('dotenv').config();
 const passport = require ('passport');
 
 module.exports = {
-    passportGoogle: async (req, res, next) => {
+    getPassport: async (req, res, next) => {
         req.logIn(req.user,async function(err) {
             if (err) {
               return res.redirect('/account/signin');
