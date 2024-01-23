@@ -38,84 +38,115 @@ class HomeController {
     }
 
     async profile(req, res, next) {
-        res.render('profilepage');
-    }
+        let username;
+        let role;
+        const token = req.cookies.token;
 
-
-
-    /* Admin CRU Category*/
-    async adminCate(req,res,next){ 
-        const categories=await Category.getAll();
+        // Lấy token từ cookie
+        jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: "Token không hợp lệ." });
+            } else {
+                username = decoded.username;
+                role=decoded.role;
+            }
+        });
         
-        res.render('admincategorypage',{categories});
-    }
-
-    async adminAddCatePage(req,res,next){         
-        res.render('adminaddcategorypage');
-    }
-
-    async adminAddCategory(req,res,next){ 
-        try {
-            const {name} = req.body;
-            const cateNew = name;
-            const existingCategoryId = await Category.getCatIDByName(cateNew);
-
-            if (existingCategoryId) {
-                //Nếu đã tồn tại tên này thì không thêm
-                res.status(400).json({ error: 'Category with this name already exists' });
-                return;
-            }
-
-            const newCategory = await Category.insert(cateNew );
-            res.redirect('/admin/category');
-        } catch (error) {
-            console.error('Error adding category:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
+        const account = await Account.findAccount(username);
+        if (!account) {
+            res.clearCookie('token');
+            return res.redirect('/');
         }
+
+        let fullname, birthday, email, gender, address, avatar
+        const customer = await Account.findCustomer(account.ID);
+        fullname = customer.fullname;
+        birthday = new Date(customer.dob);
+        var year = birthday.getFullYear();
+        var month = birthday.getMonth() + 1; 
+        var day = birthday.getDate();
+        birthday = `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}/${year}`;
+        email = customer.email;
+        gender = customer.gender;
+        address = customer.address;
+        avatar = customer.avatar;
+
+        res.render('profilepage', {fullname, birthday, email, gender, address, avatar, user:account, role: role });    
     }
 
-    async adminDeleteCate(req,res,next){ 
-        const {id} = req.params;
+    async profileEdit(req, res, next) {
+        let username;
+        let role;
+        const token = req.cookies.token;
 
-        try {
-            const rs = await Category.deleteCateByID(id);
-           
-            if(rs) {
-                res.redirect('/admin/category');
+        // Lấy token từ cookie
+        jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: "Token không hợp lệ." });
             } else {
-                res.status(404).json({ error: 'Category not found' });
+                username = decoded.username;
+                role=decoded.role;
             }
-        } catch (error) {
-            console.error('Error deleting category:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
+        });
+        
+        const account = await Account.findAccount(username);
+        if (!account) {
+            res.clearCookie('token');
+            return res.redirect('/');
         }
+
+        let fullname, birthday, email, gender, address, avatar
+        const customer = await Account.findCustomer(account.ID);
+        fullname = customer.fullname;
+        birthday = new Date(customer.dob);
+        var year = birthday.getFullYear();
+        var month = birthday.getMonth() + 1; 
+        var day = birthday.getDate();
+        birthday = `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}/${year}`;
+        email = customer.email;
+        gender = customer.gender;
+        address = customer.address;
+        avatar = customer.avatar;
+
+        res.render('editprofilepage', {fullname, birthday, email, gender, address, avatar, user:account, role: role });    
     }
 
-    async adminEditCategory(req,res,next){ 
-        const {name} = req.body;
-        const cateName = name;
-        const {id} = req.params;
+    async profileUpload(req, res, next) {
+        let username;
+        let role;
+        const token = req.cookies.token;
 
-        try {
-            const rs = await Category.editCateByID(cateName, id);
-           
-            if(rs) {
-                res.redirect('/admin/category');
+        // Lấy token từ cookie
+        jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: "Token không hợp lệ." });
             } else {
-                res.status(404).json({ error: 'Category not found' });
+                username = decoded.username;
+                role=decoded.role;
             }
-        } catch (error) {
-            console.error('Error deleting category:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
+        });
+        
+        const account = await Account.findAccount(username);
+        if (!account) {
+            res.clearCookie('token');
+            return res.redirect('/');
         }
+
+        let fullname, birthday, email, gender, address, avatar
+        const customer = await Account.findCustomer(account.ID);
+        fullname = customer.fullname;
+        birthday = new Date(customer.dob);
+        var year = birthday.getFullYear();
+        var month = birthday.getMonth() + 1; 
+        var day = birthday.getDate();
+        birthday = `${day < 10 ? '0' : ''}${day}-${month < 10 ? '0' : ''}${month}-${year}`;
+        email = customer.email;
+        gender = customer.gender;
+        address = customer.address;
+        avatar = customer.avatar;
+
+        res.render('profilepage', {fullname, birthday, email, gender, address, avatar, user:account, role: role });    
     }
-
-    async adminEditCatePage(req,res,next){ 
-        const {id} = req.query;
-        const cateName = await Category.getCatNameByID(id);
-
-        res.render('admineditcategorypage', {id, cateName});
-    } 
 }
 
 module.exports = new HomeController;

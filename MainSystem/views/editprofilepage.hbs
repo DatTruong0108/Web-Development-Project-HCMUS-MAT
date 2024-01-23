@@ -1,0 +1,72 @@
+<h1 class="profile-title mt-5">Upload Profile</h1>
+<div class="container" style="width: 600px;">
+    <div class="card card-list mt-4 mb-5">
+        <form action="/profile/upload" method="post" enctype="application/json">
+            <div class="container mt-4" style="width: 200px; height: 300px; align-items: center; justify-content: center;">
+                <img id="currentImage" src="{{avatar}}" class="card-img-top" alt="" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+            <div class="container mb-5 " style="width: 500px;">
+                <div class="mb-4 ml-5 mr-5">
+                    <label for="formFile" class="form-label">Choose image</label>
+                    <input class="form-control" type="file" id="img">
+                </div>    
+                <div class="mb-4 mt-4 ml-5 mr-5">
+                    <label for="fullname" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="fullname" name="fullname" value="{{fullname}}">
+                </div>
+                <div class="mb-4 mt-4 ml-5 mr-5">
+                    <label for="birthday" class="form-label">Birthday</label>
+                    <input id="birthday" name="birthday" class="form-control" placeholder="Date of Birth" type="date" value="{{birthday}}">
+                </div>
+                <div class="mb-4 mt-4 ml-5 mr-5">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="email" name="email" value="{{email}}">
+                </div>
+                <div class="mb-4 mt-4 ml-5 mr-5">
+                    <label for="gender" class="form-label">Gender</label><br>
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected value="{{gender}}"> {{gender}}</option>
+                        <option value="male">male</option>
+                    </select>
+                </div>
+                <div class="mb-4 mt-4 ml-5 mr-5">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" name="address" value="{{address}}">
+                </div>
+            </div>
+            <div class="container text-center mb-5">
+                <button type="submit" class="btn btn-block btn-upload mx-auto">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {      
+        var inputImage = document.getElementById('img'); // Lấy thẻ input chứa ảnh      
+        var currentImage = document.getElementById('currentImage'); // Lấy thẻ hiển thị ảnh hiện tại
+
+        inputImage.addEventListener('change', function () {
+            var file = inputImage.files[0];     // Đọc đường dẫn của tập tin hình ảnh
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                currentImage.src = e.target.result; //Cập nhật
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        });
+
+     
+        var birthdayValue = "{{birthday}}";
+        if (birthdayValue) {
+            var [day, month, year] = birthdayValue.split("/");
+            var formattedBirthday = `${year}-${month}-${day}`;
+            document.getElementById('birthday').valueAsDate = new Date(formattedBirthday);
+        }
+    });
+</script>
+
+
