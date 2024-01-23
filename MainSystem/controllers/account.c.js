@@ -3,57 +3,11 @@ const bcryptH = require('../helpers/bcrypt.h');
 const jwt = require('jsonwebtoken')
 require('dotenv').config();
 const passport = require ('passport');
+
 module.exports = {
-    getLogin: async (req, res, next) => {
-        try {
-            const token = req.cookies.token; // Lấy token từ cookie
-            if (token) {
-                return res.redirect('/');
-            }
-            res.render('signin');
-        } catch (error) {
-            return new Error('Error get login');
-        };
+    getLogin: (req, res, next) => {
+        res.render('signin')
     },
-
-    home: async (req, res, next) => {
-        try {
-            const token = req.cookies.token; // Lấy token từ cookie
-            let username;
-            if (!token) {
-                return res.redirect('/signin');
-            }
-            jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
-                if (err) {
-                    return res.status(401).json({ message: "Token không hợp lệ." });
-                } else {
-                    username = decoded.username;
-                }
-            });
-            const account = await Account.findAccount(username);
-            if(!account){
-                req.logout(function(err) {
-                    if (err) {
-                      // Handle error
-                      console.error(err);
-                      return res.json({ success: false, message: "Error logging out" });
-                    }
-                    res.clearCookie('token');
-                    return res.redirect('/');
-                });
-            }
-            var user = await Account.findAdmin(account.ID);
-            if(user){
-                return res.render('empty', {role:"admin"});
-            }
-            
-            user = await Account.findCustomer(account.ID);
-            return res.render('empty', {role:"customer"});
-        } catch (error) {
-            return new Error('Error get login');
-        };
-    },
-
     getSignup: async (req, res, next) => {
         try {
             const token = req.cookies.token; // Lấy token từ cookie
@@ -103,31 +57,6 @@ module.exports = {
             next(error);
         };
     },
-    postSignin: async (req, res, next) => {
-        try{
-            // const { username, password } = req.body;
-            // const user= await Account.findUser(username);
-            // if (!user){
-            //     return res.json({ isValid: false, message: "Tên đăng nhập không tồn tại." });
-            // }
-            // let isPasswordValid =await bcryptH.check(password, user.password);
-            // if (!isPasswordValid) {
-            // return res.json({ isValid: false, message: "Mật khẩu không chính xác." });
-            // }
-            console.log("===");
-            const user = req.user;
-            const token_auth=jwt.sign({username:user.username},process.env.SECRET_KEY, { expiresIn: 600});
-            //res.cookie('token',token_auth,{maxAge:60000, httpOnly:true });
-            return res.json({
-                isValid: true, 
-                message: "thanh cong",
-                token: undefined,
-            })
-        }
-        catch (error){
-            next(error);
-        }
-    },
     postPassport: (req,res, next) => {
         passport.authenticate('local', async function(err, user, info) {
           if (err) {
@@ -136,12 +65,22 @@ module.exports = {
           if (!user) {
             return res.json({ isValid: false, message: info.message });
           }
-          req.logIn(user, function(err) {
+          req.logIn(user,async function(err) {
             if (err) {
               return res.json({ isValid: false, message: "Lỗi hệ thống khi đăng nhập" });
             }
-            const token = jwt.sign({ username: user.username }, process.env.SECRET_KEY, { expiresIn: 600 });
-            res.cookie('token', token, { maxAge: 600000, httpOnly: true }); // Set maxAge in milliseconds
+            console.log(user);
+            const admin = await Account.findAdmin(user.ID);
+            const us=  await Account.findCustomer(user.ID);
+            var token;
+            if (admin){
+                 token = jwt.sign({ username: user.username,role:"admin" }, process.env.SECRET_KEY,{expiresIn: 86400000});
+            }
+            else if (us) {
+                 token = jwt.sign({ username: user.username,role:"user" }, process.env.SECRET_KEY,{expiresIn: 86400000});
+            }
+           
+            res.cookie('token', token, { maxAge: 86400000, httpOnly: true }); // Set maxAge in milliseconds
             return res.json({
               isValid: true,
               message: "Đăng nhập thành công",
@@ -149,15 +88,14 @@ module.exports = {
           });
         })(req, res);
       },
+
     getSignOut: async (req, res, next) =>{
-        req.logout(function(err) {
-            if (err) {
-              // Handle error
-              console.error(err);
-              return res.json({ success: false, message: "Error logging out" });
-            }
+        if (req.cookies.token){
             res.clearCookie('token');
-            return res.redirect('/account/signin');
-        });
+            res.redirect('/');
+        }
+        else{
+            res.redirect('/');
+        }
     }
 }

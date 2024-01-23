@@ -4,7 +4,7 @@ const morgan=require('morgan');
 const express=require ('express');
 const {engine}=require('express-handlebars');
 const methodOverride=require("method-override");
-const cookieParser=require("cookie-parser");
+
 const https=require('https');
 const bodyparser = require("body-parser");
 
@@ -108,11 +108,12 @@ app.use(session({
   }));
 
 route(app);
-
+const cookieParser=require("cookie-parser");
 app.use(cookieParser());
 
 const passportConfig = require('./configs/PassportConfig');
 passportConfig(app);
+
 const credentials = {
     key: process.env.PRIVATE_KEY,
     cert: process.env.CERTIFICATE,

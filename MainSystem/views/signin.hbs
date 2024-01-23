@@ -16,6 +16,8 @@
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function() {
         $('#signin-form').on('submit', function(e) {
@@ -24,7 +26,7 @@
             const username = $('#username').val();
             const password = $('#password').val();
             $.ajax({
-                url: 'https://localhost:3003/signin', // Địa chỉ endpoint để kiểm tra validate
+                url: 'https://localhost:3000/account/signin', // Địa chỉ endpoint để kiểm tra validate
                 method: 'POST',
                 data: {
                 username: username,
@@ -35,7 +37,7 @@
                 // Xử lý kết quả trả về từ server sau khi kiểm tra validate
                 if (response.isValid) {
                     // Nếu thông tin hợp lệ, tiến hành đăng ký
-                    window.location.href = 'https://localhost:3003/';
+                    window.location.href = 'https://localhost:3000/';
                 } else {
                     // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
                     $('#form-message').text(response.message);

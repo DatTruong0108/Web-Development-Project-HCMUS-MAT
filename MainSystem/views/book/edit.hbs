@@ -1,0 +1,68 @@
+<div class="container  mt-4">
+    <h3>New Product</h3>
+    <form method="POST" action="/book/{{book.id}}?_method=PUT" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{book.name}}">
+    </div>
+    <div class="form-group">
+        <label for="author">Author</label>
+        <input type="text" class="form-control" id="author" name="author" value="{{book.author}}">
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" class="form-control" id="description" name="description" value="{{book.description}}">
+    </div>
+    <div class="form-group">
+        <label for="price">Price</label>
+        <input type="text" class="form-control" id="price" name="price" value="{{book.price}}">
+    </div>
+     <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input type="number" class="form-control" id="quantity" name="quantity" value="{{book.quantity}}">
+    </div>
+
+    <div class="form-group">
+            <label for="catID">Category</label>
+            <select class="form-control" id="catID" name="catID">
+                <option value={{cate.id}}>{{cate.name}}</option>
+                {{#each categories}}
+                   <option value={{this.id}}>{{this.name}}</option>
+                {{/each}}
+            </select>
+    </div>
+
+    <div class="form-group">
+            <label for="releaseDate">Release Date</label>
+            <input type="date" value="{{book.releaseDate}}" class="form-control" id="releaseDate" name="releaseDate">
+    </div>
+
+    <div class="form-group">
+        <label for="image">Hình ảnh</label>
+        <input type="file" class="form-control" id="image" name="image" value="{{book.image}}"  accept=".png, .jpg" onchange="previewImage(event)">
+        <img class="mt-2" src="/{{book.image}}"  id="preview" style="max-width: 500px; display: block;" alt="Preview">     
+    </div>
+    <div class="form-group text-center">
+            <button type="submit" class="mt-4 btn btn-primary mx-auto">Update</button>
+        </div>
+    </form>
+</div>
+<script>
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('preview');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            preview.src = '';
+            preview.style.display = 'none';
+        }
+    }
+</script>
+
+

@@ -1,0 +1,67 @@
+<div class="container  mt-4">
+    <h3>New Product</h3>
+    <form method="POST" action="/book/store" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" name="name">
+    </div>
+    <div class="form-group">
+        <label for="author">Author</label>
+        <input type="text" class="form-control" id="author" name="author">
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" class="form-control" id="description" name="description">
+    </div>
+    <div class="form-group">
+        <label for="price">Price</label>
+        <input type="text" class="form-control" id="price" name="price">
+    </div>
+     <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input type="number" class="form-control" id="quantity" name="quantity">
+    </div>
+
+    <div class="form-group">
+            <label for="catID">Category</label>
+            <select class="form-control" id="catID" name="catID">
+                {{#each categories}}
+                   <option value={{this.id}}>{{this.name}}</option>
+                {{/each}}
+            </select>
+    </div>
+
+    <div class="form-group">
+            <label for="releaseDate">Release Date</label>
+            <input type="date" class="form-control" id="releaseDate" name="releaseDate">
+    </div>
+
+     <div class="card">
+        <div class="card-header">Hình ảnh</div>
+        <div class="card-body">
+            <div class="form-group">
+               <input type="file" class="form-control-file border" id="image" name="image" multiple>
+            </div>
+        </div>
+    </div>
+    <div class="form-group text-center">
+            <button type="submit" class="mt-4 btn btn-primary mx-auto">Add</button>
+        </div>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+
+   <script>
+    $(function() {
+      $("#image").fileinput({
+        uploadUrl: "",
+        maxFileCount: 5,
+        allowedFileTypes: ['image'],    // allow only images
+        showCancel: true,
+        initialPreviewAsData: true,
+        overwriteInitial: false,
+        theme: 'fa5',
+        dropZoneEnabled: true,
+    })
+  });
+ </script>
