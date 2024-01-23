@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-light align-items-center">
+            <form id="signin-form" name="signin-form">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password">
+                </div>           
+                <div id="form-message"></div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#signin-form').on('submit', function(e) {
+            e.preventDefault(); 
+
+            const username = $('#username').val();
+            const password = $('#password').val();
+            $.ajax({
+                url: 'https://localhost:3000/account/signin', // Địa chỉ endpoint để kiểm tra validate
+                method: 'POST',
+                data: {
+                username: username,
+                password: password,
+                },
+                dataType: 'json',
+                success: function(response) {
+                // Xử lý kết quả trả về từ server sau khi kiểm tra validate
+                if (response.isValid) {
+                    // Nếu thông tin hợp lệ, tiến hành đăng ký
+                    window.location.href = 'https://localhost:3000/';
+                } else {
+                    // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
+                    $('#form-message').text(response.message);
+                }
+                },
+                error: function(xhr, status, error) {
+                    // Xử lý lỗi nếu có
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>

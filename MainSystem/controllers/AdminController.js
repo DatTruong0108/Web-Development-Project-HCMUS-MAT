@@ -14,7 +14,7 @@ class AdminController{
         const totalPages = Math.ceil(totalBooks / itemsPerPage);
         const cateName = "all";
 
-        res.render('admin/showProduct', { catgories,  books, currentPage, totalPages, cateName });
+        res.render('admin/showProduct', { catgories,  books, currentPage, totalPages, cateName,user:req.user, role: req.role });
     }
 
     async getBooksByCategory(req, res, next) {

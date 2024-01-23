@@ -1,7 +1,17 @@
 <nav class="navbar navbar-light bg-light">
   <div class="header__left">
     <img src="/Images/Book.png" alt="Logo" width="40" height="40">
-    <h3 class="mt-2" style="display: inline-block; margin-left: 10px;">SmartBook</h3>
+    {{#if user}}
+       {{#ifE role "admin"}}
+           <h3 class="mt-2" style="display: inline-block; margin-left: 10px;">AdminPage</h3>
+        {{/ifE}}
+
+        {{#ifE role "user"}}
+           <h3 class="mt-2" style="display: inline-block; margin-left: 10px;">SmartBook</h3>
+        {{/ifE}}
+    {{else}}
+       <h3 class="mt-2" style="display: inline-block; margin-left: 10px;">SmartBook</h3>
+    {{/if}}
   </div>
 
   <div class="mx-auto order-0 ">
@@ -17,18 +27,50 @@
   </div>
 
   <div class="header__right order-2">
-    <img class="mr-2" src="/Images/cart.png" alt="Logo" width="30" height="30">
-    <button type="button" class="btn btn-warning btn-signin">Sign In</button>
+    <img  id="cartImage" class="mr-2 pointer" src="/Images/cart.png" alt="Logo" width="30" height="30">
+    {{#if user}}
+        <button type="button" class="btn btn-warning btn-signin"><a style="color: #ffffff;" href="/account/signout">Sign Out</a></button>
+    {{else}}
+      <button type="button" class="btn btn-warning btn-signin"><a style="color: #ffffff;" href="/account/signin">Sign In</a></button>
+    {{/if}}
   </div>
 </nav>
 
 <nav class="navbar navbar-expand-lg" style="background-color: #FAE6D4;">
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav mx-auto">
-      <a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-      <a class="nav-item nav-link" href="/category">Category</a>
-      <a class="nav-item nav-link" href="#">Order History</a>
-      <a class="nav-item nav-link" href="#">Profile</a>
+      {{#if user}}
+       {{#ifE role "admin"}}
+        <a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link" href="/admin/showProducts">Products</a>
+        <a class="nav-item nav-link" href="#">Categories</a>
+        <a class="nav-item nav-link" href="#">Users</a>
+        <a class="nav-item nav-link" href="#">Orders</a>
+        <a class="nav-item nav-link" href="#">Revenue</a>
+        <a class="nav-item nav-link" href="#">Profile</a>
+        {{/ifE}}
+
+        {{#ifE role "user"}}
+        <a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link" href="/category">Category</a>
+       <a class="nav-item nav-link" href="#">Order History</a>
+       <a class="nav-item nav-link" href="#">Profile</a>
+        {{/ifE}}
+     {{else}}
+        <a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link" href="/category">Category</a>
+       <a class="nav-item nav-link" href="#">Order History</a>
+       <a class="nav-item nav-link" href="#">Profile</a>
+    {{/if}}
+      
     </div>
   </div>
 </nav>
+
+<script>
+  console.log(`{{admin.fullname}}`);
+  document.getElementById('cartImage').addEventListener('click', function(){
+    const destinationURL = '/cart';
+    window.location.href = destinationURL;
+  });
+</script>

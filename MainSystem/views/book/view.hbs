@@ -12,7 +12,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                        <p style="font-size: 2em;"><strong>{{book.price}}</strong></p>
                        <div class="btn-group">
-                        <button style="background-color: #ba3838;;" class="btn-add-to-cart btn ">Add to Cart</button>
+                        <button style="background-color: #ba3838;;" class="btn-add-to-cart btn " onclick="addToCart('{{book.id}}')">Add to Cart</button>
                         <button style="background-color: #ba3838;;" class="btn-add-to-cart btn ">Buy Now</button>
                        </div>         
                     </div>
@@ -67,3 +67,72 @@
     <span class="sr-only">Next</span>
   </a>
 </div>  
+
+<script>
+  function parsePrice(priceString) {
+    return parseFloat(priceString.replace('$', ''));
+  }
+
+  // Hàm thêm sản phẩm vào giỏ hàng
+  function addToCart(bookId) {
+    let productName = "{{book.name}}";
+    let productImage = "/{{book.image}}";
+    let productPrice = parsePrice("{{book.price}}"); // Chuyển giá thành số thực
+
+    // Lấy giỏ hàng từ cookies
+    let cartString = getCookie("cart") || '[]';
+
+    // Giải mã HTML entities trước khi thực hiện JSON.parse
+    let decodedCartString = decodeEntities(cartString);
+
+    // Thực hiện JSON.parse với chuỗi đã giải mã
+    let cart = JSON.parse(decodedCartString);
+
+    // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
+    let existingProductIndex = cart.findIndex(product => product.id === bookId);
+
+    if (existingProductIndex !== -1) {
+      // Nếu sản phẩm đã tồn tại, tăng số lượng lên
+      cart[existingProductIndex].quantity++;
+      cart[existingProductIndex].total = cart[existingProductIndex].quantity * productPrice;
+    } else {
+      // Nếu sản phẩm chưa tồn tại, thêm mới vào giỏ hàng
+      var newProduct = {
+        id: bookId,
+        name: productName,
+        image: productImage,
+        price: productPrice,
+        quantity: 1,
+        total: productPrice * 1
+      };
+      cart.push(newProduct);
+    }
+
+    // Lưu giỏ hàng vào cookies
+    setCookie("cart", JSON.stringify(cart));
+
+    // Thông báo thành công
+    alert("Product added to cart!");
+  }
+
+  // Hàm lấy giá trị của cookie
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      return decodeURIComponent(parts.pop().split(';').shift());
+    }
+  }
+
+  function setCookie(name, value) {
+    const encodedValue = encodeURIComponent(value);
+    document.cookie = `${name}=${encodedValue}; path=/`;
+  }
+
+  // Hàm giải mã HTML entities
+  function decodeEntities(encodedString) {
+    const textArea = document.createElement('textarea');
+    textArea.innerHTML = encodedString;
+    return textArea.value;
+  }
+</script>

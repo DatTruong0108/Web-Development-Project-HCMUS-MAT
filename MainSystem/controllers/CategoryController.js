@@ -29,18 +29,18 @@ class CategoryController{
                 const totalBooks = await Book.getCount();
                 const totalPages = Math.ceil(totalBooks / itemsPerPage);
     
-                return res.json({ books, totalPages });
+                return res.json({ books, totalPages, currentPage });
             } else {
                 cateID = await Category.getCatIDByName(cateName);
             }
     
             const currentPage = req.params.page || 1;
-            const itemsPerPage = 3;
+            const itemsPerPage = 6;
     
             const books = await Book.getBookByIDCategoryWithPagination(cateID, currentPage, itemsPerPage);
             const totalBooks = await Book.getCountByCategory(cateID);
             const totalPages = Math.ceil(totalBooks / itemsPerPage);
-    
+
             res.json({ books, totalPages, currentPage });
         } catch (error) {
             res.status(500).json({ error: error.message });
