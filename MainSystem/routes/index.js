@@ -4,7 +4,7 @@ const bookRouter=require('./book');
 const adminRouter=require('./admin')
 const cartRouter = require('./cart');
 const accRouter = require('./account.r')
-
+const authRouter = require('./authAccount.r');
 
 function route(app){
     app.use('/',homeRouter);
@@ -13,6 +13,7 @@ function route(app){
     app.use('/admin',adminRouter);
     app.use('/cart', cartRouter);
     app.use('/account', accRouter);
+    app.use('/account/auth', authRouter);
 }
 
 module.exports=route;
