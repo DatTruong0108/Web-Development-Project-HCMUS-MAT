@@ -39,7 +39,7 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
                         <li class="page-item">
-                            <a class="page-link custom-pagination-background custom-page-number" href="javascript:void(0);" onclick="categoryType('{{cateName}}', '{{subtractOne currentPage}}')">
+                            <a class="page-link custom-pagination-background custom-page-number" href="javascript:void(0);">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
@@ -53,7 +53,7 @@
                             </li>
                         {{/each}}
                         <li class="page-item">
-                            <a class="page-link custom-pagination-background custom-page-number" href="javascript:void(0);" onclick="categoryType('{{cateName}}', '{{addinOne currentPage totalPages}}')">
+                            <a class="page-link custom-pagination-background custom-page-number" href="javascript:void(0);">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
@@ -164,9 +164,9 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        const currentPage = '{{currentPage}}';
+        {{!-- const currentPage = '{{currentPage}}';
         const totalPages = '{{totalPages}}';
-        
+         --}}
         document.querySelectorAll('.page-link').forEach(link => {
             link.addEventListener('click', function(event) {
                 event.preventDefault();
@@ -175,7 +175,7 @@
             });
         });
 
-        // Thêm xử lý sự kiện cho nút "Previous"
+        {{!-- // Thêm xử lý sự kiện cho nút "Previous"
         const prevButton = document.querySelector('.pagination .page-item:first-child .page-link');
         prevButton.addEventListener('click', function(event) {
             event.preventDefault();
@@ -187,7 +187,7 @@
         nextButton.addEventListener('click', function(event) {
             event.preventDefault();
             categoryType('{{cateName}}', addinOne(currentPage, totalPages));
-        });
+        }); --}}
     });
 
     function subtractOne(currentPage) {

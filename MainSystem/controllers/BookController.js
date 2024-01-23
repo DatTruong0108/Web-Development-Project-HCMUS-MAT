@@ -73,21 +73,17 @@ class BookController{
     }
 
     async filterAllPaginate(req, res, next) {
-        const book = await Book.getAll();
-
         const itemsPerPage = 8;
-        const totalPages = Math.ceil(book.length / itemsPerPage);
-
-        const page = req.query.page || 1;
-        const startIndex = (page - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-
-        const paginatedBook = book.slice(startIndex, endIndex);
+        const page = req.params.page || 1;
+        const books = await Book.getAllWithPagination(page, itemsPerPage);
+        const totalBooks = await Book.getCount();
+        const totalPages = Math.ceil(totalBooks / itemsPerPage);
+        const currentPage = parseInt(page.split("=")[1], 10);
 
         res.json({
-            book: paginatedBook,
+            book: books,
             totalPages: totalPages,
-            currentPage: page
+            currentPage: currentPage
         });
     }
 

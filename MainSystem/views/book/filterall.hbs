@@ -34,7 +34,7 @@
                 </li>
                 {{#each (range 1 totalPages)}}
                 <li class="page-item">
-                    <a class="page-link custom-pagination-background custom-page-number" href="#">{{this}}</a>
+                    <a class="page-link custom-pagination-background custom-page-number" href="javascript:void(0);">{{this}}</a>
                 </li>
                 {{/each}}
                 <li class="page-item">
@@ -47,47 +47,37 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    function bookPagin(page = 1){
+        const url = `/book/filterAll/page/page=${page}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                // Cập nhật danh sách sách trên trang
+                updateBookList(data.book);
+
+                // Cập nhật phân trang
+                updatePagination(data.totalPages, data.currentPage);
+
+                // Cập nhật đường dẫn mà không load lại trang
+                const newUrl = `/book/filterAll/page/page=${page}`;
+                history.pushState({ page: page }, '', newUrl);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function updateBookList(books) {
         const bookListContainer = document.getElementById('bookListContainer');
-        const paginationContainer = document.getElementById('paginationContainer');
 
-        {
-            {
-                !--paginationContainer.addEventListener('click', function (event) {
-                    if (event.target.tagName === 'A' && event.target.closest('#paginationContainer')) {
-                        event.preventDefault();
-                        const page = event.target.textContent;
-                        fetchData(page);
-                    }
-                }); --}
+        // Xóa tất cả các phần tử con trong container
+        while (bookListContainer.firstChild) {
+            bookListContainer.removeChild(bookListContainer.firstChild);
         }
-        const input = `{{key}}`;
 
-        const fetchData = async (page) => {
-            const response = await fetch(`/book/filterAll/paginate?page=${page}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                console.error('Error fetching data:', response.statusText);
-                return;
-            }
-
-            const data = await response.json();
-            updateUI(data);
-        };
-
-        const updateUI = (data) => {
-            // Cập nhật danh sách sách và phân trang trên trang
-            bookListContainer.innerHTML = ''; // Xóa nội dung cũ
-            data.book.forEach((book) => {
-                // Hiển thị thông tin sách trong danh sách sách
-                const card = document.createElement('div');
-                card.className = 'col-3 mb-4';
-                card.innerHTML = `
+        // Thêm sách mới vào container
+        books.forEach(book => {
+            const card = document.createElement('div');
+            card.className = 'col-3 mb-4';
+            card.innerHTML = `
                 <div class="card h-100" style="width: 14rem; margin-right: 12px;">
                     <div class="container" style="width: 100%; height: 200px; background-color: #f5f5f5; align-items: center; justify-content: center;">
                         <a href="/book/${book.id}/view">
@@ -104,73 +94,80 @@
                     </div>
                 </div>
             `;
-                bookListContainer.appendChild(card);
-            });
+            bookListContainer.appendChild(card);
+        });
+    }
 
-            paginationContainer.innerHTML = ''; // Xóa nội dung cũ
+    function updatePagination(totalPages, currentPage) {
+        const paginationContainer = document.querySelector('.pagination');
 
-            // Add "previous" link
-            const previousLink = document.createElement('a');
-            previousLink.className = 'page-link custom-pagination-background custom-page-number';
-            previousLink.href = '#';
-            previousLink.innerHTML = '&laquo;';
-            previousLink.addEventListener('click', function (event) {
+        // Xóa tất cả các phần tử con trong container
+        while (paginationContainer.firstChild) {
+            paginationContainer.removeChild(paginationContainer.firstChild);
+        }
+
+        // Thêm nút "Previous"
+        const prevLi = document.createElement('li');
+        prevLi.className = 'page-item';
+        const prevLink = document.createElement('a');
+        prevLink.className = 'page-link custom-pagination-background custom-page-number';
+        prevLink.href = `javascript:void(0);`;
+        prevLink.textContent = '«';
+        const prePage = subtractOne(currentPage)
+        prevLink.onclick = () => bookPagin(prePage);
+        prevLi.appendChild(prevLink);
+        paginationContainer.appendChild(prevLi);
+
+        // Thêm các nút phân trang mới vào container
+        for (let i = 1; i <= totalPages; i++) {
+            const li = document.createElement('li');
+            li.className = 'page-item';
+
+            const link = document.createElement('a');
+            link.className = 'page-link custom-pagination-background custom-page-number';
+            link.href = `javascript:void(0);`;
+            link.textContent = i;
+            link.onclick = () => bookPagin(i);
+
+            li.appendChild(link);
+            paginationContainer.appendChild(li);
+        }
+
+        // Thêm nút "Next"
+        const nextLi = document.createElement('li');
+        nextLi.className = 'page-item';
+        const nextLink = document.createElement('a');
+        nextLink.className = 'page-link custom-pagination-background custom-page-number';
+        nextLink.href = `javascript:void(0);`;
+        nextLink.textContent = '»';
+        nextLink.onclick = () => bookPagin(plusPage(currentPage, totalPages));
+        nextLi.appendChild(nextLink);
+        paginationContainer.appendChild(nextLi);
+    }
+
+    function subtractOne(currentPage) {
+        if(currentPage === 1){
+            return currentPage;
+        }
+        return currentPage - 1;
+    }
+
+    function plusPage(currentPage, totalPages) {
+        if(currentPage === totalPages){
+            return currentPage;
+        }
+        
+        return currentPage + 1;
+    }   
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.page-link').forEach(link => {
+            link.addEventListener('click', function(event) {
                 event.preventDefault();
-                const currentPage = parseInt(data.currentPage);
-                const previousPage = currentPage - 1;
-                if (previousPage >= 1) {
-                    fetchData(previousPage);
-                }
+                const page = this.textContent.trim();
+                bookPagin(page);
             });
-            const previousListItem = document.createElement('li');
-            previousListItem.className = 'page-item';
-            previousListItem.appendChild(previousLink);
-            paginationContainer.appendChild(previousListItem);
-
-            console.log(data.currentPage);
-            for (let i = 1; i <= data.totalPages; i++) {
-                // Tạo các liên kết phân trang và thêm vào paginationContainer
-                const pageLink = document.createElement('a');
-                pageLink.className = 'page-link custom-pagination-background custom-page-number';
-                pageLink.href = '#';
-                pageLink.textContent = i;
-
-                // Bắt sự kiện click cho liên kết phân trang
-                pageLink.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    fetchData(i);
-                });
-
-                const listItem = document.createElement('li');
-                listItem.className = 'page-item';
-                if (i === parseInt(data.currentPage)) {
-                    listItem.classList.add('active');
-                }
-                listItem.appendChild(pageLink);
-
-                paginationContainer.appendChild(listItem);
-            }
-
-            // Add "next" link
-            const nextLink = document.createElement('a');
-            nextLink.className = 'page-link custom-pagination-background custom-page-number';
-            nextLink.href = '#';
-            nextLink.innerHTML = '&raquo;';
-            nextLink.addEventListener('click', function (event) {
-                event.preventDefault();
-                const currentPage = parseInt(document.querySelector('.page-item.active a').textContent, 10);
-                const nextPage = currentPage + 1;
-                if (nextPage <= data.totalPages) {
-                    fetchData(nextPage);
-                }
-            });
-            const nextListItem = document.createElement('li');
-            nextListItem.className = 'page-item';
-            nextListItem.appendChild(nextLink);
-            paginationContainer.appendChild(nextListItem);
-        };
-
-        fetchData(1);
+        });
     });
 
 </script>
