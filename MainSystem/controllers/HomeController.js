@@ -51,6 +51,9 @@ class HomeController {
 
     // }
 
+    async profile(req, res, next) {
+        res.render('profilepage');
+    }
 
 }
 
