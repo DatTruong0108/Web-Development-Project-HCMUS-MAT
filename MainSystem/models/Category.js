@@ -29,4 +29,38 @@ module.exports=class Category{
             return null;
         }
     };
+
+
+    /* Admin CRU Category*/
+    static async getCatNameByID(cateID){
+        const categories =await db.getAll(tbName);
+        cateID = parseInt(cateID );
+        const category = categories.find(category => category.id === cateID);
+
+        if (category) {
+            return category.name;
+        } else {
+            return null;
+        }
+    };
+
+    static async insert(cateName){
+        const categories =await db.getAll(tbName);
+        const id = categories.length + 1;
+        const rs = await db.insertCategory(tbName, cateName, id);
+
+        return rs;
+    };
+
+    static async deleteCateByID(id){
+        const rs = await db.deleteCategory(tbName, id);
+
+        return rs;
+    };
+
+    static async editCateByID(cateName, id){
+        const rs = await db.editCategory(tbName, cateName, id);
+
+        return rs;
+    };
 }
