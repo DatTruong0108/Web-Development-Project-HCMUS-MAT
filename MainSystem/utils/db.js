@@ -104,6 +104,19 @@ module.exports={
           }
     },
 
+    insert: async(tbName, entity, idName='id')=>{
+        const query=pgp.helpers.insert(entity,null, tbName);
+        const data=await db.one(query+`RETURNING "${idName}"`);
+        return data;
+    }, 
+
+    update: async(tbName,clName,value,primaryKey,key)=>{
+        const result = await db.result(
+          'UPDATE $1:name SET $2:name = $3 WHERE $4:name = $5',
+          [tbName, clName, value,primaryKey,key] 
+      );
+    },
+
     any: async (query, values) => {
         let dbcn = null;
         try {
@@ -132,6 +145,14 @@ module.exports={
                 dbcn.done();
             }
         }
+    },
+
+    delete: async(tbName,primaryKey,key)=>{
+        const result = await db.result(
+          'DELETE FROM $1:name WHERE  $2:name = $3',
+          [tbName,primaryKey,key] // Thay thế bằng giá trị ID của bản ghi bạn muốn xóa
+        );
+        return result;
     },
 
     query: async (query, values) => {

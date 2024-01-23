@@ -1,7 +1,9 @@
 const db=require('../utils/db')
 const Book=require('../models/Book')
-const Category=require('../models/Category')
+const Category=require('../models/Category');
+const path = require('path');
 
+const IMAGE_UPLOAD_PATH='Images\\Books\\';
 
 class BookController{
     async viewDetail(req,res,next){ 
@@ -70,6 +72,85 @@ class BookController{
             totalPages: totalPages,
             currentPage: page
         });
+    }
+
+    async create(req,res,next){
+        const cats=await Category.getAll();
+        res.render('book/create',{categories: cats});
+    }
+
+    async edit (req,res,next){
+        const bookId=req.params.id;
+        const cats=await Category.getAll();
+        const book=await Book.get('id',parseInt(bookId));
+        const currenCat=await Category.get(parseInt(book.catID));
+       
+        console.log(book);
+
+        res.render('book/edit',{book:book, categories: cats, cate: currenCat})
+    }
+
+    async store(req,res,next){
+        const image=req.file;
+        if (!image){
+            return res.status(400).json({ message: 'No image uploaded' });
+        }
+        const imagePath=path.join(IMAGE_UPLOAD_PATH, image.filename);
+        const newBook=new Book({
+            name:req.body.name,
+            author:req.body.author,
+            catID:parseInt(req.body.catID),
+            image:imagePath,
+            price: req.body.price,
+            catID:req.body.catID,
+            description:req.body.description,
+            releaseDate:req.body.releaseDate,
+            sold:0,
+            quantity:parseInt(req.body.quantity)
+        })
+
+        const rs=await Book.insert(newBook);
+        res.redirect('/admin/showProducts');
+    }
+
+    async update(req,res,next){
+        const rs=await Book.get('id',req.params.id);
+        const image = req.file;
+        var imagePath;
+        var date;
+      
+        if (image){
+            imagePath = path.join(IMAGE_UPLOAD_PATH, image.filename);
+        }
+        else{
+            imagePath=rs.image;
+        }
+
+        if (req.body.releaseDate && req.body.releaseDate!=null){
+            date=req.body.releaseDate;
+        }
+        else{
+            date=rs.releaseDate;
+        }
+
+        const newProduct=new Book({
+            name:req.body.name,
+            author:req.body.author,
+            catID:parseInt(req.body.catID),
+            image:imagePath,
+            price: req.body.price,
+            catID:req.body.catID,
+            description:req.body.description,
+            quantity:parseInt(req.body.quantity),
+            releaseDate:date,
+        });
+        const data=await Book.update(newProduct,parseInt(req.params.id));
+        res.redirect('/admin/showProducts');
+    }
+
+    async destroy(req,res,next){
+        const rs=Book.delete(req.params.id);
+        res.redirect('/admin/showProducts');
     }
 }
 

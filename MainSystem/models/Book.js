@@ -3,8 +3,7 @@ const fs = require('fs');
 const tbName='Book';
 
 module.exports=class Book{
-    constructor({id,name,author,catID,image,price,quantity,description,releaseDate,sold}){
-        this.id=id;
+    constructor({name,author,catID,image,price,quantity,description,releaseDate,sold}){
         this.name=name;
         this.author=author;
         this.catID=catID;
@@ -14,6 +13,11 @@ module.exports=class Book{
         this.description=description;
         this.releaseDate=releaseDate;
         this.sold=sold;
+    }
+
+    static async delete(id){
+        const rs=await db.delete(tbName,'id',id);
+        return rs;
     }
    
     static async getAll(){
@@ -31,6 +35,23 @@ module.exports=class Book{
         const data=await db.getMany(tbName,clName,value);
 
         return data;
+    }
+
+    static async insert(book){
+        const rs=await db.insert(tbName,book,'id');
+        return rs;
+    }
+
+    static async update(user,id){
+        let rs=await db.update(tbName,'name',user.name,'id',id);
+        rs=await db.update(tbName,'author',user.author,'id',id);
+        rs=await db.update(tbName,'description',user.description,'id',id);
+        rs=await db.update(tbName,'catID',user.catID,'id',id);
+        rs=await db.update(tbName,'price',user.price,'id',id); 
+        rs=await db.update(tbName,'quantity',user.quantity,'id',id);
+        rs=await db.update(tbName,'releaseDate',user.releaseDate,'id',id);
+        rs=await db.update(tbName,'image',user.image,'id',id);
+        return rs;
     }
 
     static async searchLike(clName,_id){

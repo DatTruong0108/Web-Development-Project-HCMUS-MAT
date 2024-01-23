@@ -13,8 +13,8 @@ module.exports=class Category{
         return data;
     };
 
-    static async get(){
-        const data=await db.get(tbName);
+    static async get(value){
+        const data=await db.get(tbName,'id',value);
         return data;
     };
 

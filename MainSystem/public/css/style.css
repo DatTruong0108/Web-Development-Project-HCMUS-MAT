@@ -1,6 +1,9 @@
 .category-bg {
     background-color: #F8F1E8; /* Màu nền mong muốn cho category */
 }
+.app__bodyody{
+    min-height: 100vh;
+}
 
 .roboto-font-size-18 {
     font-family: 'Roboto', sans-serif;
