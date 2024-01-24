@@ -85,13 +85,32 @@ app.engine(
           range: function (start, end) {
               const result = [];
               for (let i = start; i <= end; i++) {
-                  result.push(i);
+                  result.push(i); 
               }
               return result;
           },
       
           eq: function (a, b) {
               return a === b;
+          },
+
+          priceRangeLabel: function (priceRange) {
+            switch (priceRange) {
+              case '0':
+                return 'All';
+              case '1':
+                return '0 - 10.00';
+              case '2':
+                return '10.00 - 20.00';
+              case '3':
+                return '20.00 - 30.00';
+              case '4':
+                return '30.00 - 40.00';
+              case '5':
+                return 'More than 40.00';
+              default:
+                return 'Price Range';
+            }
           }
         }
     })

@@ -5,6 +5,7 @@ const Category=require('../models/Category')
 class CategoryController{
     async index(req,res,next){ 
         const catgories=await Category.getAll();
+        const authors = await Book.getAllAuthors();
         const currentPageReq = req.params.page || 1;
         const currentPage = 'page=' + currentPageReq;
         const itemsPerPage = 9;
@@ -14,7 +15,7 @@ class CategoryController{
         const totalPages = Math.ceil(totalBooks / itemsPerPage);
         const cateName = "all";
 
-        res.render('categorypage', { catgories,  books, currentPage, totalPages, cateName });
+        res.render('categorypage', { catgories, authors, books, currentPage, totalPages, cateName });
     }
 
     async getBooksByCategory(req, res, next) {
