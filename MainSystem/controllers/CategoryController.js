@@ -33,7 +33,7 @@ class CategoryController{
         const totalPages = Math.ceil(totalBooks / itemsPerPage);
         const cateName = "all";
 
-        res.render('categorypage', { catgories,  books, currentPage, totalPages, cateName, user: req.user, role:role });
+        res.render('categorypage', { catgories, authors, books, currentPage, totalPages, cateName, user: req.user, role:role });
     }
 
     async getBooksByCategory(req, res, next) {

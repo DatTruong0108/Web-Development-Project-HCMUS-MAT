@@ -297,6 +297,7 @@ class BookController {
     async filterPrice(req, res, next) {
         try {
             console.log("go into filter price");
+            const authors = await Book.getAllAuthors();
             const priceRange = req.params.priceRange;
             const itemsPerPage = 12;
             const currentPage = req.params.page || 1;
@@ -338,7 +339,7 @@ class BookController {
             const totalBooks = await Book.getCountByPrice(minPrice, maxPrice);
             const totalPages = Math.ceil(totalBooks / itemsPerPage);
 
-            return res.json({ priceRange: req.params.priceRange, books, totalPages, currentPage });
+            return res.json({ priceRange, authorName: undefined, authors, books, totalPages, currentPage });
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
