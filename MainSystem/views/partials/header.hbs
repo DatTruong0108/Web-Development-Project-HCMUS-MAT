@@ -45,6 +45,7 @@
   <div class="header__right order-2">
     <img  id="cartImage" class="mr-2 pointer" src="/Images/cart.png" alt="Logo" width="30" height="30">
     {{#if user}}
+        <img src="/{{avatar}}" alt="User Avatar" class="rounded-circle mr-3 ml-2" width="40" height="40">
         <button type="button" class="btn btn-warning btn-signin"><a style="color: #ffffff;" href="/account/signout">Sign Out</a></button>
     {{else}}
       <button type="button" class="btn btn-warning btn-signin mr-2"><a style="color: #ffffff;" href="/account/signin">Sign In</a></button>

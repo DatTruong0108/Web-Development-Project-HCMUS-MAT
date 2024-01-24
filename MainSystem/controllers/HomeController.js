@@ -13,6 +13,7 @@ class HomeController {
         
         let username;
         let role;
+        let avatar;
         const token = req.cookies.token;
         if (token){
             // Lấy token từ cookie
@@ -30,7 +31,9 @@ class HomeController {
                 res.clearCookie('token');
                 return res.redirect('/');
             }
-            res.render('homepage', { bestSelling: bestSelling, latestRelease: latestRelease,user:account, role: role });    
+            const customer = await Account.findCustomer(account.ID);
+            avatar = customer.avatar;
+            res.render('homepage', { bestSelling: bestSelling, latestRelease: latestRelease,user:account, role: role, avatar });    
         }
         else{          
             res.render('homepage', { bestSelling: bestSelling, latestRelease: latestRelease});
@@ -107,6 +110,7 @@ class HomeController {
         gender = customer.gender;
         address = customer.address;
         avatar = customer.avatar;
+        console.log(avatar);
 
         res.render('editprofilepage', {fullname, birthday, email, gender, address, avatar, user:account, role: role });    
     }
