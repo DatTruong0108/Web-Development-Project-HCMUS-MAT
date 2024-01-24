@@ -71,12 +71,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Modal title</h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -84,13 +79,8 @@
         <p>Bạn chắc chắn muốn xóa sản phẩm này?</p>
       </div>
       <div class="modal-footer">
-        <button id="btn-delete-course" type="button" class="btn btn-danger">Xóa
-          bỏ</button>
-        <button
-          type="button"
-          class="btn btn-secondary"
-          data-dismiss="modal"
-        >Hủy</button>
+        <button id="btn-delete-course" type="button" class="btn btn-danger">Xóa bỏ</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
       </div>
     </div>
   </div>
@@ -106,6 +96,19 @@
         // Set the productId to use when confirming deletion
         productIdToDelete = productId;
     }
+
+    const cancelButton = document.querySelector('.modal .modal-footer .btn-secondary');
+    cancelButton.addEventListener('click', function(event) {
+       event.preventDefault();
+      $('#delete-course-modal').modal('hide');
+    })
+    const closeButton = document.querySelector('.close');
+    closeButton.addEventListener('click', function(event) {
+       event.preventDefault();
+      $('#delete-course-modal').modal('hide');
+    });
+
+
     function categoryType(name, page = 1) {
         const url = `/admin/ajax/${name}/page=${page}`;
         fetch(url)

@@ -5,6 +5,9 @@ const express=require ('express');
 const {engine}=require('express-handlebars');
 const methodOverride=require("method-override");
 const cors = require('cors');
+const passport = require('passport');
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
 const jwt = require('jsonwebtoken');
 
 const https=require('https');
@@ -77,11 +80,43 @@ app.use(session({
     saveUninitialized: true,
   }));
 
-
-
 //route(app);
 const cookieParser=require("cookie-parser");
 app.use(cookieParser());
+
+var cookieExtractor = function(req) {
+  var token = null;
+  if (req && req.cookies) {
+      token = req.cookies['token'];
+  }
+  return token;
+};
+
+const jwtOptions = {
+  jwtFromRequest: cookieExtractor,
+  secretOrKey: process.env.SECRET_KEY,
+};
+
+passport.use(
+  new JwtStrategy(jwtOptions,async (payload, done) => {
+    // Truy vấn người dùng từ payload.sub (ID người dùng) và kiểm tra người dùng
+    // Done(err, user) sẽ trả về user nếu tìm thấy, ngược lại trả về false
+    // Thay thế phần này với logic truy vấn người dùng từ database của bạn
+    const user =await Account.findAccount(payload.username);
+    if (user) {
+      done(null, user);
+    } else {
+      done(null, false);
+    }
+  })
+);
+
+app.use(passport.initialize());
+
+// Route để đảm bảo người dùng đã xác thực
+app.get('/home', passport.authenticate('jwt', { session: false }), (req, res) => {
+  res.send(`Welcome to SmartPay, ${req.user.username}!`);
+});
 
 app.post('/create-account', async (req, res) => {
   const {token} = req.body;
@@ -117,9 +152,7 @@ app.post('/create-account', async (req, res) => {
   }
 });
 
-app.get("/",(req,res,next)=>{
-  res.render('home');
-})
+
 
 const credentials = {
     key: process.env.PRIVATE_KEY,
