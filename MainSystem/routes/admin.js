@@ -9,6 +9,12 @@ const isAuthenticated=require('../middlewares/authenticate')
 
 const AdminController=require('../controllers/AdminController');
 
+route.get('/category/edit', isAuthenticated, AdminController.adminEditCatePage);
+route.get('/category/add', isAuthenticated, AdminController.adminAddCatePage);
+route.get('/category', isAuthenticated, AdminController.adminCate);
+route.post('/category/addNewCategory', isAuthenticated, AdminController.adminAddCategory);
+route.post('/category/delete/:id', isAuthenticated, AdminController.adminDeleteCate);
+route.post('/category/edit/:id', isAuthenticated, AdminController.adminEditCategory);
 route.get('/ajax/:categoryName/:page?',isAuthenticated, AdminController.getBooksByCategory);
 route.get('/showProducts',isAuthenticated, AdminController.showProducts);
 
