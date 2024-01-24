@@ -19,16 +19,7 @@
 
         </div>
     </div>
-    <div class="row justify-content-between mt-4 mr-5">
-        <div class="col-4">
-            <div class="input-group mt-5 voucher">
-                <input type="text" class="form-control" placeholder="Voucher code">
-                <div class="input-group-append">
-                    <button class="btn btn-cart" type="button" id="applyVoucherBtn">Redeem</button>
-                </div>
-            </div>
-        </div>
-
+    <div class="row justify-content-center mt-4 mr-5">
         <div class="col-4">
             <div class="card card-total mt-4">
                 <div class="container">
@@ -45,7 +36,7 @@
                             <p class="checkout-font ml-5">Shipping fee</p>
                         </div>
                         <div class="col-6 text-right">
-                            <p id="shipfree" class="checkout-font mr-5">$2</p>
+                            <p id="shipfree" class="checkout-font mr-5">$0</p>
                         </div>
                     </div>
                     <div class="row">
@@ -66,7 +57,7 @@
                         </div>
                     </div>
                     <div class="row justify-content-center mb-4 ml-5 mr-5">
-                        <button type="button" class="btn btn-block btn-cart">Check out</button>
+                        <button type="button" class="btn btn-block btn-cart"><a style="color: #ffffff;">Check out</a></button>
                     </div>
                 </div>
             </div>
@@ -205,12 +196,36 @@
             });
 
             const subtotal = checkedBooks.reduce((total, book) => total + book.total, 0);
+            setCookie("subtotal", subtotal);
             const total = subtotal + shippingFee;
 
             subtotalDisplay.textContent = `$${subtotal.toFixed(2)}`;
             totalDisplay.textContent = `$${total.toFixed(2)}`;
+
+              // Enable or disable the "Check Out" button based on whether any checkbox is checked
+              const checkOutButton = document.querySelector('.btn-cart a');
+              checkOutButton.disabled = checkedBooks.length === 0;
         }
 
+        // Event listener for the "Check Out" button
+    const checkOutButton = document.querySelector('.btn-cart a');
+    checkOutButton.addEventListener('click', function () {
+        const checkedBooks = cart.filter(book => {
+            const checkbox = bookList.querySelector(`input[value="${book.name}"]`);
+            return checkbox && checkbox.checked; 
+        });
+
+        // Perform the check if at least one checkbox is checked
+        if (checkedBooks.length === 0) {
+            alert('Please select at least one item to check out.');
+            return;
+        }
+
+        // Proceed with the checkout process
+        window.location.href = '/cart/order'; // Redirect to the checkout page
+    });
+
         displayCart();
+        updateSubtotal()
     });
 </script>
