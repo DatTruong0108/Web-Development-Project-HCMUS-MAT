@@ -8,6 +8,12 @@ router.get('/google',
 
 router.get('/google/callback', 
   passport.authenticate('google', { failureRedirect: '/account/login' }),
-  accountController.passportGoogle);
+  accountController.getPassport);
 
+router.get('/facebook',
+  passport.authenticate('facebook'));
+
+router.get('/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/account/login' }),
+  accountController.getPassport);
   module.exports = router;

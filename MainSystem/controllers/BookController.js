@@ -244,7 +244,7 @@ class BookController {
         const books = await Book.getAllWithPagination(currentPage, itemsPerPage);
         const totalBooks = await Book.getCount();
         const totalPages = Math.ceil(totalBooks / itemsPerPage);
-        const price = "";
+        const price = '0';
 
         res.render('book/filterprice', { books, currentPage, totalPages, price });
     }
