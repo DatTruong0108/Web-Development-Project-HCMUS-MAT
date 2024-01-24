@@ -94,6 +94,7 @@
 
         // Lấy giỏ hàng từ cookies
         let cart = getCookie("cart") ? JSON.parse(getCookie("cart")) : [];
+        console.log(cart);
 
         function updateCart() {
             // Lưu giỏ hàng vào cookies
@@ -194,6 +195,8 @@
                 const checkbox = bookList.querySelector(`input[value="${book.name}"]`);
                 return checkbox && checkbox.checked; 
             });
+
+            setCookie("list", JSON.stringify(checkedBooks));
 
             const subtotal = checkedBooks.reduce((total, book) => total + book.total, 0);
             setCookie("subtotal", subtotal);

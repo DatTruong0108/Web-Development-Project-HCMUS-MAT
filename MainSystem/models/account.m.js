@@ -35,6 +35,17 @@ module.exports = class Account {
             throw error;
         };
     }
+    static async addPayAccount(signUpInfor) {
+        try {
+            let newId =parseInt(signUpInfor.id)
+            await db.query(`INSERT INTO "payAccount"(
+                                "id", "balance")
+                                VALUES (${newId}, '${signUpInfor.balance}');`);
+            return newId;
+        } catch (error) {
+            throw error;
+        };
+    }
     static async addCustomer(signUpInfor, id){
         try {
             if(signUpInfor.dob == null){

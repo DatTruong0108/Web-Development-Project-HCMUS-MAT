@@ -40,12 +40,12 @@ class CartController{
     async store(req,res,next){
         const user=req.user;
         console.log(user);
-        const cart=JSON.parse(req.cookies.cart);
-        if (cart){
+        const list=JSON.parse(req.cookies.list);
+        if (list){
             
             const listId=[];
             const listQuantities=[];
-            for (var obj of cart){
+            for (var obj of list){
                 listId.push(parseInt(obj.id));
                 listQuantities.push(parseInt(obj.quantity));
             }
@@ -60,8 +60,17 @@ class CartController{
                 total:parseFloat(req.cookies.subtotal)
             });
             const rs=await Order.insert(newOrder);
+
+            const cart=JSON.parse(req.cookies.cart);
+            // Lấy danh sách các id từ mảng list
+            const listIds = list.map(item => item.id);
+
+            // Lọc các phần tử trong cart có id không trùng với id trong list
+            const updatedCart = cart.filter(item => !listIds.includes(item.id));  
+            res.cookie('cart', JSON.stringify(updatedCart), { maxAge: 86400000}); // Set maxAge in milliseconds
+            
             res.clearCookie('subtotal');
-            res.clearCookie('cart');
+            res.clearCookie('list');
             res.send("Order is created");
         }
     }

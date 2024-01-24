@@ -50,9 +50,10 @@ const cookieParser = require("cookie-parser");
 route.use(cookieParser());
 
 const HomeController=require('../controllers/HomeController');
+const isAuthenticated=require('../middlewares/authenticate')
 
 //route.post('/search',HomeController.index);
-route.get('/profile',HomeController.profile);
+route.get('/profile',isAuthenticated,HomeController.profile);
 route.get('/',HomeController.index);
 
 route.post('/profile/edit',HomeController.profileEdit);

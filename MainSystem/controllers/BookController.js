@@ -57,6 +57,7 @@ class BookController {
            const account = await Account.findAccount(username);
            req.user=account;
         }
+        
         const name = req.body.inputName;
 
         const book1 = await Book.searchLike('name', name);

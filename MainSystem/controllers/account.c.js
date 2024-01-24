@@ -1,8 +1,10 @@
 const Account = require('../models/account.m');
 const bcryptH = require('../helpers/bcrypt.h');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const axios=require('axios')
 require('dotenv').config();
 const passport = require ('passport');
+const { token } = require('morgan');
 
 module.exports = {
     getLogin: (req, res, next) => {
@@ -47,9 +49,16 @@ module.exports = {
             if (checkUser == undefined) {
                 signUpData.password = await bcryptH.hashPassword(signUpData.password);
                 addId = await Account.addAccount(signUpData);
-                if(addId) await Account.addCustomer(signUpData, addId);
+                let token;
+                if(addId)
+                {   
+                    const userId = addId; // Thay đổi thành ID của người dùng mới được tạo
+                    token = jwt.sign({ sub: userId }, process.env.SECRET_KEY,{expiresIn: 86400000});
+                    await Account.addCustomer(signUpData, addId);
+
+                }
                 else return res.json ({ isValid:false, message: 'cant add account to database' });
-                res.json({ isValid: true });
+                res.json({ isValid: true,token:token});
             } else {
                 res.json({ isValid:false, message: 'username has exist' });
             }

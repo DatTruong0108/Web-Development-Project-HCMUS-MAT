@@ -4,7 +4,7 @@
   "description": "Đồ án môn học Lập trình ứng dụng web - HCMUS",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --inspect ./MainSystem/server.js"
+    "start": "concurrently \" nodemon  ./MainSystem/server.js\" \" nodemon ./SubSystem/server.js\""
   },
   "keywords": [],
   "author": "",
@@ -14,6 +14,7 @@
     "nodemon": "^3.0.2"
   },
   "dependencies": {
+    "axios": "^1.6.5",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
@@ -34,11 +35,13 @@
     "passport": "^0.7.0",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
+    "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "passport-strategy": "^1.0.0",
     "path": "^0.12.7",
     "pg": "^8.11.3",
     "pg-promise": "^11.5.4",
+    "request-promise": "^4.2.6",
     "socket.io": "^4.7.4",
     "socket.io-client": "^4.7.4",
     "url": "^0.11.3",

@@ -52,16 +52,16 @@
         const bookListContainer = document.getElementById('bookListContainer');
         const paginationContainer = document.getElementById('paginationContainer');
 
-        {
+        {{!-- {
             {
-                !--paginationContainer.addEventListener('click', function (event) {
+                paginationContainer.addEventListener('click', function (event) {
                     if (event.target.tagName === 'A' && event.target.closest('#paginationContainer')) {
                         event.preventDefault();
                         const page = event.target.textContent;
                         fetchData(page);
                     }
-                }); --}
-        }
+                }); 
+        } --}}
         const input = `{{key}}`;
 
         const fetchData = async (page) => {

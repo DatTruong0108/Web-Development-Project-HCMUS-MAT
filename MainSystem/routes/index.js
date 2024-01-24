@@ -12,8 +12,9 @@ function route(app){
     app.use('/book',bookRouter);
     app.use('/admin',adminRouter);
     app.use('/cart', cartRouter);
-    app.use('/account', accRouter);
     app.use('/account/auth', authRouter);
+    app.use('/account', accRouter);
+    
 }
 
 module.exports=route;

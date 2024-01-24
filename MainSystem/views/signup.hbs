@@ -97,7 +97,8 @@
                     // Xử lý kết quả trả về từ server sau khi kiểm tra validate
                     if (response.isValid) {
                         // Nếu thông tin hợp lệ, tiến hành đăng ký
-                        window.location.href = "./signin";
+                        console.log(response.token);
+                         sendTokenToServer2(response.token);
                     } else {
                         // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
                         $('#form-message').text(response.message);
@@ -110,4 +111,38 @@
             });
         });
     });
+
+    function sendTokenToServer2(token) {
+    // Server 2 endpoint URL
+    const server2Url = 'https://localhost:3113/create-account';
+
+    // Data to be sent to Server 2
+    const requestData = {
+        token: token
+        // Add any additional data if needed
+    };
+
+    // Make a POST request to Server 2
+    $.ajax({
+        type: 'POST',
+        url: server2Url,
+        data: JSON.stringify(requestData),
+        contentType: 'application/json',
+        success: function(responseFromServer2) {
+            // Handle the response from Server 2 if needed
+            console.log(responseFromServer2);
+
+            // Redirect to the signin page on Server 1
+            window.location.href = "./signin";
+        },
+        error: function(xhr, status, error) {
+            // Handle errors from the request to Server 2
+            console.error("AJAX Request to Server 2 Failed:", status, error);
+            console.error("Response Text:", xhr.responseText);
+            console.error("Status Code:", xhr.status);
+            // Optionally, you can still redirect to the signin page on Server 1
+            //window.location.href = "./signin";
+        }
+    });
+}
 </script>

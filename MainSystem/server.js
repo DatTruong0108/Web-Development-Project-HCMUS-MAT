@@ -4,6 +4,7 @@ const morgan=require('morgan');
 const express=require ('express');
 const {engine}=require('express-handlebars');
 const methodOverride=require("method-override");
+const passport = require('passport');
 
 const https=require('https');
 const bodyparser = require("body-parser");
@@ -136,6 +137,12 @@ const passportGoogle = require('./configs/PassportGGConfig');
 passportGoogle(app);
 const passportFacebook = require('./configs/PassportFBConfig');
 passportFacebook(app);
+const passportJwt = require('./configs/PassportJwt');
+passportJwt(app);
+
+app.get('/protected', passport.authenticate('jwt', { session: false }), (req, res) => {
+  res.json({ message: 'Token is valid', user: req.user });
+});
 
 const credentials = {
     key: process.env.PRIVATE_KEY,
@@ -149,4 +156,4 @@ app.use((err, req, res, next) => {
 
 var server = https.createServer(credentials, app);
 server.listen(port, () =>
-  console.log(`Auth server listening on port ${port}`));
+  console.log(`Main server listening on port ${port}`));
