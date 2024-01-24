@@ -1,9 +1,29 @@
 const db=require('../utils/db')
 const Book=require('../models/Book')
 const Category=require('../models/Category')
+const Order=require('../models/Order')
+const Account=require('../models/account.m')
+const jwt = require('jsonwebtoken')
 
 class CartController{
     async index(req,res,next){ 
+        const token = req.cookies.token;
+        let username;
+        let role;
+        if (token)
+        {
+         jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: "Token không hợp lệ." });
+            } else {
+                username = decoded.username;
+                role=decoded.role;
+            }
+           });
+           const account = await Account.findAccount(username);
+           req.user=account;
+        }
+
         const catgories=await Category.getAll();
         const currentPageReq = req.params.page || 1;
         const currentPage = 'page=' + currentPageReq;
@@ -14,7 +34,36 @@ class CartController{
         const totalPages = Math.ceil(totalBooks / itemsPerPage);
         const cateName = "all";
 
-        res.render('cartpage', { catgories });
+        res.render('cartpage', { catgories, user: req.user, role:role });
+    }
+
+    async store(req,res,next){
+        const user=req.user;
+        console.log(user);
+        const cart=JSON.parse(req.cookies.cart);
+        if (cart){
+            
+            const listId=[];
+            const listQuantities=[];
+            for (var obj of cart){
+                listId.push(parseInt(obj.id));
+                listQuantities.push(parseInt(obj.quantity));
+            }
+            console.log(listId);
+            const newOrder=new Order({
+                listItems:listId,
+                listQuantity:listQuantities,
+                userID:parseInt(user.ID),
+                status:"pending",
+                subTotal: parseFloat(req.cookies.subtotal),
+                shippingFee:parseFloat(0),
+                total:parseFloat(req.cookies.subtotal)
+            });
+            const rs=await Order.insert(newOrder);
+            res.clearCookie('subtotal');
+            res.clearCookie('cart');
+            res.send("Order is created");
+        }
     }
 }
 

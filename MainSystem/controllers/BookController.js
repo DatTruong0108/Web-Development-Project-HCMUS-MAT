@@ -2,6 +2,8 @@ const db=require('../utils/db')
 const Book=require('../models/Book')
 const Category=require('../models/Category');
 const path = require('path');
+const jwt = require('jsonwebtoken')
+const Account=require('../models/account.m')
 
 
 
@@ -9,15 +11,29 @@ const IMAGE_UPLOAD_PATH='Images\\Books\\';
 
 class BookController {
     async viewDetail(req, res, next) {
+        const token = req.cookies.token;
+        let username;
+        let role;
+        if (token)
+        {
+         jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: "Token không hợp lệ." });
+            } else {
+                username = decoded.username;
+                role=decoded.role;
+            }
+           });
+           const account = await Account.findAccount(username);
+           req.user=account;
+        }
         const bookId = req.params.id;
         const rs = await Book.get('id', bookId);
 
         if (rs) {
             const catId = rs.catID;
             const relevant = await Book.search('catID', catId);
-
-
-            res.render('book/view', { book: rs, related: relevant });
+            res.render('book/view', { book: rs, related: relevant, user: req.user, role: role });
         }
         else {
             res.send('No book found');
@@ -25,6 +41,22 @@ class BookController {
     }
 
     async search(req, res, next) {
+        const token = req.cookies.token;
+        let username;
+        let role;
+        if (token)
+        {
+         jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: "Token không hợp lệ." });
+            } else {
+                username = decoded.username;
+                role=decoded.role;
+            }
+           });
+           const account = await Account.findAccount(username);
+           req.user=account;
+        }
         const name = req.body.inputName;
 
         const book1 = await Book.searchLike('name', name);
@@ -45,7 +77,9 @@ class BookController {
                 book: paginatedBook,
                 totalPages: totalPages,
                 key: name,
-                currentPage: currentPage
+                currentPage: currentPage,
+                user: req.user,
+                role: role
             });
         }
         else {
@@ -77,19 +111,30 @@ class BookController {
     }
 
     async create(req,res,next){
-        const cats=await Category.getAll();
-        res.render('book/create',{categories: cats});
+        if (req.role=="admin"){
+            const cats=await Category.getAll();
+            res.render('book/create',{categories: cats,user:req.user, role: req.role});
+        }
+        else{
+            res.send("No permission to access")
+        }
+       
     }
 
     async edit (req,res,next){
-        const bookId=req.params.id;
-        const cats=await Category.getAll();
-        const book=await Book.get('id',parseInt(bookId));
-        const currenCat=await Category.get(parseInt(book.catID));
+        if (req.role=="admin")
+        {
+            const bookId=req.params.id;
+            const cats=await Category.getAll();
+            const book=await Book.get('id',parseInt(bookId));
+            const currenCat=await Category.get(parseInt(book.catID));
        
-        console.log(book);
-
-        res.render('book/edit',{book:book, categories: cats, cate: currenCat})
+           res.render('book/edit',{book:book, categories: cats, cate: currenCat,user:req.user, role: req.role})
+        }
+        else{
+            res.send("No permission to access")
+        }
+        
     }
 
     async store(req,res,next){

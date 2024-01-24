@@ -5,15 +5,21 @@ const upload=require('../middlewares/upload');
 
 const BookController=require('../controllers/BookController');
 const Book = require('../models/Book');
+const cookieParser = require("cookie-parser");
+route.use(cookieParser());
+const isAuthenticated=require('../middlewares/authenticate')
 
 route.put('/:id',upload.single('image'),BookController.update);
 route.delete('/:id',BookController.destroy);
 route.post('/store',upload.single('image'),BookController.store);
-route.get('/create',BookController.create);
-route.get('/:id/edit',BookController.edit);
+
+route.get('/create',isAuthenticated,BookController.create);
+route.get('/:id/edit',isAuthenticated,BookController.edit);
+
 route.get('/:id/view',BookController.viewDetail);
 route.get('/search/paginate',BookController.paginateSearchResults);
 route.post('/search',BookController.search);
+
 route.get('/filterAll/page/:page?', BookController.filterAllPaginate);
 route.get('/filterAll', BookController.filterAll);
 route.get('/ajax/filterAuthor/:authorname/:page?', BookController.filterAuthor);
