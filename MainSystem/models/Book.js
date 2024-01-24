@@ -255,4 +255,19 @@ module.exports=class Book{
             throw error;
         }
     }
+
+    static async getCountByPrice(minPrice, maxPrice) {
+        try {
+            const query = `
+                SELECT *
+                FROM "Book"
+                WHERE "price" BETWEEN $1::money AND $2::money
+            `;
+
+            const data = await db.any(query, [minPrice, maxPrice]);
+            return data.length;
+        } catch (error) {
+            throw error;
+        }
+    }
 }

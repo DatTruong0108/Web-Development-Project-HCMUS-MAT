@@ -97,17 +97,17 @@ app.engine(
 
           priceRangeLabel: function (priceRange) {
             switch (priceRange) {
-              case '0':
+              case '0' || 0:
                 return 'All';
-              case '1':
+              case '1' || 1:
                 return '0 - 10.00';
-              case '2':
+              case '2' || 2:
                 return '10.00 - 20.00';
-              case '3':
+              case '3' || 3:
                 return '20.00 - 30.00';
-              case '4':
+              case '4' || 4:
                 return '30.00 - 40.00';
-              case '5':
+              case '5' || 5:
                 return 'More than 40.00';
               default:
                 return 'Price Range';

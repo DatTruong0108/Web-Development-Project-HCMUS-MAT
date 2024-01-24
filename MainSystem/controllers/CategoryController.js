@@ -9,6 +9,7 @@ class CategoryController{
         const token = req.cookies.token;
         let username;
         let role;
+        let avatar;
         if (token)
         {
          jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
@@ -20,6 +21,8 @@ class CategoryController{
             }
            });
            const account = await Account.findAccount(username);
+           const customer = await Account.findCustomer(account.ID);
+           avatar = customer.avatar;
            req.user=account;
         }
         const catgories=await Category.getAll();
@@ -33,7 +36,7 @@ class CategoryController{
         const totalPages = Math.ceil(totalBooks / itemsPerPage);
         const cateName = "all";
 
-        res.render('categorypage', { catgories,  books, currentPage, totalPages, cateName, user: req.user, role:role });
+        res.render('categorypage', { catgories, authors, books, currentPage, totalPages, cateName, user: req.user, role:role, avatar });
     }
 
     async getBooksByCategory(req, res, next) {
