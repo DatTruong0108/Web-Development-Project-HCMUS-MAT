@@ -25,7 +25,8 @@ route.get('/filterAll', BookController.filterAll);
 route.get('/ajax/filterAuthor/:authorname/:page?', BookController.filterAuthor);
 route.get('/filterAuthor', BookController.filterAuthorIndex);
 route.get('/filterPrice', BookController.filterPriceIndex);
-route.post('/filterPrice', BookController.filterPrice);
+route.get('/ajax/filterPrice/:priceRange/:page?', BookController.filterPrice);
+// route.post('/filterPrice', BookController.filterPrice);
 
 
 module.exports=route;

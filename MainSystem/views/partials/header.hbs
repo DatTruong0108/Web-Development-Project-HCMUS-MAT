@@ -60,7 +60,7 @@
        {{#ifE role "admin"}}
         <a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
         <a class="nav-item nav-link" href="/admin/showProducts">Products</a>
-        <a class="nav-item nav-link" href="#">Categories</a>
+        <a class="nav-item nav-link" href="/admin/category">Categories</a>
         <a class="nav-item nav-link" href="#">Users</a>
         <a class="nav-item nav-link" href="#">Orders</a>
         <a class="nav-item nav-link" href="#">Revenue</a>
@@ -70,7 +70,7 @@
         <a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
         <a class="nav-item nav-link" href="/category">Category</a>
        <a class="nav-item nav-link" href="#">Order History</a>
-       <a class="nav-item nav-link" href="#">Profile</a>
+       <a class="nav-item nav-link" href="/profile">Profile</a>
         {{/ifE}}
      {{else}}
         <a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
@@ -78,7 +78,6 @@
        <a class="nav-item nav-link" href="#">Order History</a>
        <a class="nav-item nav-link" href="#">Profile</a>
     {{/if}}
-      
     </div>
   </div>
 </nav>

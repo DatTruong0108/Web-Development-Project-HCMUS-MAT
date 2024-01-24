@@ -23,6 +23,7 @@ class CategoryController{
            req.user=account;
         }
         const catgories=await Category.getAll();
+        const authors = await Book.getAllAuthors();
         const currentPageReq = req.params.page || 1;
         const currentPage = 'page=' + currentPageReq;
         const itemsPerPage = 9;

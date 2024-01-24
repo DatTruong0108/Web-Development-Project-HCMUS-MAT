@@ -289,14 +289,15 @@ class BookController {
         const books = await Book.getAllWithPagination(currentPage, itemsPerPage);
         const totalBooks = await Book.getCount();
         const totalPages = Math.ceil(totalBooks / itemsPerPage);
-        const price = "";
+        const price = '0';
 
         res.render('book/filterprice', { books, currentPage, totalPages, price });
     }
 
     async filterPrice(req, res, next) {
         try {
-            const priceRange = parseInt(req.body.priceRange);
+            console.log("go into filter price");
+            const priceRange = req.params.priceRange;
             const itemsPerPage = 12;
             const currentPage = req.params.page || 1;
 
@@ -304,23 +305,27 @@ class BookController {
             let maxPrice = 10000.00;
 
             switch (priceRange) {
-                case 1:
+                case '0':
+                    minPrice = 0.00;
+                    maxPrice = 10000.00;
+                    break;
+                case '1':
                     minPrice = 0.00;
                     maxPrice = 10.00;
                     break;
-                case 2:
+                case '2':
                     minPrice = 10.00;
                     maxPrice = 20.00;
                     break;
-                case 3:
+                case '3':
                     minPrice = 20.00;
                     maxPrice = 30.00;
                     break;
-                case 4:
+                case '4':
                     minPrice = 30.00;
                     maxPrice = 40.00;
                     break;
-                case 5:
+                case '5':
                     minPrice = 40.00;
                     maxPrice = 10000.00; // No upper limit for the highest range
                     break;
@@ -329,14 +334,15 @@ class BookController {
                     break;
             }
             
-            const books = await Book.getBookByPrice(minPrice, maxPrice);
+            const books = await Book.getBookByPriceWithPagination(minPrice, maxPrice, currentPage, itemsPerPage)
             const totalBooks = books.length;
             const totalPages = Math.ceil(totalBooks / itemsPerPage);
 
-            return res.render('book/filterprice', { 
-                priceRange: req.body.priceRange,
-                books: books,
-            });
+            // return res.render('book/filterprice', { 
+            //     priceRange: req.body.priceRange,
+            //     books: books,
+            // });
+            return res.json({ priceRange: req.params.priceRange, books, totalPages, currentPage });
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

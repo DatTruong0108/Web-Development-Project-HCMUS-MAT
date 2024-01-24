@@ -45,30 +45,28 @@
                     {{/each}}
                 </div>
                 <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
+                    <div class="pagination justify-content-center" id="paginationContainer">
                         <li class="page-item">
                             <a class="page-link custom-pagination-background custom-page-number"
-                                href="javascript:void(0);"
-                                onclick="authorNameFunc('{{cateName}}', '{{subtractOne currentPage}}')">
+                                href="javascript:void(0);">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
                         {{#each (range 1 totalPages)}}
                         <li class="page-item">
                             <a class="page-link custom-pagination-background custom-page-number"
-                                href="javascript:void(0);" onclick="authorNameFunc('{{cateName}}', {{this}})">
+                            href="javascript:void(0);">
                                 {{this}}
                             </a>
                         </li>
                         {{/each}}
                         <li class="page-item">
                             <a class="page-link custom-pagination-background custom-page-number"
-                                href="javascript:void(0);"
-                                onclick="authorNameFunc('{{cateName}}', '{{addinOne currentPage totalPages}}')">
+                                href="javascript:void(0);">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
-                    </ul>
+                    </div>
                 </nav>
             </div>
         </div>
@@ -90,7 +88,7 @@
 
                 // Cập nhật đường dẫn mà không load lại trang
                 const newUrl = `/book/filterAuthor/${authorname}/page=${page}`;
-                history.pushState({ page: page, name: authorname }, '', newUrl);
+                history.pushState({ page: page, authorname: authorname }, '', newUrl);
             })
             .catch(error => console.error('Error:', error));
     }
@@ -174,8 +172,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        const currentPage = '{{currentPage}}';
-        const totalPages = '{{totalPages}}';
+        {{!-- const currentPage = '{{currentPage}}';
+        const totalPages = '{{totalPages}}'; --}}
 
         document.querySelectorAll('.page-link').forEach(link => {
             link.addEventListener('click', function (event) {
@@ -185,7 +183,7 @@
             });
         });
 
-        // Thêm xử lý sự kiện cho nút "Previous"
+        {{!-- // Thêm xử lý sự kiện cho nút "Previous"
         const prevButton = document.querySelector('.pagination .page-item:first-child .page-link');
         prevButton.addEventListener('click', function (event) {
             event.preventDefault();
@@ -197,7 +195,7 @@
         nextButton.addEventListener('click', function (event) {
             event.preventDefault();
             authorNameFunc('{{authorname}}', addinOne(currentPage, totalPages));
-        });
+        }); --}}
     });
 
     function subtractOne(currentPage) {
