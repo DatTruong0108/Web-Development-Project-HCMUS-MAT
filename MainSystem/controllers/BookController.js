@@ -290,13 +290,9 @@ class BookController {
             }
             
             const books = await Book.getBookByPriceWithPagination(minPrice, maxPrice, currentPage, itemsPerPage)
-            const totalBooks = books.length;
+            const totalBooks = await Book.getCountByPrice(minPrice, maxPrice);
             const totalPages = Math.ceil(totalBooks / itemsPerPage);
 
-            // return res.render('book/filterprice', { 
-            //     priceRange: req.body.priceRange,
-            //     books: books,
-            // });
             return res.json({ priceRange: req.params.priceRange, books, totalPages, currentPage });
         } catch (error) {
             res.status(500).json({ error: error.message });

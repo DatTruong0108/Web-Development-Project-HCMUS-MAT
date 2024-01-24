@@ -11,7 +11,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-9 d-flex">
+        <div class="col-md-8 d-flex">
             <div class="container">
                 <div class="row mb-4" id="bookListContainer">
                     {{#each books}}
@@ -62,17 +62,9 @@
                     </ul>
                 </nav>
             </div>
+        </div>
+        <div class="col-1">
             <div class="ml-auto">
-                {{!-- <div class="dropdown">
-                    <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Filter
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/category/filterAll">All</a></li>
-                        <li><a class="dropdown-item" href="/category/filterPrice">Price</a></li>
-                        <li><a class="dropdown-item" href="/category/filterAuthor">Author</a></li>
-                    </ul>
-                </div> --}}
                 <div class="dropdown mb-3">
                     <button id="authorBtn" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -90,15 +82,6 @@
                     </ul>
                 </div>
                 <div class="dropdown input-group">
-                    {{!-- <span class="input-group-text">{{priceRangeLabel priceRange}}e</span>
-                    <select name="priceRange" class="form-control" id="priceRange">
-                        <option value="0" {{#if (eq priceRange '0' ) }}selected{{/if}}>All</option>
-                        <option value="1" {{#if (eq priceRange '1' ) }}selected{{/if}}>0-10.00</option>
-                        <option value="2" {{#if (eq priceRange '2' ) }}selected{{/if}}>10.00-20.00</option>
-                        <option value="3" {{#if (eq priceRange '3' ) }}selected{{/if}}>20.00-30.00</option>
-                        <option value="4" {{#if (eq priceRange '4' ) }}selected{{/if}}>30.00-40.00</option>
-                        <option value="5" {{#if (eq priceRange '5' ) }}selected{{/if}}>More than 40.00</option>
-                    </select> --}}
                     <button id="priceRangeBtn" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         {{priceRangeLabel priceRange}}
@@ -127,7 +110,7 @@
                 updateBookList(data.books);
 
                 // Cập nhật phân trang
-                updatePagination(data.totalPages, priceRange, page);
+                updatePaginationPrice(data.totalPages, priceRange, page);
 
                 // Cập nhật đường dẫn mà không load lại trang
                 const newUrl = `/book/filterPrice/${priceRange}/page=${page}`;
@@ -205,6 +188,53 @@
             `;
             bookListContainer.appendChild(card);
         });
+    }
+
+    function updatePaginationPrice(totalPages, cateName, currentPage) {
+        const paginationContainer = document.querySelector('.pagination');
+
+        // Xóa tất cả các phần tử con trong container
+        while (paginationContainer.firstChild) {
+            paginationContainer.removeChild(paginationContainer.firstChild);
+        }
+
+        // Thêm nút "Previous"
+        const prevLi = document.createElement('li');
+        prevLi.className = 'page-item';
+        const prevLink = document.createElement('a');
+        prevLink.className = 'page-link custom-pagination-background custom-page-number';
+        prevLink.href = `javascript:void(0);`;
+        prevLink.textContent = '«';
+        const prePage = subtractOne(currentPage)
+        prevLink.onclick = () => priceRangeFunc(cateName, prePage);
+        prevLi.appendChild(prevLink);
+        paginationContainer.appendChild(prevLi);
+
+        // Thêm các nút phân trang mới vào container
+        for (let i = 1; i <= totalPages; i++) {
+            const li = document.createElement('li');
+            li.className = 'page-item';
+
+            const link = document.createElement('a');
+            link.className = 'page-link custom-pagination-background custom-page-number';
+            link.href = `javascript:void(0);`;
+            link.textContent = i;
+            link.onclick = () => priceRangeFunc(cateName, i);
+
+            li.appendChild(link);
+            paginationContainer.appendChild(li);
+        }
+
+        // Thêm nút "Next"
+        const nextLi = document.createElement('li');
+        nextLi.className = 'page-item';
+        const nextLink = document.createElement('a');
+        nextLink.className = 'page-link custom-pagination-background custom-page-number';
+        nextLink.href = `javascript:void(0);`;
+        nextLink.textContent = '»';
+        nextLink.onclick = () => priceRangeFunc(cateName, addinOne(currentPage, totalPages));
+        nextLi.appendChild(nextLink);
+        paginationContainer.appendChild(nextLi);
     }
 
     function updatePagination(totalPages, cateName, currentPage) {
