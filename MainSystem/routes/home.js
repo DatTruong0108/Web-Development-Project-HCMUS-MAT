@@ -52,6 +52,7 @@ route.use(cookieParser());
 const HomeController=require('../controllers/HomeController');
 
 //route.post('/search',HomeController.index);
+route.get('/orderHistory', HomeController.orderHistory);
 route.get('/profile',HomeController.profile);
 route.get('/',HomeController.index);
 
