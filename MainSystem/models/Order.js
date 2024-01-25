@@ -3,7 +3,7 @@ const fs = require('fs');
 const tbName = 'Order';
 
 module.exports=class Book{
-    constructor({listItems,listQuantity,userID,status,subTotal,shippingFee,total}){
+    constructor({listItems,listQuantity,userID,status,subTotal,shippingFee,total,address,phone,date}){
         this.listItems=listItems;
         this.listQuantity=listQuantity;
         this.userID=userID;
@@ -11,6 +11,9 @@ module.exports=class Book{
         this.subTotal=subTotal;
         this.shippingFee=shippingFee;
         this.total=total;
+        this.address=address;
+        this.phone=phone;
+        this.date=date;
     }
 
     static async insert(order){

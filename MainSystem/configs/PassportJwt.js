@@ -10,6 +10,7 @@ const opts = {
   };
 
 const PassportJwt=(app) =>{
+     app.use(passport.initialize());
     passport.use(
         new JwtStrategy(opts, (jwt_payload, done) => {
           const user = jwt_payload.sub;

@@ -258,6 +258,16 @@
     color: #555555;
 }
 
+.navbar {
+    overflow: hidden;
+  }
+  
+  .dropdown-menu {
+    position: static; /* Hoặc sử dụng position: absolute; nếu cần */
+    float: none; /* Không sử dụng float */
+    margin-top: 0; /* Đặt margin-top thành 0 để tránh tăng kích thước */
+  }
+
 .gsi-material-button {
     -moz-user-select: none;
     -webkit-user-select: none;

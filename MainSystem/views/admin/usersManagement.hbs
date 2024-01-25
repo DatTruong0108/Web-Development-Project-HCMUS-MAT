@@ -1,0 +1,353 @@
+<div class="container d-flex justify-content-center mt-5 mb-5">
+    <form id="filter-form">
+        <div class="row py-2">
+                <div class="col-md-3">
+                    <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Customer ID</span>
+                    <input id="customerID" name="customerID" type="text" class="form-control" placeholder="Customer ID"
+                                aria-label="Customer ID" aria-describedby="basic-addon1" value="{{customerID}}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Customer Name</span>
+                    <input id="customerName" name="customerName" type="text" class="form-control" placeholder="Customer Name"
+                                aria-label="Customer Name" aria-describedby="basic-addon1" value="{{customerName}}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="dropdown input-group mb-3">
+                        <span class="input-group-text">Total Order Price</span>
+                        <select name="balanceRange" class="form-control" id="balanceRange">
+                        <option value="0" {{#ifE balanceRange '0'}}selected{{/ifE}}>All</option>
+                        <option value="1" {{#ifE balanceRange '1'}}selected{{/ifE}}>0-300</option>
+                        <option value="2" {{#ifE balanceRange '2'}}selected{{/ifE}}>300-1.000</option>
+                        <option value="3" {{#ifE balanceRange '3'}}selected{{/ifE}}>1.000-3.000</option>
+                        <option value="4" {{#ifE balanceRange '4'}}selected{{/ifE}}>More than 3.000</option>                            
+                    </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="dropdown input-group mb-3">
+                        <span class="input-group-text">Sort By</span>
+                        <select name="sortBy" class="form-control" id="sortBy">
+                            <option value="0" {{#ifE sortBy '0'}}selected{{/ifE}}>Customer ID</option>
+                            <option value="1" {{#ifE sortBy '1'}}selected{{/ifE}}>Customer Name</option>
+                            <option value="3" {{#ifE sortBy '3'}}selected{{/ifE}}>Total Order Price</option>
+                        </select>
+
+                    </div>
+                </div>
+                
+        </div>
+
+        <div class="row py-2">
+                    <div class="col-12 d-flex justify-content-center">
+                        <button id="search-button" type="button" class="btn btn-success" onclick="categoryType(1)">Search</button>
+                    </div>       
+        </div>
+
+        <div class="row py-2">
+            <h2 class="d-flex justify-content-center">Customer List</h2>
+            <div class="col-md-12 offset-md-0">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <table id="customer-list" class="table table-striped table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                <th scope="col"></th>
+                                <th scope="col">CustomerID</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Fullname</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">Date of birth</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Address</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Total Order Price</th>
+                                <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each customers}}
+                                <tr>
+                                    <th scope="row">{{addOne @index}}</th>
+                                    <td>{{customer_id}}</td>
+                                    <td>{{username}}</td>
+                                    <td>{{fullname}}</td>
+                                    <td>{{gender}}</td>
+                                    <td>{{dob}}</td>
+                                    <td>{{email}}</td>                                   
+                                    <td>{{address}}</td>
+                                    <td>{{active}}</td>
+                                    <td>{{total_order}}</td>
+                                    <td>
+                                        <div class="container">
+                                            <div class="row py-2">
+                                                {{#if active}}
+                                                    <button id="active-button" type="button" class="btn btn-warning">Lock</button>
+                                                {{else}}
+                                                    <button id="active-button" type="button" class="btn btn-success">Unclock</button>
+                                                {{/if}}
+                                            </div>
+                                            <div class="row py-2">
+                                                <button id="delete-button" type="button" class="btn btn-danger py-2">Delete</button>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                                        <nav aria-label="Page navigation example">
+                                            <ul class="pagination justify-content-center">
+                                                <li class="page-item">
+                                                    <a class="page-link custom-pagination-background custom-page-number"
+                                                        href="javascript:void(0);">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </a>
+                                                </li>
+                                                {{#each (range 1 totalPages)}}
+                                                <li class="page-item">
+                                                    <a class="page-link custom-pagination-background custom-page-number"
+                                                        href="javascript:void(0);" onclick="categoryType({{this}})">
+                                                        {{this}}
+                                                    </a>
+                                                </li>
+                                                {{/each}}
+                                                <li class="page-item">
+                                                    <a class="page-link custom-pagination-background custom-page-number"
+                                                        href="javascript:void(0);">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                        </table>
+                        <p class="result-message"></p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal -->
+<div id="delete-course-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn chắc chắn muốn xóa tài khoản này?</p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-delete-course" type="button" class="btn btn-danger">Xóa
+          bỏ</button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+        >Hủy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form method="POST" name="delete-form"></form>
+
+
+<script>
+    function subtractOne(currentPage) {
+        if(currentPage === 1){
+            return currentPage;
+        }
+        return currentPage - 1;
+    }
+
+    function addinOne(currentPage, totalPages) {
+        if(currentPage === totalPages){
+            return currentPage;
+        }
+        return currentPage + 1;
+    }
+    function categoryType(page) {
+        
+        var customerID = $("#customerID").val();
+        if (customerID=="") customerID="all";
+        var customerName = $("#customerName").val();
+        if (customerName=="") customerName="all";
+        const balanceRange = $("#balanceRange").val();
+        const sortBy = $("#sortBy").val();
+        const params = new URLSearchParams({
+            id: customerID,
+            name:customerName,
+            range: balanceRange,
+            s: sortBy,
+            page: page
+        });
+
+            const url = `/user-management/ajax?${params.toString()}`;
+        //const url = `/user-management/ajax/id=${customerID}&name=${customerName}&range=${balanceRange}&s=${sortBy}&page=${page}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                // Xử lý dữ liệu trả về, ví dụ cập nhật danh sách sách trên trang
+                updateBookList(data.books);
+
+                // Cập nhật phân trang
+                updatePagination(data.totalPages, page);
+
+                // Cập nhật đường dẫn mà không load lại trang
+                const newUrl = `/user-management/id=${customerID}&name=${customerName}&range=${balanceRange}&s=${sortBy}&page=${page}`;
+                history.pushState({ page: page, name: customerName, id:customerID, range:balanceRange, s:sortBy }, '', newUrl);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        {{!-- var btnDeleteCourse=document.getElementById("btn-delete-course");
+        btnDeleteCourse.onclick=function(){
+         deleteForm.action='/book/'+productIdToDelete+'?_method=DELETE'; 
+         deleteForm.submit();
+        }  --}}
+
+        const currentPage = '{{currentPage}}';
+        const totalPages = '{{totalPages}}';
+        
+        document.querySelectorAll('.page-link').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const page = this.textContent.trim();
+                categoryType(page);
+            });
+        });
+
+        // Thêm xử lý sự kiện cho nút "Previous"
+        const prevButton = document.querySelector('.pagination .page-item:first-child .page-link');
+        prevButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            categoryType(subtractOne('{{currentPage}}'));
+        });
+
+        // Thêm xử lý sự kiện cho nút "Next"
+        const nextButton = document.querySelector('.pagination .page-item:last-child .page-link');
+        nextButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            categoryType(addinOne(currentPage, totalPages));
+        }); 
+    });
+    
+
+    function updateBookList(books) {
+        const tableBody = document.querySelector('#customer-list tbody');
+
+        // Xóa tất cả các phần tử con trong container
+        
+       tableBody.innerHTML = '';
+
+        // Thêm sách mới vào container
+        books.forEach((book, index) => {
+            // Tạo một dòng mới
+            const row = document.createElement('tr');
+
+            // Thêm các ô dữ liệu vào dòng
+            row.innerHTML = `
+                <th scope="row">${index + 1}</th>
+                <td>${book.customer_id}</td>
+                <td>${book.username}</td>
+                <td>${book.fullname}</td>
+                <td>${book.gender}</td>
+                <td>${book.dob}</td>
+                <td>${book.email}</td>                                   
+                <td>${book.address}</td>
+                <td>${book.active}</td>
+                <td>${book.total_order}</td>`
+                ;
+            if(book.active){
+                row.innerHTML += `<td>
+                    <div class="container">
+                        <div class="row py-2">
+                                <button id="active-button" type="button" class="btn btn-warning">Lock</button>
+                        </div>
+                        <div class="row py-2">
+                            <button id="delete-button" type="button" class="btn btn-danger py-2">Delete</button>
+                        </div>
+                    </div>
+                </td>`
+            }
+            else{
+                row.innerHTML += `<td>
+                    <div class="container">
+                        <div class="row py-2">                      
+                                <button id="active-button" type="button" class="btn btn-success">Unclock</button>
+                        </div>
+                        <div class="row py-2">
+                            <button id="delete-button" type="button" class="btn btn-danger py-2">Delete</button>
+                        </div>
+                    </div>
+                </td>`
+            }
+
+            // Thêm dòng vào tbody
+            tableBody.appendChild(row);
+        });
+    }
+
+    function updatePagination(totalPages, currentPage) {
+        
+        const paginationContainer = document.querySelector('.pagination');
+
+        // Xóa tất cả các phần tử con trong container
+        while (paginationContainer.firstChild) {
+            paginationContainer.removeChild(paginationContainer.firstChild);
+        }
+
+        // Thêm nút "Previous"
+        const prevLi = document.createElement('li');
+        prevLi.className = 'page-item';
+        const prevLink = document.createElement('a');
+        prevLink.className = 'page-link custom-pagination-background custom-page-number';
+        prevLink.href = `javascript:void(0);`;
+        prevLink.textContent = '«';
+        const prePage = subtractOne(currentPage)
+        prevLink.onclick = () => categoryType(prePage);
+        prevLi.appendChild(prevLink);
+        paginationContainer.appendChild(prevLi);
+
+        // Thêm các nút phân trang mới vào container
+        for (let i = 1; i <= totalPages; i++) {
+            const li = document.createElement('li');
+            li.className = 'page-item';
+
+            const link = document.createElement('a');
+            link.className = 'page-link custom-pagination-background custom-page-number';
+            link.href = `javascript:void(0);`;
+            link.textContent = i;
+            link.onclick = () => categoryType(i);
+
+            li.appendChild(link);
+            paginationContainer.appendChild(li);
+        }
+
+        // Thêm nút "Next"
+        const nextLi = document.createElement('li');
+        nextLi.className = 'page-item';
+        const nextLink = document.createElement('a');
+        nextLink.className = 'page-link custom-pagination-background custom-page-number';
+        nextLink.href = `javascript:void(0);`;
+        nextLink.textContent = '»';
+        nextLink.onclick = () => categoryType(addinOne(currentPage, totalPages));
+        nextLi.appendChild(nextLink);
+        paginationContainer.appendChild(nextLi);
+    }
+</script>

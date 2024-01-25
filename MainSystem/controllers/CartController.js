@@ -56,8 +56,11 @@ class CartController{
                 userID:parseInt(user.ID),
                 status:"pending",
                 subTotal: parseFloat(req.cookies.subtotal),
-                shippingFee:parseFloat(0),
-                total:parseFloat(req.cookies.subtotal)
+                shippingFee:parseFloat(2),
+                total:parseFloat(req.cookies.subtotal)+parseFloat(2),
+                address: req.cookies.address,
+                phone:req.cookies.phone,
+                date:new Date(req.cookies.time)
             });
             const rs=await Order.insert(newOrder);
 
@@ -70,6 +73,9 @@ class CartController{
             res.cookie('cart', JSON.stringify(updatedCart), { maxAge: 86400000}); // Set maxAge in milliseconds
             
             res.clearCookie('subtotal');
+            res.clearCookie('address');
+            res.clearCookie('time');
+            res.clearCookie('phone');
             res.clearCookie('list');
             res.send("Order is created");
         }

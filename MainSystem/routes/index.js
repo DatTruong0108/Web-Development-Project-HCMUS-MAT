@@ -5,6 +5,7 @@ const adminRouter=require('./admin')
 const cartRouter = require('./cart');
 const accRouter = require('./account.r')
 const authRouter = require('./authAccount.r');
+const userManagementRouter = require('./userManagement.r');
 
 function route(app){
     app.use('/',homeRouter);
@@ -14,7 +15,7 @@ function route(app){
     app.use('/cart', cartRouter);
     app.use('/account/auth', authRouter);
     app.use('/account', accRouter);
-    
+    app.use('/user-management',userManagementRouter);
 }
 
 module.exports=route;
