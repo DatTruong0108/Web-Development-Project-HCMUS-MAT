@@ -45,7 +45,7 @@
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
-                        {{#each (range 1 totalPages)}}
+                        {{#each (range 1 4)}}
                         <li class="page-item">
                             <a class="page-link custom-pagination-background custom-page-number"
                                 href="javascript:void(0);" onclick="categoryType('{{cateName}}', {{this}})">
@@ -53,6 +53,13 @@
                             </a>
                         </li>
                         {{/each}}
+                        <a class="custom-pagination-background custom-page-number"> <span class="mr-2 ml-2">... </span></a>   
+                        <li class="page-item">
+                            <a class="page-link custom-pagination-background custom-page-number"
+                                href="javascript:void(0);" onclick="categoryType('{{cateName}}', {{totalPages}})">
+                                {{totalPages}}
+                            </a>
+                        </li>          
                         <li class="page-item">
                             <a class="page-link custom-pagination-background custom-page-number"
                                 href="javascript:void(0);">
@@ -197,6 +204,7 @@
 
     function updatePaginationPrice(totalPages, cateName, currentPage) {
         const paginationContainer = document.querySelector('.pagination');
+        const pageNumbers = generatePageNumbers(currentPage, totalPages);
 
         // Xóa tất cả các phần tử con trong container
         while (paginationContainer.firstChild) {
@@ -216,18 +224,30 @@
         paginationContainer.appendChild(prevLi);
 
         // Thêm các nút phân trang mới vào container
-        for (let i = 1; i <= totalPages; i++) {
-            const li = document.createElement('li');
-            li.className = 'page-item';
+        for (let i = 0; i < pageNumbers.length; i++) {
+            if (pageNumbers[i] === 0){
+                const li = document.createElement('a');
+                li.className = 'custom-pagination-background custom-page-number';
+                
+                const link = document.createElement('span');
+                link.className = 'mr-2 ml-2';
+                link.textContent = '...';
 
-            const link = document.createElement('a');
-            link.className = 'page-link custom-pagination-background custom-page-number';
-            link.href = `javascript:void(0);`;
-            link.textContent = i;
-            link.onclick = () => priceRangeFunc(cateName, i);
+                li.appendChild(link);
+                paginationContainer.appendChild(li);
+            } else {
+                const li = document.createElement('li');
+                li.className = 'page-item';
 
-            li.appendChild(link);
-            paginationContainer.appendChild(li);
+                const link = document.createElement('a');
+                link.className = 'page-link custom-pagination-background custom-page-number';
+                link.href = `javascript:void(0);`;
+                link.textContent = pageNumbers[i];
+                link.onclick = () => priceRangeFunc(cateName, pageNumbers[i]);
+
+                li.appendChild(link);
+                paginationContainer.appendChild(li);
+            }
         }
 
         // Thêm nút "Next"
@@ -244,6 +264,7 @@
 
     function updatePagination(totalPages, cateName, currentPage) {
         const paginationContainer = document.querySelector('.pagination');
+        const pageNumbers = generatePageNumbers(currentPage, totalPages);
 
         // Xóa tất cả các phần tử con trong container
         while (paginationContainer.firstChild) {
@@ -263,18 +284,30 @@
         paginationContainer.appendChild(prevLi);
 
         // Thêm các nút phân trang mới vào container
-        for (let i = 1; i <= totalPages; i++) {
-            const li = document.createElement('li');
-            li.className = 'page-item';
+        for (let i = 0; i < pageNumbers.length; i++) {
+            if (pageNumbers[i] === 0){
+                const li = document.createElement('a');
+                li.className = 'custom-pagination-background custom-page-number';
+                
+                const link = document.createElement('span');
+                link.className = 'mr-2 ml-2';
+                link.textContent = '...';
 
-            const link = document.createElement('a');
-            link.className = 'page-link custom-pagination-background custom-page-number';
-            link.href = `javascript:void(0);`;
-            link.textContent = i;
-            link.onclick = () => categoryType(cateName, i);
+                li.appendChild(link);
+                paginationContainer.appendChild(li);
+            } else {
+                const li = document.createElement('li');
+                li.className = 'page-item';
 
-            li.appendChild(link);
-            paginationContainer.appendChild(li);
+                const link = document.createElement('a');
+                link.className = 'page-link custom-pagination-background custom-page-number';
+                link.href = `javascript:void(0);`;
+                link.textContent = pageNumbers[i];
+                link.onclick = () => categoryType(cateName, pageNumbers[i]);
+
+                li.appendChild(link);
+                paginationContainer.appendChild(li);
+            }
         }
 
         // Thêm nút "Next"
@@ -287,6 +320,39 @@
         nextLink.onclick = () => categoryType(cateName, addinOne(currentPage, totalPages));
         nextLi.appendChild(nextLink);
         paginationContainer.appendChild(nextLi);
+    }
+
+
+    function generatePageNumbers(currentPage, totalPages) {
+        const pageNumbers = [];
+        if (totalPages <= 5){
+            for (let i = 1; i <= totalPages; i++) {
+                pageNumbers.push(i);
+            }
+        } else {
+            if (currentPage <= 3){
+                for (let i = 1; i <= 4; i++) {
+                    pageNumbers.push(i);
+                }
+                pageNumbers.push(0);
+                pageNumbers.push(totalPages);
+            } else if (currentPage >= totalPages - 2) {
+                pageNumbers.push(1);
+                pageNumbers.push(0);
+                for (let i = totalPages - 3; i <= totalPages; i++) {
+                    pageNumbers.push(i);
+                }
+            } else {
+                pageNumbers.push(1);
+                pageNumbers.push(0);
+                for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                    pageNumbers.push(i);
+                }
+                pageNumbers.push(0);
+                pageNumbers.push(totalPages);
+            }
+        }
+        return pageNumbers;
     }
 
     document.addEventListener('DOMContentLoaded', function () {
