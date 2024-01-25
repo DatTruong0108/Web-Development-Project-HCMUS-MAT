@@ -205,7 +205,26 @@ module.exports = class Account {
             return false;
           }
     }
-
+    static async UpdateStatusAccount(id) {
+        try {
+          // Get the current value of 'active' for the specified ID
+          const queryResult = await db.query('SELECT active FROM "Account" WHERE "ID" = $1', [id]);
+    
+          if (queryResult.rowCount === 0) {
+            throw new Error('Account not found'); // Handle case where account with specified ID does not exist
+          }
+    
+          const currentActiveStatus = queryResult[0].active;
+          const newActiveStatus = !currentActiveStatus; // Toggle the value of 'active'
+    
+          // Update the 'active' field with the new value
+          await db.query('UPDATE "Account" SET active = $1 WHERE "ID" = $2', [newActiveStatus, id]);
+    
+          return true; // Return the new value of 'active'
+        } catch (error) {
+            throw (error);
+        }
+    }
     
     static async findAccount(username) {
         try {

@@ -8,5 +8,6 @@ route.get('/ajax', userManagementController.getBooksByCategory);
 route.get('/', userManagementController.index);
 route.get('/filter',userManagementController.getBooksByCategoryFilter);
 route.delete('/:id', isAuthenticated, userManagementController.adminDeleteUser);
+route.post('/update/:id', isAuthenticated, userManagementController.adminUpdateUser);
 
 module.exports=route;

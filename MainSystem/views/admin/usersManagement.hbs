@@ -85,9 +85,9 @@
                                         <div class="container">
                                             <div class="row py-2">
                                                 {{#if active}}
-                                                    <button id="active-button" type="button" class="btn btn-warning">Lock</button>
+                                                    <button id="active-button" onclick="updateAccount('{{customer_id}}')" type="button" class="btn btn-warning">Lock</button>
                                                 {{else}}
-                                                    <button id="active-button" type="button" class="btn btn-success">Unclock</button>
+                                                    <button id="active-button" onclick="updateAccount('{{customer_id}}')" type="button" class="btn btn-success">Unclock</button>
                                                 {{/if}}
                                             </div>
                                             <div class="row py-2">
@@ -166,6 +166,7 @@
 
 <form method="POST" name="delete-form"></form>
 
+<form method="POST" name="update-form"></form>
 
 <script>
     function subtractOne(currentPage) {
@@ -233,7 +234,11 @@
        event.preventDefault();
       $('#delete-course-modal').modal('hide');
     });
-
+    function updateAccount(accountId){
+        var updateForm = document.forms['update-form'];
+        updateForm.action = '/user-management/update/'+accountId+'?_method=POST';
+        updateForm.submit();
+    }
     document.addEventListener('DOMContentLoaded', function() {
         var btnDeleteCourse=document.getElementById("btn-delete-course");
         btnDeleteCourse.onclick=function(){
@@ -297,7 +302,7 @@
                 row.innerHTML += `<td>
                     <div class="container">
                         <div class="row py-2">
-                                <button id="active-button" type="button" class="btn btn-warning">Lock</button>
+                                <button id="active-button" onclick="updateAccount('${book.customer_id}')" type="button" class="btn btn-warning">Lock</button>
                         </div>
                         <div class="row py-2">
                             <button id="delete-button" onclick="openDeleteModal('${book.customer_id}')" type="button" class="btn btn-danger py-2">Delete</button>
@@ -309,7 +314,7 @@
                 row.innerHTML += `<td>
                     <div class="container">
                         <div class="row py-2">                      
-                                <button id="active-button" type="button" class="btn btn-success">Unclock</button>
+                                <button id="active-button" onclick="updateAccount('${book.customer_id}')" type="button" class="btn btn-success">Unclock</button>
                         </div>
                         <div class="row py-2">
                             <button id="delete-button" onclick="openDeleteModal('${book.customer_id}')" type="button" class="btn btn-danger py-2">Delete</button>

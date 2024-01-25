@@ -106,7 +106,23 @@ class userManagementController{
             console.error('Error deleting Account:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
-    }       
+    }
+    async adminUpdateUser(req,res,next){ 
+        const {id} = req.params;
+
+        try {
+            const rs = await Account.UpdateStatusAccount(id);
+           
+            if(rs) {
+                res.redirect('/user-management');
+            } else {
+                res.status(404).json({ error: 'Account not found' });
+            }
+        } catch (error) {
+            console.error('Error deleting Account:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }         
 }
 
 module.exports=new userManagementController;
