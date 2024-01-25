@@ -1,0 +1,62 @@
+<div class="row py-2">
+    <div class="col-8 offset-2">
+        <div class="card align-items-center">
+            <article class="card-body w-75">
+                <h4 class="card-title mt-3 text-center">Enter PIN</h4>
+                <form id="signup-form">
+    
+                    <div class="form-group input-group py-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <b>PIN:</b> </span>
+                        </div>
+                        <input id="pin" name="pin" class="form-control" placeholder="Create PIN" type="password">
+                    </div> <!-- form-group// -->
+
+                    <div class="form-group mt-2 d-flex flex-column align-items-center">
+                        <button id="submitbtn" type="submit" class="btn btn-warning btn-block"> Confirm </button>
+                        <div id="form-message"></div>
+                    </div> <!-- form-group// -->
+                </form>
+            </article>
+        </div> <!-- card.// -->
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>  
+    $(document).ready(function() {
+        const formMessage = document.getElementById('form-message');
+        $('#signup-form').on('submit', function(e) {
+            e.preventDefault(); // Ngăn chặn form gửi thông tin mặc định
+            // Gửi yêu cầu Ajax để kiểm tra validate
+            // Lấy giá trị từ các trường nhập liệu
+            const pin = $('#pin').val().toString();
+            console.log(pin)
+            if (pin.length !== 6) {
+                formMessage.innerHTML = '<div class="alert alert-danger">Mã PIN phải chứa đúng 6 chữ số.</div>';
+                return;
+            }
+            $.ajax({
+                url: 'https://localhost:3113/check', // Địa chỉ endpoint để kiểm tra validate
+                method: 'POST',
+                data: {
+                    pin:pin,
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.isValid) {
+                    // Nếu thông tin hợp lệ, tiến hành đăng ký
+                    window.location.href = '/home';
+                } else {
+                    // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
+                   formMessage.innerHTML = '<div class="alert alert-danger">Mã pin không đúng</div>';
+                }
+                },
+                error: function(xhr, status, error) {
+                    // Xử lý lỗi nếu có
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>

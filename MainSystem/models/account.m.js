@@ -39,8 +39,8 @@ module.exports = class Account {
         try {
             let newId =parseInt(signUpInfor.id)
             await db.query(`INSERT INTO "payAccount"(
-                                "id", "balance")
-                                VALUES (${newId}, '${signUpInfor.balance}');`);
+                                "id", "balance","pin")
+                                VALUES (${newId}, '${signUpInfor.balance}', '${signUpInfor.pin}');`);
             return newId;
         } catch (error) {
             throw error;

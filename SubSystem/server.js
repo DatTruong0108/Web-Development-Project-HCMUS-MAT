@@ -9,6 +9,7 @@ const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const jwt = require('jsonwebtoken');
+const bcryptH = require('./helpers/bcrypt.h');
 
 const https=require('https');
 const bodyparser = require("body-parser");
@@ -113,46 +114,89 @@ passport.use(
 
 app.use(passport.initialize());
 
+app.get('/home', passport.authenticate('jwt', { session: false }),async (req, res) => {
+  const account=await payAccount.get('id',req.user.ID);
+  if (account){
+    res.render('home',{username:req.user.username, account:account})
+  }
+});
 // Route để đảm bảo người dùng đã xác thực
-app.get('/home', passport.authenticate('jwt', { session: false }), (req, res) => {
-  res.send(`Welcome to SmartPay, ${req.user.username}!`);
+app.get('/authenticate', passport.authenticate('jwt', { session: false }),async (req, res) => {
+    const account=await payAccount.get('id',req.user.ID);
+    if (!account){
+      res.render('createAcc',{username:req.user.username})
+    }
+    else{
+      res.cookie('user', req.user.ID, { maxAge: 86400000, httpOnly: true }); 
+      res.render('check')
+    }
 });
 
-app.post('/create-account', async (req, res) => {
-  const {token} = req.body;
+app.get('/back', passport.authenticate('jwt', { session: false }), (req, res) => {
+  // Kiểm tra xác thực thành công, sau đó chuyển hướng đến Server 2
+  res.redirect('https://localhost:3000/');
+});
+
+
+
+app.post('/check', async (req, res) => {
+  try{
+   const id=parseInt(req.cookies.user);
+   const {pin} = req.body;
+   const account=await payAccount.get('id',id);
+  console.log(account.pin);
+   const isValidPassword = await bcryptH.check(pin.toString(), account.pin);
+   if (isValidPassword) {
+      res.status(200).json({ success: true,isValid:true});
+    }
+    else res.status(200).json({ success: true,isValid:false});
+  }catch{
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+
+})
+
+app.post('/create-account', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const {pin} = req.body;
   
   try {
     // Giải mã token để trích xuất thông tin người dùng
-     let userId;
-     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
-      if (err) {
-          return res.status(401).json({ message: "Token không hợp lệ." });
-      } else {
-          userId = decoded.sub;
-      }
-    });
+    const pws = await bcryptH.hashPassword(pin);
     
     const newAcc=new payAccount({
-      id:parseInt(userId),
+      id:parseInt(req.user.ID),
       balance:parseFloat(0),
+      pin:pws.toString()
     });
 
     const rs=await Account.addPayAccount(newAcc);
     console.log(rs);
 
-    res.json({ message: 'Account created successfully' });
+    res.status(200).json({ success: true});
   } catch (error) {
-    if (error.name === 'JsonWebTokenError') {
-      // Lỗi khi giải mã token
-      res.status(401).json({ error: 'Invalid token' });
-    } else {
-      // Các lỗi khác
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error.' });
   }
 });
 
+app.post('/addBalance', async (req, res) => {
+  try {
+    // Lấy số tiền từ yêu cầu POST
+    const balanceAmount = parseFloat(req.body.balanceAmount);
 
+    const id=parseInt(req.cookies.user);
+    let account=await payAccount.get('id',id);
+    const rs=await payAccount.updateBalance(balanceAmount+account.balance,id);
+    account=await payAccount.get('id',id);
+
+    // Trả về kết quả thành công
+    res.status(200).json({ success: true, newBalance: account.balance });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
 
 const credentials = {
     key: process.env.PRIVATE_KEY,

@@ -49,16 +49,13 @@ module.exports = {
             if (checkUser == undefined) {
                 signUpData.password = await bcryptH.hashPassword(signUpData.password);
                 addId = await Account.addAccount(signUpData);
-                let token;
                 if(addId)
                 {   
-                    const userId = addId; // Thay đổi thành ID của người dùng mới được tạo
-                    token = jwt.sign({ sub: userId }, process.env.SECRET_KEY,{expiresIn: 86400000});
+                    const userId = addId; 
                     await Account.addCustomer(signUpData, addId);
-
                 }
                 else return res.json ({ isValid:false, message: 'cant add account to database' });
-                res.json({ isValid: true,token:token});
+                res.json({ isValid: true});
             } else {
                 res.json({ isValid:false, message: 'username has exist' });
             }

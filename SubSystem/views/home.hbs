@@ -1,1 +1,89 @@
-<h2>Hêre</h2>
+<button style="background-color:#deab8f; border:0px" class="btn btn-primary ml-4 mt-4 mb-4"> <a style="color:#ffffff;" href="/back">Back To SmartBook</a></button>
+
+<div class="container">
+    <h3 class="mt-4">Welcome to SmartPay, {{username}}!</h3>
+
+    <div class="mt-4 d-flex justify-content-center align-items-center mt-3">
+        <div class="balance-group d-inline-flex align-items-center mr-4">
+            <h5>Số dư</h5>
+            <div style="width: 300px; background-color:#fae6d4" class="balance-value border p-2 ml-4 text-center"><strong>$ {{account.balance}}</strong></div>
+        </div>
+
+         <button id="addBalanceButton" style="background-color:#deab8f; border:0px" class="btn btn-primary ml-4">Nạp tiền</button>
+    </div>
+
+    <div class="mt-4">
+        <h4>Lịch sử giao dịch</h4>
+    </div>
+</div>
+
+<!-- Thêm modal vào body -->
+<div class="modal" tabindex="-1" role="dialog" id="addBalanceModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nạp tiền</h5>
+        <button type="button" id="closeButton" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addBalanceForm">
+          <div class="form-group">
+            <label for="balanceInput">Số tiền:</label>
+            <input type="number" class="form-control" id="balanceInput" placeholder="Nhập số tiền">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="confirmAddBalance">OK</button>
+        <button id="cancelButton" type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+   const cancelButton = document.querySelector('.modal .modal-footer .btn-secondary');
+    cancelButton.addEventListener('click', function(event) {
+       event.preventDefault();
+      $('#addBalanceModal').modal('hide');
+    })
+    const closeButton = document.querySelector('.close');
+    closeButton.addEventListener('click', function(event) {
+       event.preventDefault();
+      $('#addBalanceModal').modal('hide');
+    });
+
+  
+  $(document).ready(function () {
+    // Khi nút "Nạp tiền" được bấm, mở modal
+    $("#addBalanceButton").click(function () {
+      $("#addBalanceModal").modal("show");
+    });
+
+    // Khi nút "OK" trong modal được bấm, thực hiện AJAX để gửi số tiền
+    $("#confirmAddBalance").click(function () {
+      var balanceAmount = $("#balanceInput").val();
+
+      // Thực hiện AJAX tới "/addBalance" với số tiền
+      $.ajax({
+        type: "POST",
+        url: "/addBalance",
+        data: { balanceAmount: balanceAmount },
+        success: function (data) {
+          // Xử lý kết quả nếu cần
+          // Đóng modal sau khi xử lý
+          $("#addBalanceModal").modal("hide");
+          alert("Nạp tiền thành công!")
+           $(".balance-value strong").text("$ " + data.newBalance);
+        },
+        error: function (error) {
+          // Xử lý lỗi nếu cần
+        }
+      });
+    });
+  });
+</script>

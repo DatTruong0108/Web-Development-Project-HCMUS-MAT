@@ -187,7 +187,7 @@ const authenticate = passport.authenticate('jwt', { session: false });
 app.get('/smartpay', authenticate, (req, res) => {
   console.log("kff");
   // Kiểm tra xác thực thành công, sau đó chuyển hướng đến Server 2
-  res.redirect('https://localhost:3113/home');
+  res.redirect('https://localhost:3113/authenticate');
 });
 
 const credentials = {
