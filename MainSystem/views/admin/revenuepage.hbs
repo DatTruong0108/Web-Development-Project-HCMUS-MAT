@@ -1,0 +1,76 @@
+
+
+<div class="container d-flex justify-content-center mt-5 mb-5" style="width: 100%;">
+    <form method="POST" action="/admin/revenue" id="form" name="date">
+            <div class="row">
+                <div class="col" >
+                    <div class="input-group mb-3">
+                        <label style="">Chọn khoảng thời gian:</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="width: 100%;">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Từ ngày:</span>
+                        <input type="date" class="form-control" id="startDate" name="startDate" required>
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-3" style="width: 100%;">
+                        <span class="input-group-text">Đến ngày:</span>
+                        <input type="date" class="form-control" id="endDate" name="endDate" required>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="row py-2">
+                <div class="col-md-4 offset-4" >
+                    <div class="input-group mb-3">
+                        <button style="background-color: #ffcc81; border:#ffcc81" type="submit" class="btn btn-primary">Tìm kiếm</button>
+                    </div>
+                </div>
+            </div>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <canvas id="myChart" width="400" height="200" style="margin: 25px"></canvas>
+<script>
+        // Lấy dữ liệu doanh thu từ controller và truyền vào biểu đồ
+        //var revenueData = {{ revenueData }};
+        const _labels = `{{labels}}`;
+        var labels=_labels.split(',');
+        var ctx = document.getElementById('myChart').getContext('2d');
+        const revenueData = {
+                    labels:labels, 
+                    datasets: [
+                        {
+                            label: 'Doanh thu',
+                            data: {{data}}, // Thay thế bằng dữ liệu của bạn
+                            borderColor: 'red', // Thay thế màu sắc nếu cần
+                            backgroundColor: 'rgba(255, 0, 0, 0.5)', // Thay thế màu sắc nếu cần
+                            pointStyle: 'circle',
+                            pointRadius: 10,
+                            pointHoverRadius: 15
+                        }
+                    ]
+                };
+
+        const config = {
+            type: 'line',
+            data: revenueData,
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Point Style: ' + revenueData.datasets[0].pointStyle,
+                    }
+                }
+            }
+        };
+
+        var myChart = new Chart(ctx, config);
+    </script>

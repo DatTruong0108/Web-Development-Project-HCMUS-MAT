@@ -4,7 +4,7 @@ const route=express.Router();
 const cookieParser = require("cookie-parser");
 route.use(cookieParser());
 const isAuthenticated=require('../middlewares/authenticate')
-
+const revenueController = require('../controllers/revenue.c');
 const AdminController=require('../controllers/AdminController');
 
 route.get('/category/edit', isAuthenticated, AdminController.adminEditCatePage);
@@ -15,5 +15,7 @@ route.post('/category/delete/:id', isAuthenticated, AdminController.adminDeleteC
 route.post('/category/edit/:id', isAuthenticated, AdminController.adminEditCategory);
 route.get('/ajax/:categoryName/:page?',isAuthenticated, AdminController.getBooksByCategory);
 route.get('/showProducts',isAuthenticated, AdminController.showProducts);
+route.get('/revenue', isAuthenticated, revenueController.getRevenue);
+route.post('/revenue', isAuthenticated, revenueController.postRevenue);
 
 module.exports=route;
