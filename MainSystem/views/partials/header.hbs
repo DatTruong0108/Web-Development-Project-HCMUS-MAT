@@ -49,12 +49,8 @@
         <button type="button" class="btn btn-warning btn-signin"><a style="color: #ffffff;" href="/account/signout">Sign Out</a></button>
       {{/ifE}}
       {{#ifE role "user"}}
-<<<<<<< HEAD
         <img src="/{{avatar}}" alt="User Avatar" class="rounded-circle mr-3 ml-2" width="40" height="40">
         <button type="button" class="btn btn-warning btn-signin"><a style="color: #ffffff;" href="/smartpay">SmartPay</a></button>
-=======
-        <img src="/{{avatar}}" class="rounded-circle mr-3 ml-2" width="40" height="40">
->>>>>>> 40e193e9b20812cbc9e3bcfa4b5d9b95093f9354
         <button type="button" class="btn btn-warning btn-signin"><a style="color: #ffffff;" href="/account/signout">Sign Out</a></button>
       {{/ifE}}
     {{else}}
@@ -72,7 +68,7 @@
         <a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
         <a class="nav-item nav-link" href="/admin/showProducts">Products</a>
         <a class="nav-item nav-link" href="/admin/category">Categories</a>
-        <a class="nav-item nav-link" href="#">Users</a>
+        <a class="nav-item nav-link" href="/user-management">Users</a>
         <a class="nav-item nav-link" href="#">Orders</a>
         <a class="nav-item nav-link" href="#">Revenue</a>
         {{/ifE}}
