@@ -209,7 +209,7 @@
                 updatePagination(data.totalPages, page);
 
                 // Cập nhật đường dẫn mà không load lại trang
-                const newUrl = `/user-management/id=${customerID}&name=${customerName}&range=${balanceRange}&s=${sortBy}&page=${page}`;
+                const newUrl = `/user-management/filter?id=${customerID}&name=${customerName}&range=${balanceRange}&s=${sortBy}&page=${page}`;
                 history.pushState({ page: page, name: customerName, id:customerID, range:balanceRange, s:sortBy }, '', newUrl);
             })
             .catch(error => console.error('Error:', error));

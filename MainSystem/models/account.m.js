@@ -62,9 +62,12 @@ module.exports = class Account {
         // Xây dựng phần điều kiện cho filter id
         let idCondition = '';
         if (id !== 'all') {
-            idCondition = `AND c.customer_id = ${parseInt(id)}`;
+            const parsedId = parseInt(id);
+            if (!isNaN(parsedId)) {
+                idCondition = `AND c.customer_id = ${parsedId}`;
+            }
         }
-    
+        
         // Xây dựng phần điều kiện cho filter name
         let nameCondition = '';
         if (name !== 'all') {
@@ -132,7 +135,10 @@ module.exports = class Account {
         // Xây dựng phần điều kiện cho filter id
         let idCondition = '';
         if (id !== 'all') {
-            idCondition = `AND c.customer_id = ${parseInt(id)}`;
+            const parsedId = parseInt(id);
+            if (!isNaN(parsedId)) {
+                idCondition = `AND c.customer_id = ${parsedId}`;
+            }
         }
     
         // Xây dựng phần điều kiện cho filter name
