@@ -14,6 +14,7 @@ class BookController {
         const token = req.cookies.token;
         let username;
         let role;
+        let avatar;
         if (token)
         {
          jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
@@ -25,6 +26,8 @@ class BookController {
             }
            });
            const account = await Account.findAccount(username);
+           const customer = await Account.findCustomer(account.ID);
+           avatar = customer.avatar;
            req.user=account;
         }
         const bookId = req.params.id;
@@ -33,7 +36,7 @@ class BookController {
         if (rs) {
             const catId = rs.catID;
             const relevant = await Book.search('catID', catId);
-            res.render('book/view', { book: rs, related: relevant, user: req.user, role: role });
+            res.render('book/view', { book: rs, related: relevant, user: req.user, role: role, avatar });
         }
         else {
             res.send('No book found');
