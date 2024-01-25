@@ -6,6 +6,7 @@ const {engine}=require('express-handlebars');
 const methodOverride=require("method-override");
 const passport = require('passport');
 
+
 const https=require('https');
 const bodyparser = require("body-parser");
 
@@ -82,7 +83,9 @@ app.engine(
               const rs = 'page=' + nextPage;
               return rs;
           },
-      
+          addOne: function (index) {
+            return index + 1;
+          },
           range: function (start, end) {
               const result = [];
               for (let i = start; i <= end; i++) {
