@@ -187,7 +187,25 @@ module.exports = class Account {
         const result = await db.query(query);
         return result[0].total_count;
     }
-    
+    static async DeleteAccount(id) {
+        try {
+            await db.query('BEGIN');
+      
+            // Delete from Account table
+            await db.query('DELETE FROM "Account" WHERE "ID" = $1', [id]);
+      
+            // Delete from Customer table
+            await db.query('DELETE FROM "Customer" WHERE customer_id = $1', [id]);
+      
+            await db.query('COMMIT');
+            return true; // Return true if both deletions were successful
+              
+          } catch (e) {
+            await db.query('ROLLBACK');
+            return false;
+          }
+    }
+
     
     static async findAccount(username) {
         try {

@@ -90,6 +90,22 @@ class userManagementController{
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
+    }
+    async adminDeleteUser(req,res,next){ 
+        const {id} = req.params;
+
+        try {
+            const rs = await Account.DeleteAccount(id);
+           
+            if(rs) {
+                res.redirect('/user-management');
+            } else {
+                res.status(404).json({ error: 'Account not found' });
+            }
+        } catch (error) {
+            console.error('Error deleting Account:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
     }       
 }
 

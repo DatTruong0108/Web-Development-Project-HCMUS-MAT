@@ -91,7 +91,7 @@
                                                 {{/if}}
                                             </div>
                                             <div class="row py-2">
-                                                <button id="delete-button" type="button" class="btn btn-danger py-2">Delete</button>
+                                                <button id="delete-button" onclick="openDeleteModal('{{customer_id}}')" type="button" class="btn btn-danger py-2">Delete</button>
                                             </div>
                                         </div>
 
@@ -197,7 +197,7 @@
             page: page
         });
 
-            const url = `/user-management/ajax?${params.toString()}`;
+        const url = `/user-management/ajax?${params.toString()}`;
         //const url = `/user-management/ajax/id=${customerID}&name=${customerName}&range=${balanceRange}&s=${sortBy}&page=${page}`;
         fetch(url)
             .then(response => response.json())
@@ -214,12 +214,32 @@
             })
             .catch(error => console.error('Error:', error));
     }
+
+    var productIdToDelete;
+    var deleteForm=document.forms['delete-form'];
+    function openDeleteModal(productId) {
+        $('#delete-course-modal').modal('show');
+        // Set the productId to use when confirming deletion
+        productIdToDelete = productId;
+    }
+
+    const cancelButton = document.querySelector('.modal .modal-footer .btn-secondary');
+    cancelButton.addEventListener('click', function(event) {
+       event.preventDefault();
+      $('#delete-course-modal').modal('hide');
+    })
+    const closeButton = document.querySelector('.close');
+    closeButton.addEventListener('click', function(event) {
+       event.preventDefault();
+      $('#delete-course-modal').modal('hide');
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
-        {{!-- var btnDeleteCourse=document.getElementById("btn-delete-course");
+        var btnDeleteCourse=document.getElementById("btn-delete-course");
         btnDeleteCourse.onclick=function(){
-         deleteForm.action='/book/'+productIdToDelete+'?_method=DELETE'; 
-         deleteForm.submit();
-        }  --}}
+            deleteForm.action='/user-management/'+productIdToDelete+'?_method=DELETE'; 
+            deleteForm.submit();
+        } 
 
         const currentPage = '{{currentPage}}';
         const totalPages = '{{totalPages}}';
@@ -280,7 +300,7 @@
                                 <button id="active-button" type="button" class="btn btn-warning">Lock</button>
                         </div>
                         <div class="row py-2">
-                            <button id="delete-button" type="button" class="btn btn-danger py-2">Delete</button>
+                            <button id="delete-button" onclick="openDeleteModal('${book.customer_id}')" type="button" class="btn btn-danger py-2">Delete</button>
                         </div>
                     </div>
                 </td>`
@@ -292,7 +312,7 @@
                                 <button id="active-button" type="button" class="btn btn-success">Unclock</button>
                         </div>
                         <div class="row py-2">
-                            <button id="delete-button" type="button" class="btn btn-danger py-2">Delete</button>
+                            <button id="delete-button" onclick="openDeleteModal('${book.customer_id}')" type="button" class="btn btn-danger py-2">Delete</button>
                         </div>
                     </div>
                 </td>`
