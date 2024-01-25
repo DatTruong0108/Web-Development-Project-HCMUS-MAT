@@ -20,4 +20,9 @@ module.exports=class Book{
         const rs=await db.insert(tbName,order,'id');
         return rs;
     }
+
+    static async findListOrder(id){
+        const rs = await db.getOrder(tbName, "userID", id);
+        return rs;
+    }
 }

@@ -52,11 +52,17 @@ route.use(cookieParser());
 const HomeController=require('../controllers/HomeController');
 const isAuthenticated=require('../middlewares/authenticate')
 
+<<<<<<< HEAD
 
 route.get('/profile',isAuthenticated,HomeController.profile);
 
 route.get('/orderHistory', HomeController.orderHistory);
 
+=======
+//route.post('/search',HomeController.index);
+route.get('/orderHistory', HomeController.orderHistory);
+route.get('/profile',HomeController.profile);
+>>>>>>> 40e193e9b20812cbc9e3bcfa4b5d9b95093f9354
 route.get('/',HomeController.index);
 
 route.post('/profile/edit',HomeController.profileEdit);

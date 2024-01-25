@@ -1,68 +1,79 @@
 <h1 class="profile-title mt-5">Order History</h1>
-<div class="container mt-5 mb-5">
-    <div class="card card-list mt-4">
-        <div class="row ml-4 mr-4 mt-4">
-            <div class="col-5 text-center">
-                <h1 class="title-font">PRODUCT</h1>
+<div class="container mt-4 mb-5">
+    {{#each listOrder}}
+    <div class="card card-order-history mt-4 mx-auto">
+        <div class="backgound-summary">
+            <span class="ordersum-font ml-3">Order summary</span>
+        </div>
+        <div class="row mt-2 mb-2 ml-3">
+            <div class="col-6">
+                {{#each listNames}}
+                    <span class="summary-text1">{{this}}</span>
+                    {{#unless @last}}
+                        <br>
+                    {{/unless}}
+                {{/each}}
             </div>
-            <div class="col-2 text-center">
-                <h1 class="title-font">PRICE</h1>
-            </div>
-            <div class="col-3 text-center">
-                <h1 class="title-font">QTY</h1>
-            </div>
-            <div class="col-2 text-center">
-                <h1 class="title-font">UNIT PRICE</h1>
+            <div class="col-1"></div>
+            <div class="col-5">
+                <span class="summary-text2">{{getPriceQuantity listPrices listQuantity}}</span>
             </div>
         </div>
-        <hr class="line ml-4 mr-4">
-        <div id="bookList" class="ml-4 mr-4">
-            <div class="row custom-row">
-                <div class="col-5">
-                    <div class="row d-flex align-items-center justify-content-center">
-                        <div class="form-check mr-3 mb-4">
-                            <input class="form-check-input custom-checkbox" type="checkbox" value="{{name}}" id="checkPayment">
-                        </div>
-                        <div class="mr-4">
-                            <img src="/Images/Books/80.jpg" class="img-thumbnail rounded" alt="${book.name}"
-                                style="width: 120px; height: 180px; object-fit: cover;">
-                        </div>
-                        <h1 class="namebook-font namebook">HAPPY</h1>
-                    </div>
-                </div>
-                <div class="col-2 text-center">
-                    <p>$12.00</p>
-                </div>
-                <div class="col-3 text-center">
-                    <div class="row text-center d-flex align-items-center justify-content-center">
-                        <div class="input-group custom-input-group mr-3">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary minusBtn" type="button">-</button>
-                            </div>
-                            <input type="text" class="form-control text-center custom-input" value="1" id="quantityInput" disabled>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary plusBtn" type="button">+</button>
-                            </div>
-                        </div>
-                        <i class="fas fa-trash-alt trashBtn" style="color: red;"></i>
-                    </div>
-                </div>
-                <div class="col-2 text-center">
-                    <p>$12.00</p>
-                </div>
+        <hr class="ml-4 mr-4 my-0">
+        <div class="row mt-2 mb-2 ml-3">
+            <div class="col-6">
+                <span class="summary-text1">Order subtotal</span>
             </div>
-            <hr class="line">
-            <div class="row mt-4 mb-4">
-                <div class="col-5"></div>
-                <div class="col-2"></div>
-                <div class="col-3 text-center">
-                    <p class="checkout-font2 ml-5">TOTAL</p>
-                </div>
-                <div class="col-2 text-center" id="total">
-                    <p>$12.00</p>
-                </div>
+            <div class="col-1"></div>
+            <div class="col-5">
+                <span class="summary-text2">${{subTotal}}</span>
+            </div>
+        </div>
+        <hr class="ml-4 mr-4 my-0">
+        <div class="row mt-2 mb-2 ml-3">
+            <div class="col-6">
+                <span class="summary-text1">Shipping fee</span>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5">
+                <span class="summary-text2">${{shippingFee}}</span>
+            </div>
+        </div>
+        <hr class="ml-4 mr-4 my-0">
+        <div class="row mt-2 mb-2 ml-3">
+            <div class="col-6">
+                <span class="summary-text1">Ordered Date</span>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5">
+                <span class="summary-text2" id="date">{{formatDate date}}</span>
+            </div>
+        </div>
+        <hr class="ml-4 mr-4 my-0">
+        <div class="row mt-2 mb-2 ml-3">
+            <div class="col-6">
+                <span class="summary-text1">Status</span>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5">
+                <span class="summary-text2">{{status}}</span>
+            </div>
+        </div>
+        <hr class="ml-4 mr-4 my-0">
+        <div class="row mt-2 mb-4 ml-3">
+            <div class="col-6">
+                <span class="summary-text1">Total</span>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5">
+                <span class="summary-text2">${{total}}</span>
             </div>
         </div>
     </div>
+    {{/each}}
 </div>
+
+<script>
+    
+</script>
 

@@ -227,4 +227,20 @@ module.exports={
             }
         }
     },
+
+    getOrder: async(tbName,clName, id)=>{
+        let dbcn=null;
+        try {
+            dbcn=await db.connect();
+            const query = `SELECT * FROM $1:name WHERE $2:name = $3;`;
+            const values = [tbName, clName, id];
+            const result = await db.manyOrNone(query, values);
+            return result;
+          } catch (error) {
+            console.error('ERROR:', error);
+          } 
+          finally{
+            dbcn.done();
+          }
+    }, 
 }

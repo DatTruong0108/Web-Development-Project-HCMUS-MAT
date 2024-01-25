@@ -10,6 +10,7 @@ class CartController{
         const token = req.cookies.token;
         let username;
         let role;
+        let avatar;
         if (token)
         {
          jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
@@ -21,6 +22,8 @@ class CartController{
             }
            });
            const account = await Account.findAccount(username);
+           const customer = await Account.findCustomer(account.ID);
+           avatar = customer.avatar;
            req.user=account;
         }
 
@@ -34,7 +37,7 @@ class CartController{
         const totalPages = Math.ceil(totalBooks / itemsPerPage);
         const cateName = "all";
 
-        res.render('cartpage', { catgories, user: req.user, role:role });
+        res.render('cartpage', { catgories, user: req.user, role:role, avatar });
     }
 
     async store(req,res,next){
