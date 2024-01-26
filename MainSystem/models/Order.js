@@ -3,8 +3,7 @@ const fs = require('fs');
 const tbName = 'Order';
 
 module.exports=class Order{
-    constructor({id, listItems,listQuantity,userID,status,subTotal,shippingFee,total,address,phone,date}){
-        this.id=id;
+    constructor({listItems,listQuantity,userID,status,subTotal,shippingFee,total,address,phone,date}){
         this.listItems=listItems;
         this.listQuantity=listQuantity;
         this.userID=userID;
