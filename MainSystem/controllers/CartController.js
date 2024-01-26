@@ -81,7 +81,7 @@ class CartController{
             res.clearCookie('phone');
             res.clearCookie('list');
             // res.send("Order is created");
-            res.redirect('https://localhost:3113/authenticate');
+            res.redirect('https://localhost:3113/authenticate-payment');
         }
     }
 }
