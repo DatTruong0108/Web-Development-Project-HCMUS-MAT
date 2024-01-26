@@ -3,6 +3,16 @@ const Book=require('../models/Book')
 const Account=require('../models/account.m')
 const Category=require('../models/Category')
 const jwt = require('jsonwebtoken')
+const Handlebars = require('handlebars');
+
+Handlebars.registerHelper('gte', function (a, b, options) {
+    if (a > b) {
+        return options.fn(this);
+    } else if (options.inverse) {
+        return options.inverse(this);
+    }
+    return '';
+});
 
 class userManagementController{
     async index(req,res,next){ 
