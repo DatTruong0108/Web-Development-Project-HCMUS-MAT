@@ -25,4 +25,32 @@ module.exports=class Book{
         const rs = await db.getOrder(tbName, "userID", id);
         return rs;
     }
+    static async getRevenue(startDate, endDate) {
+        try {
+          // Kết nối đến cơ sở dữ liệu
+          //const client = await pool.connect();
+            console.log(startDate + " " + endDate);
+          // Truy vấn lấy tổng doanh thu theo ngày
+          const query = `
+            SELECT date, SUM(total) AS totalOrder
+            FROM "Order"
+            WHERE date >= $1 AND date <= $2
+            GROUP BY date
+            ORDER BY date;
+          `;
+      
+          // Thực hiện truy vấn với các tham số startDate và endDate
+          const rs = await db.query(query, [startDate, endDate]);
+      
+          // Giải phóng kết nối
+          //client.release();
+      
+          // Trả về kết quả
+          return rs;
+        } catch (err) {
+          // Xử lý lỗi nếu có
+          console.error('Error executing query', err);
+          throw err;
+        }
+      }
 }
