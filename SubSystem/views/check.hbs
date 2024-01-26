@@ -45,8 +45,8 @@
                 dataType: 'json',
                 success: function(response) {
                     if (response.isValid) {
-                    // Nếu thông tin hợp lệ, tiến hành đăng ký
-                    window.location.href = '/home';
+                    // Nếu thông tin hợp lệ, tiến hành thanh toán
+                    window.location.href = '/payment';
                 } else {
                     // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
                    formMessage.innerHTML = '<div class="alert alert-danger">Mã pin không đúng</div>';

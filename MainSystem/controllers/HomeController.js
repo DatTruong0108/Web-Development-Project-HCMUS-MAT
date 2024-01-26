@@ -132,6 +132,7 @@ class HomeController {
                 }
 
                 const filteredOrder = new OrderHistory({
+                    id: order.id,
                     listNames: listNames,
                     listPrices: listPrices,
                     listQuantity: listQuantity,

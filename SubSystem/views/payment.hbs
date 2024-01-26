@@ -80,62 +80,39 @@
                 <span class="summary-text2">${{total}}</span>
             </div>
         </div>
-        <button class="btn btn-success btn-payment" id="btn-payment-{{addOne @index}}">Thanh toán hóa đơn #{{addOne @index}}</button>
+        <button class="btn btn-success btn-payment" id="btn-payment-{{id}}">Thanh toán hóa đơn #{{id}}</button>
     </div>
     {{/each}}
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-{{!-- <script>
-    $(document).ready(() => {
+<script>
+    $(document).ready(function() {
         {{#each listOrder}}
-        $('#btn-payment-{{addOne @index}}').click((e) => {
+        $('#btn-payment-{{id}}').on('click', function(e) {
             e.preventDefault();
-
+            
             $.ajax({
                 url: 'https://localhost:3113/payment',
                 method: 'POST',
                 data: {
-                    order: {{this}},
+                    order_id: {{id}},
+                    total: {{total}}
                 },
                 dataType: 'json',
-                success: (response) => {
+                success: function(response) {
                     if (response.success) {
-                        alert('Thanh toán thành công');
                         window.location.href = '/payment';
+                        alert('Thanh toán thành công');
                     } else {
                         alert('Thanh toán thất bại');
                     }
                 },
-                error: (xhr, status, error) => {
+                error: function(xhr, status, error) {
                     console.error(error);
-                } 
+                }
             });
         });
         {{/each}}
     });
-    {{!-- document.addEventListener('DOMContentLoaded', function() {
-        {{#each listOrder}}
-        document.getElementById('btn-payment-{{addOne @index}}').addEventListener('click', function() {
-            fetch('/payment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    order: {{this}},
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Thanh toán thành công');
-                    window.location.href = '/payment';
-                } else {
-                    alert('Thanh toán thất bại');
-                }
-            })
-        });
-        {{/each}}
-    }); --}}
-</script> --}}
+</script>
