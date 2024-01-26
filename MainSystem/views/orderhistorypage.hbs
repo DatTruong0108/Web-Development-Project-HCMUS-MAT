@@ -7,16 +7,27 @@
         </div>
         <div class="row mt-2 mb-2 ml-3">
             <div class="col-6">
-                {{#each listNames}}
-                    <span class="summary-text1">{{this}}</span>
+                {{#each listItems}}
+                    <span class="summary-text1"><a style="color: #000000;" href="/book/{{this.id}}/view">{{this.name}}</a></span>
+                    <br>
                     {{#unless @last}}
                         <br>
                     {{/unless}}
                 {{/each}}
             </div>
             <div class="col-1"></div>
-            <div class="col-5">
+            <div class="col-3">
                 <span class="summary-text2">{{getPriceQuantity listPrices listQuantity}}</span>
+            </div>
+            <div class="col-2">
+                 {{#each listItems}}
+                    <button data-toggle="modal"
+                       data-target="#feedbackModal" data-id="{{this.id}}" style="background-color: #53a3c0;color:aliceblue; height:30px" class="btn-review btn pt-0">Review</button>
+                    <br>
+                    {{#unless @last}}
+                        <br>
+                    {{/unless}}
+                {{/each}}
             </div>
         </div>
         <hr class="ml-4 mr-4 my-0">
@@ -73,7 +84,94 @@
     {{/each}}
 </div>
 
+<div
+  class="modal fade"
+  id="feedbackModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="feedbackModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <form id="review-form">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-header-wrapper d-flex align-items-center h2">
+            <div class="modal-header-icon mr-3">
+              <i class="fa-solid fa-envelope-open-text"></i>
+            </div>
+            <h5 class="modal-title h1" id="feedbackModalLabel">Review Book</h5>
+          </div>
+
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="feadback_content">Viết đánh giá</label>
+            <textarea
+              class="form-control"
+              id="feadback_content"
+              name="feedback"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+          >Hủy bỏ</button>
+          <button type="submit" class="btn btn-outline-success">Lưu</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    
+     const user=`{{user.ID}}`;
+     const username=`{{user.username}}`;
+     $(document).ready(function() {
+            var bookID;
+            $('.btn-review').on('click', function () {
+            // Lấy giá trị data-id từ thuộc tính data-id của button
+              bookID = $(this).data('id');
+            });
+           $('#review-form').on('submit', function(e) {
+              e.preventDefault(); 
+               const review = $('#feadback_content').val().toString();
+               $.ajax({
+                url: 'https://localhost:3000/book/storeReview', // Địa chỉ endpoint để kiểm tra validate
+                method: 'POST',
+                data: {
+                    feedback:review,
+                    bookID:bookID,
+                    user:user,
+                    username:username,
+                    date:new Date().toISOString().split('T')[0]
+                },
+                dataType: 'json',
+                success: function(response) {     
+                    alert("Review thành công!");
+                    $("#feedbackModal").modal("hide");
+                },
+                error: function(xhr, status, error) {
+                    // Xử lý lỗi nếu có
+                    console.error(error);
+                }
+           })
+     })
+     })
 </script>
 

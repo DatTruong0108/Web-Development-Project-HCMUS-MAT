@@ -27,13 +27,11 @@ module.exports=class Book{
 
     static async get(clName, value) {
         const data = await db.get(tbName, clName, value);
-
         return data;
     }
 
     static async search(clName, value) {
         const data = await db.getMany(tbName, clName, value);
-
         return data;
     }
 
