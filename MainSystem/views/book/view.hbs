@@ -13,7 +13,7 @@
                        <p style="font-size: 2em;"><strong>{{book.price}}</strong></p>
                        <div class="btn-group">
                         <button style="background-color: #ba3838;;" class="btn-add-to-cart btn " onclick="addToCart('{{book.id}}')">Add to Cart</button>
-                        <button style="background-color: #ba3838;;" class="btn-add-to-cart btn ">Buy Now</button>
+                        <button style="background-color: #ba3838;;" class="btn-add-to-cart btn " onclick="buyNow('{{book.id}}')">Buy Now</button>
                        </div>         
                     </div>
                     <hr>
@@ -113,6 +113,43 @@
 
     // Thông báo thành công
     alert("Product added to cart!");
+  }
+
+  function buyNow(bookID){
+    let productName = "{{book.name}}";
+    let productImage = "/{{book.image}}";
+    let productPrice = parsePrice("{{book.price}}"); // Chuyển giá thành số thực
+    let listString = getCookie("list") || '[]';
+
+    // Giải mã HTML entities trước khi thực hiện JSON.parse
+    let decodedListString = decodeEntities(listString);
+
+    // Thực hiện JSON.parse với chuỗi đã giải mã
+    let list = JSON.parse(decodedListString);
+
+    // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
+    let existingProductIndex = list.findIndex(product => product.id === bookID);
+
+    if (existingProductIndex !== -1) {
+      // Nếu sản phẩm đã tồn tại, tăng số lượng lên
+      list[existingProductIndex].quantity++;
+      list[existingProductIndex].total = list[existingProductIndex].quantity * productPrice;
+    } else {
+      // Nếu sản phẩm chưa tồn tại, thêm mới vào giỏ hàng
+      var newProduct = {
+        id: bookID,
+        name: productName,
+        image: productImage,
+        price: productPrice,
+        quantity: 1,
+        total: productPrice * 1
+      };
+      list.push(newProduct);
+    }
+
+    // Lưu giỏ hàng vào cookies
+    setCookie("list", JSON.stringify(list));
+    window.location.href = `/cart/buynow/${bookID}`;
   }
 
   // Hàm lấy giá trị của cookie

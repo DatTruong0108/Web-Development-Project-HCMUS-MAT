@@ -1,0 +1,231 @@
+<div class="container mt-5 mb-5">
+    <div class="card card-list mt-4">
+        <div class="row ml-4 mr-4 mt-4">
+            <div class="col-5 text-center">
+                <h1 class="title-font">PRODUCT</h1>
+            </div>
+            <div class="col-2 text-center">
+                <h1 class="title-font">PRICE</h1>
+            </div>
+            <div class="col-3 text-center">
+                <h1 class="title-font">QTY</h1>
+            </div>
+            <div class="col-2 text-center">
+                <h1 class="title-font">UNIT PRICE</h1>
+            </div>
+        </div>
+        <hr class="line ml-4 mr-4">
+        <div id="bookList" class="ml-4 mr-4 mb-3">
+            <div class="row custom-row">
+                <div class="col-5">
+                    <div class="row d-flex align-items-center justify-content-center">
+                        <div class="mr-4">
+                            <img src="/{{bookImage}}" class="img-thumbnail rounded" alt="{{bookName}}"
+                                style="width: 120px; height: 180px; object-fit: cover;">
+                        </div>
+                        <h1 class="namebook-font namebook">{{bookName}}</h1>
+                    </div>
+                </div>
+                <div class="col-2 text-center">
+                    <p>{{bookPrice}}</p>
+                </div>
+                <div class="col-3 text-center">
+                    <div class="row text-center d-flex align-items-center justify-content-center">
+                        <div class="input-group custom-input-group mr-3">
+                            <div class="input-group-prepend" id="btnMinus">
+                                <button class="btn btn-outline-secondary minusBtn" type="button">-</button>
+                            </div>
+                            <input type="text" class="form-control text-center custom-input" value="1" id="quantityInput" disabled>
+                            <div class="input-group-append" id="btnPlus">
+                                <button class="btn btn-outline-secondary plusBtn" type="button">+</button>
+                            </div>
+                        </div>
+                </div>
+                    </div>
+                <div class="col-2 text-center">
+                    <p id="unitPrice"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-between mt-4 mr-5">
+        <div class="col-6">
+            <div class="card card-total mt-4 pl-4 pt-4 pr-4 pb-2">
+            <h5 class="mb-3">Delivery Address</h5>
+        <form>
+            <div class="form-group">
+                <label for="inputAddress">Address</label>
+                <input autofocus type="text" class="form-control" id="inputAddress">
+            </div>
+            
+            <div class="form-group">
+                <label for="inputPhone">Phone Number</label>
+                <input type="tel" class="form-control" id="inputPhone">
+            </div>
+        </form> 
+        </div>
+        </div>
+        <div class="col-6">
+            <div class="card card-total mt-4">
+                <div class="container">
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <p class="checkout-font ml-5">Subtotal</p>
+                        </div>
+                        <div class="col-6 text-right">
+                            <p id="subtotal" class="checkout-font mr-5">$0</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="checkout-font ml-5">Shipping fee</p>
+                        </div>
+                        <div class="col-6 text-right">
+                            <p id="shipfree" class="checkout-font mr-5">$2</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="checkout-font ml-5">Coupon</p>
+                        </div>
+                        <div class="col-6 text-right">
+                            <p class="checkout-font mr-5">No</p>
+                        </div>
+                    </div>
+                    <hr class="my-0">
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <p class="checkout-font2 ml-5">Total</p>
+                        </div>
+                        <div class="col-6 text-right">
+                            <p id="total" class="checkout-font2 mr-5">$0</p>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mb-4 ml-5 mr-5">
+                        <button type="button" class="btn btn-block btn-cart"><a style="color: #ffffff;">Check out</a></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function parsePrice(priceString) {
+        return parseFloat(priceString.replace('$', ''));
+    }
+    
+    // Hàm thiết lập giá trị của cookie
+    function setCookie(name, value) {
+        const now = new Date();
+        const expirationDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // Cookie sẽ tồn tại trong 30 ngày
+        document.cookie = `${name}=${value}; expires=${expirationDate.toUTCString()}; path=/`;
+    }
+
+    // Hàm lấy giá trị của cookie
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) {
+        return decodeURIComponent(parts.pop().split(';').shift());
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnPlus =  document.getElementById('btnPlus');
+        const btnMinus = document.getElementById('btnMinus');
+        const quantityInput = document.getElementById('quantityInput');
+        const unitPrice = document.getElementById('unitPrice');
+        const bookPriceString = "{{bookPrice}}";
+        const subtotalDisplay = document.getElementById('subtotal'); 
+        const totalDisplay = document.getElementById('total');
+        const shippingFeeDisplay = document.getElementById('shipfree');
+        const shippingFee = parsePrice(shippingFeeDisplay.textContent);
+
+        // Loại bỏ ký tự "$" và chuyển đổi sang kiểu số
+        const bookPrice = parseFloat(bookPriceString.replace('$', ''));
+
+        // Lấy giỏ hàng từ cookies
+        let list = getCookie("list") ? JSON.parse(getCookie("list")) : [];
+        console.log(list);
+
+        updateUnitPrice();
+        updateSubtotal();
+
+        btnPlus.addEventListener('click', function () {
+            let currentQuantity = parseInt(quantityInput.value);
+            currentQuantity++;
+            quantityInput.value = currentQuantity;
+            list[0].quantity = currentQuantity;
+            setCookie("list", JSON.stringify(list));
+            updateUnitPrice();
+            updateSubtotal();
+        });
+
+        btnMinus.addEventListener('click', function () {
+            let currentQuantity = parseInt(quantityInput.value);
+
+            if (currentQuantity > 1) {
+                currentQuantity--;
+                quantityInput.value = currentQuantity;
+                list[0].quantity = currentQuantity;
+                setCookie("list", JSON.stringify(list));
+                updateUnitPrice();
+                updateSubtotal();
+            } else {
+                alert('Minimum quantity must be 1'); 
+            }
+        });
+
+        function updateUnitPrice() {
+            const currentQuantity = parseInt(quantityInput.value);
+            const newUnitPrice = bookPrice * currentQuantity;
+            unitPrice.innerHTML = `$${newUnitPrice.toFixed(2)}`;
+        }
+
+        function updateSubtotal() {
+            const subtotal = list[0].price * list[0].quantity;
+            setCookie("subtotal", subtotal);
+            const total = subtotal + shippingFee;
+
+            subtotalDisplay.textContent = `$${subtotal.toFixed(2)}`;
+            totalDisplay.textContent = `$${total.toFixed(2)}`;
+
+            // Enable or disable the "Check Out" button based on whether any checkbox is checked
+            const checkOutButton = document.querySelector('.btn-cart a');
+            checkOutButton.disabled = !isAddressProvided();
+        }
+
+        // Event listener for the "Check Out" button
+        const checkOutButton = document.querySelector('.btn-cart a');
+        checkOutButton.addEventListener('click', function () {
+            // Perform the check if at least one checkbox is checked
+            if (!isAddressProvided()) {
+                alert('Please enter address and phone number.'); 
+                return;
+            }
+
+            const inputAddress = document.getElementById('inputAddress').value;
+            const inputPhone = document.getElementById('inputPhone').value;
+
+            setCookie("address",inputAddress);
+            setCookie("phone",inputPhone);
+            setCookie("time",new Date().toISOString().split('T')[0]);
+
+            // Proceed with the checkout process
+            window.location.href = '/cart/order'; // Redirect to the checkout page
+        });
+    });
+
+    function isAddressProvided() {
+        const inputAddress = document.getElementById('inputAddress');
+        const inputPhone = document.getElementById('inputPhone');
+        return inputAddress.value.trim() !== '' && inputPhone.value.trim() !== '';
+    }
+
+    function isAddressProvided() {
+        const inputAddress = document.getElementById('inputAddress');
+        const inputPhone = document.getElementById('inputPhone');
+        return inputAddress.value.trim() !== '' && inputPhone.value.trim() !== '';
+    }
+</script>
