@@ -268,7 +268,8 @@ class HomeController {
         else {
             let avatarPath = req.file.path; 
             const avatarPathWithForwardSlash = avatarPath.replace(/\\/g, '/');
-            const relativePath = avatarPathWithForwardSlash.split('public/')[1];
+            const relativePath = '/' + avatarPathWithForwardSlash.split('public/')[1];
+            console.log(relativePath);
 
             await db.update('Customer', 'fullname', fullname, 'customer_id', account.ID);
             await db.update('Customer', 'dob', birthday, 'customer_id', account.ID);
