@@ -167,6 +167,17 @@ app.get('/authenticate', passport.authenticate('jwt', { session: false }), async
   }
 });
 
+app.get('/authenticate-payment', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const account = await payAccount.get('id', req.user.ID);
+  if (!account) {
+    res.render('createAcc', { username: req.user.username })
+  }
+  else {
+    res.cookie('user', req.user.ID, { maxAge: 86400000, httpOnly: true });
+    res.render('checkpayment');
+  }
+});
+
 app.get('/back', passport.authenticate('jwt', { session: false }), (req, res) => {
   // Kiểm tra xác thực thành công, sau đó chuyển hướng đến Server 2
   res.redirect('https://localhost:3000/');
@@ -188,7 +199,25 @@ app.post('/check', async (req, res) => {
     res.status(500).json({ error: 'Internal server error.' });
   }
 
-})
+});
+
+app.post('/check-payment', async (req, res) => {
+  try {
+    const id = parseInt(req.cookies.user);
+    const { pin } = req.body;
+    const account = await payAccount.get('id', id);
+    console.log(account.pin);
+    const isValidPassword = await bcryptH.check(pin.toString(), account.pin);
+    if (isValidPassword) {
+      res.status(200).json({ success: true, isValid: true });
+    }
+    else res.status(200).json({ success: true, isValid: false });
+  } catch {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+
+});
 
 app.post('/create-account', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const { pin } = req.body;
