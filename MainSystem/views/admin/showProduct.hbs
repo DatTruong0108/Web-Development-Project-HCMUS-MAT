@@ -8,7 +8,7 @@
                     <h1 class="roboto-font-size-18 text-center">Category</h1>
                     <hr class="black-hr">
                     {{#each catgories}}
-                    <a onclick="categoryType('{{name}}')" class="roboto-font-size-18 pointer">{{name}}</a><br>
+                    <a onclick="categoryType('{{name}}')" class="list-item roboto-font-size-18 pointer">{{name}}</a><br>
                     {{/each}}
                 </div>
             </div>
@@ -89,6 +89,7 @@
 <form method="POST" name="delete-form"></form>
 
 <script>
+
     var productIdToDelete;
     var deleteForm=document.forms['delete-form'];
     function openDeleteModal(productId) {
@@ -119,10 +120,12 @@
 
                 // Cập nhật phân trang
                 updatePagination(data.totalPages, name, page);
+                
+                
 
                 // Cập nhật đường dẫn mà không load lại trang
-                const newUrl = `/admin/showProducts/${name}/page=${page}`;
-                history.pushState({ page: page, name: name }, '', newUrl);
+                {{!-- const newUrl = `/admin/showProducts/${name}/page=${page}`;
+                history.pushState({ page: page, name: name }, '', url); --}}
             })
             .catch(error => console.error('Error:', error));
     }

@@ -46,6 +46,7 @@
     <img  id="cartImage" class="mr-2 pointer" src="/Images/cart.png" alt="Logo" width="30" height="30">
     {{#if user}}
       {{#ifE role "admin"}}
+        <button type="button" class="btn btn-warning btn-signin"><a style="color: #ffffff;" href="/smartpay">SmartPay</a></button>
         <button type="button" class="btn btn-warning btn-signin"><a style="color: #ffffff;" href="/account/signout">Sign Out</a></button>
       {{/ifE}}
       {{#ifE role "user"}}
