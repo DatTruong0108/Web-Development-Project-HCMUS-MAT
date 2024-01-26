@@ -7,7 +7,9 @@ const BookController=require('../controllers/BookController');
 const Book = require('../models/Book');
 const cookieParser = require("cookie-parser");
 route.use(cookieParser());
-const isAuthenticated=require('../middlewares/authenticate')
+const isAuthenticated=require('../middlewares/authenticate');
+
+route.post('/storeReview',BookController.storeReview);
 
 route.put('/:id',upload.single('image'),BookController.update);
 route.delete('/:id',BookController.destroy);

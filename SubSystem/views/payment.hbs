@@ -1,0 +1,118 @@
+<div class="container">
+    <h3 class="mt-4">Welcome to SmartPay, {{username}}</h3>
+
+    <div class="mt-4 d-flex justify-content-center align-items-center mt-3">
+        <div class="balance-group d-inline-flex align-items-center mr-4">
+            <h5>Số dư</h5>
+            <div style="width: 300px; background-color:#fae6d4" class="balance-value border p-2 ml-4 text-center">
+                <strong>$ {{account.balance}}</strong></div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4 mb-5">
+    {{#each listOrder}}
+    <div class="card card-payment-list mt-4 mx-auto">
+        <div class="backgound-summary">
+            <span class="ordersum-font ml-3">Order summary order #{{id}}</span>
+        </div>
+        <div class="row mt-2 mb-2 ml-3">
+            <div class="col-6">
+                {{#each listNames}}
+                    <span class="summary-text1">{{this}}</span>
+                    {{#unless @last}}
+                        <br>
+                    {{/unless}}
+                {{/each}}
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5">
+                <span class="summary-text2">{{getPriceQuantity listPrices listQuantity}}</span>
+            </div>
+        </div>
+        <hr class="ml-4 mr-4 my-0">
+        <div class="row mt-2 mb-2 ml-3">
+            <div class="col-6">
+                <span class="summary-text1">Order subtotal</span>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5">
+                <span class="summary-text2">${{subTotal}}</span>
+            </div>
+        </div>
+        <hr class="ml-4 mr-4 my-0">
+        <div class="row mt-2 mb-2 ml-3">
+            <div class="col-6">
+                <span class="summary-text1">Shipping fee</span>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5">
+                <span class="summary-text2">${{shippingFee}}</span>
+            </div>
+        </div>
+        <hr class="ml-4 mr-4 my-0">
+        <div class="row mt-2 mb-2 ml-3">
+            <div class="col-6">
+                <span class="summary-text1">Ordered Date</span>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5">
+                <span class="summary-text2" id="date">{{formatDate date}}</span>
+            </div>
+        </div>
+        <hr class="ml-4 mr-4 my-0">
+        <div class="row mt-2 mb-2 ml-3">
+            <div class="col-6">
+                <span class="summary-text1">Status</span>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5">
+                <span class="summary-text2">{{status}}</span>
+            </div>
+        </div>
+        <hr class="ml-4 mr-4 my-0">
+        <div class="row mt-2 mb-4 ml-3">
+            <div class="col-6">
+                <span class="summary-text1">Total</span>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5">
+                <span class="summary-text2">${{total}}</span>
+            </div>
+        </div>
+        <button class="btn btn-success btn-payment" id="btn-payment-{{id}}">Thanh toán hóa đơn #{{id}}</button>
+    </div>
+    {{/each}}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        {{#each listOrder}}
+        $('#btn-payment-{{id}}').on('click', function(e) {
+            e.preventDefault();
+            
+            $.ajax({
+                url: 'https://localhost:3113/payment',
+                method: 'POST',
+                data: {
+                    order_id: {{id}},
+                    total: {{total}}
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        window.location.href = '/payment';
+                        alert('Thanh toán thành công');
+                    } else {
+                        alert('Thanh toán thất bại');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        });
+        {{/each}}
+    });
+</script>

@@ -101,7 +101,8 @@ class CartController{
             res.clearCookie('time');
             res.clearCookie('phone');
             res.clearCookie('list');
-            res.send("Order is created");
+            // res.send("Order is created");
+            res.redirect('https://localhost:3113/authenticate');
         }
     }
 }

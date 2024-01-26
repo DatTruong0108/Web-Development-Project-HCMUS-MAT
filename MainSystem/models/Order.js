@@ -2,7 +2,7 @@ const db = require('../utils/db');
 const fs = require('fs');
 const tbName = 'Order';
 
-module.exports=class Book{
+module.exports=class Order{
     constructor({listItems,listQuantity,userID,status,subTotal,shippingFee,total,address,phone,date}){
         this.listItems=listItems;
         this.listQuantity=listQuantity;
@@ -18,6 +18,16 @@ module.exports=class Book{
 
     static async insert(order){
         const rs=await db.insert(tbName,order,'id');
+        return rs;
+    }
+
+    static async getByID(id) {
+        const data = await db.get(tbName, 'id', id);
+        return data;
+    }
+
+    static async updateStatus(id, status) {
+        const rs = await db.update(tbName, 'status', status, 'id', id);
         return rs;
     }
 

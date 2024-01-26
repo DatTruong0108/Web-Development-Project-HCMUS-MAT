@@ -1,6 +1,7 @@
 const db=require('../utils/db')
 const Book=require('../models/Book')
 const Category=require('../models/Category');
+const Review=require('../models/Review');
 const path = require('path');
 const jwt = require('jsonwebtoken')
 const Account=require('../models/account.m')
@@ -10,14 +11,34 @@ const Account=require('../models/account.m')
 const IMAGE_UPLOAD_PATH='Images\\Books\\';
 
 class BookController {
+    async storeReview(req,res,next){
+        try{
+            console.log(req.body);
+            const newReview=new Review({
+                bookID:parseInt(req.body.bookID),
+                userID:parseInt(req.body.user),
+                username:req.body.username,
+                feedback:req.body.feedback,
+                date:req.body.date,
+            })
+    
+            const rs=await Review.insert(newReview);
+
+            res.status(200).json({ success: true});
+           }catch{
+             console.error(error);
+             res.status(500).json({ error: 'Internal server error.' });
+           }
+    }
     async viewDetail(req, res, next) {
         const token = req.cookies.token;
         let username;
         let role;
         let avatar;
+
         if (token)
         {
-         jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
             if (err) {
                 return res.status(401).json({ message: "Token không hợp lệ." });
             } else {
@@ -36,7 +57,8 @@ class BookController {
         if (rs) {
             const catId = rs.catID;
             const relevant = await Book.search('catID', catId);
-            res.render('book/view', { book: rs, related: relevant, user: req.user, role: role, avatar });
+            const result=await Review.search('bookID',bookId);
+            res.render('book/view', { book: rs, related: relevant, user: req.user, role: role, avatar,reviews:result });
         }
         else {
             res.send('No book found');
