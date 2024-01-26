@@ -68,6 +68,36 @@
   </a>
 </div>  
 
+<h3 class="ml-4 mt-4"> Reviews ({{reviews.length}}) </h3>
+
+{{#if reviews}}
+<div class="container">
+<div class="col-12 col-lg-9 mt-3">
+  <ul class="feedback-list pl-0">
+      {{#each reviews}}
+                <li class="feedback-item p-2 mb-3">
+                  <h5 class="feedback-author pl-2">{{this.username}}</h5>
+                  <div
+                    class="feedback-item-content d-flex flex-column flex-lg-row align-items-start align-items-lg-center m-3"
+                  >
+                    <div
+                      class="col-12 col-sm-6 d-flex flex-column align-items-start"
+                    >
+                      <div class="feedback-content">{{this.feedback}}</div>
+                      <div class="feedback-date mt-2 mt-sm-4">{{#dateToString
+                          this.date
+                        }}{{/dateToString}}</div>
+                    </div>
+                  </div>
+                </li>
+        {{/each}}
+      </ul>
+</div>
+</div>
+{{else}}
+<div class="text-center"><h6>No reviews</h6></div>
+{{/if}}
+
 <script>
   function parsePrice(priceString) {
     return parseFloat(priceString.replace('$', ''));
