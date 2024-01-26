@@ -1,5 +1,5 @@
 <nav class="navbar navbar-light bg-light">
-  <div class="header__left">
+  <div class="header__left pointer">
     <img src="/Images/Book.png" alt="Logo" width="40" height="40">
     {{#if user}}
        {{#ifE role "admin"}}
@@ -50,7 +50,7 @@
         <button type="button" class="btn btn-warning btn-signin"><a style="color: #ffffff;" href="/account/signout">Sign Out</a></button>
       {{/ifE}}
       {{#ifE role "user"}}
-        <img src="/{{avatar}}" alt="User Avatar" class="rounded-circle mr-3 ml-2" width="40" height="40">
+        <img src="{{avatar}}" alt="User Avatar" class="rounded-circle mr-3 ml-2" width="40" height="40">
         <button type="button" class="btn btn-warning btn-signin"><a style="color: #ffffff;" href="/smartpay">SmartPay</a></button>
         <button type="button" class="btn btn-warning btn-signin"><a style="color: #ffffff;" href="/account/signout">Sign Out</a></button>
       {{/ifE}}
@@ -95,5 +95,8 @@
   document.getElementById('cartImage').addEventListener('click', function(){
     const destinationURL = '/cart';
     window.location.href = destinationURL;
+  });
+  document.querySelector('.header__left.pointer').addEventListener('click', function() {
+    window.location.href = '/';
   });
 </script>

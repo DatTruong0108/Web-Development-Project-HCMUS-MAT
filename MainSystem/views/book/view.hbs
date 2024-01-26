@@ -13,7 +13,7 @@
                        <p style="font-size: 2em;"><strong>{{book.price}}</strong></p>
                        <div class="btn-group">
                         <button style="background-color: #ba3838;;" class="btn-add-to-cart btn " onclick="addToCart('{{book.id}}')">Add to Cart</button>
-                        <button style="background-color: #ba3838;;" class="btn-add-to-cart btn ">Buy Now</button>
+                        <button style="background-color: #ba3838;;" class="btn-add-to-cart btn " onclick="buyNow('{{book.id}}')">Buy Now</button>
                        </div>         
                     </div>
                     <hr>
@@ -68,6 +68,36 @@
   </a>
 </div>  
 
+<h3 class="ml-4 mt-4"> Reviews ({{reviews.length}}) </h3>
+
+{{#if reviews}}
+<div class="container">
+<div class="col-12 col-lg-9 mt-3">
+  <ul class="feedback-list pl-0">
+      {{#each reviews}}
+                <li class="feedback-item p-2 mb-3">
+                  <h5 class="feedback-author pl-2">{{this.username}}</h5>
+                  <div
+                    class="feedback-item-content d-flex flex-column flex-lg-row align-items-start align-items-lg-center m-3"
+                  >
+                    <div
+                      class="col-12 col-sm-6 d-flex flex-column align-items-start"
+                    >
+                      <div class="feedback-content">{{this.feedback}}</div>
+                      <div class="feedback-date mt-2 mt-sm-4">{{#dateToString
+                          this.date
+                        }}{{/dateToString}}</div>
+                    </div>
+                  </div>
+                </li>
+        {{/each}}
+      </ul>
+</div>
+</div>
+{{else}}
+<div class="text-center"><h6>No reviews</h6></div>
+{{/if}}
+
 <script>
   function parsePrice(priceString) {
     return parseFloat(priceString.replace('$', ''));
@@ -113,6 +143,43 @@
 
     // Thông báo thành công
     alert("Product added to cart!");
+  }
+
+  function buyNow(bookID){
+    let productName = "{{book.name}}";
+    let productImage = "/{{book.image}}";
+    let productPrice = parsePrice("{{book.price}}"); // Chuyển giá thành số thực
+    let listString = getCookie("list") || '[]';
+
+    // Giải mã HTML entities trước khi thực hiện JSON.parse
+    let decodedListString = decodeEntities(listString);
+
+    // Thực hiện JSON.parse với chuỗi đã giải mã
+    let list = JSON.parse(decodedListString);
+
+    // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
+    let existingProductIndex = list.findIndex(product => product.id === bookID);
+
+    if (existingProductIndex !== -1) {
+      // Nếu sản phẩm đã tồn tại, tăng số lượng lên
+      list[existingProductIndex].quantity++;
+      list[existingProductIndex].total = list[existingProductIndex].quantity * productPrice;
+    } else {
+      // Nếu sản phẩm chưa tồn tại, thêm mới vào giỏ hàng
+      var newProduct = {
+        id: bookID,
+        name: productName,
+        image: productImage,
+        price: productPrice,
+        quantity: 1,
+        total: productPrice * 1
+      };
+      list.push(newProduct);
+    }
+
+    // Lưu giỏ hàng vào cookies
+    setCookie("list", JSON.stringify(list));
+    window.location.href = `/cart/buynow/${bookID}`;
   }
 
   // Hàm lấy giá trị của cookie

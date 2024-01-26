@@ -27,17 +27,38 @@ class CartController{
            req.user=account;
         }
 
-        const catgories=await Category.getAll();
-        const currentPageReq = req.params.page || 1;
-        const currentPage = 'page=' + currentPageReq;
-        const itemsPerPage = 9;
+        res.render('cartpage', { user: req.user, role:role, avatar });
+    }
 
-        const books = await Book.getAllWithPagination(currentPage, itemsPerPage);
-        const totalBooks = await Book.getCount();
-        const totalPages = Math.ceil(totalBooks / itemsPerPage);
-        const cateName = "all";
+    async buyNow(req,res,next){ 
+        const token = req.cookies.token;
+        let username;
+        let role;
+        let avatar;
+        if (token)
+        {
+         jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: "Token không hợp lệ." });
+            } else {
+                username = decoded.username;
+                role=decoded.role;
+            }
+           });
+           const account = await Account.findAccount(username);
+           const customer = await Account.findCustomer(account.ID);
+           avatar = customer.avatar;
+           req.user=account;
+        }
+        
+        const id = req.params.id;
+        const book = await Book.get("id", id);
+        const bookName = book.name;
+        const bookPrice = book.price;
+        const bookImage = book.image;
+        const bookID = book.id;
 
-        res.render('cartpage', { catgories, user: req.user, role:role, avatar });
+        res.render('buynowpage', { user: req.user, role:role, avatar, bookName, bookPrice, bookImage, bookID });
     }
 
     async store(req,res,next){
@@ -80,7 +101,8 @@ class CartController{
             res.clearCookie('time');
             res.clearCookie('phone');
             res.clearCookie('list');
-            res.send("Order is created");
+            // res.send("Order is created");
+            res.redirect('https://localhost:3113/authenticate-payment');
         }
     }
 }

@@ -37,7 +37,7 @@
                 return;
             }
             $.ajax({
-                url: 'https://localhost:3113/check', // Địa chỉ endpoint để kiểm tra validate
+                url: 'https://localhost:3113/check-payment', // Địa chỉ endpoint để kiểm tra validate
                 method: 'POST',
                 data: {
                     pin:pin,
@@ -46,7 +46,7 @@
                 success: function(response) {
                     if (response.isValid) {
                     // Nếu thông tin hợp lệ, tiến hành thanh toán
-                    window.location.href = '/home';
+                    window.location.href = '/payment';
                 } else {
                     // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
                    formMessage.innerHTML = '<div class="alert alert-danger">Mã pin không đúng</div>';

@@ -29,6 +29,7 @@ Handlebars.registerHelper('getPriceQuantity', function(prices, quantities) {
             result += `${prices[i]} x ${quantities[i]}`;
             if (i < prices.length - 1) {
                 result += '<br>';
+                result += '<br>';
             }
         }
     }
@@ -119,12 +120,14 @@ class HomeController {
                 let listNames = [];
                 let listPrices = [];
                 let listQuantity = [];
+                let listItems=[];
 
                 // Lặp qua từng itemId trong existingBookIds để lấy thông tin và thêm vào các mảng
                 for (const itemId of existingBookIds) {
                     const book = await Book.get("id", itemId);
 
                     if (book !== null) {
+                        listItems.push(book);
                         listNames.push(book.name);
                         listPrices.push(book.price);
                         listQuantity.push(order.listQuantity[order.listItems.indexOf(itemId)]);
@@ -132,6 +135,8 @@ class HomeController {
                 }
 
                 const filteredOrder = new OrderHistory({
+                    id: order.id,
+                    listItems:listItems,
                     listNames: listNames,
                     listPrices: listPrices,
                     listQuantity: listQuantity,
@@ -264,7 +269,8 @@ class HomeController {
         else {
             let avatarPath = req.file.path; 
             const avatarPathWithForwardSlash = avatarPath.replace(/\\/g, '/');
-            const relativePath = avatarPathWithForwardSlash.split('public/')[1];
+            const relativePath = '/' + avatarPathWithForwardSlash.split('public/')[1];
+            console.log(relativePath);
 
             await db.update('Customer', 'fullname', fullname, 'customer_id', account.ID);
             await db.update('Customer', 'dob', birthday, 'customer_id', account.ID);

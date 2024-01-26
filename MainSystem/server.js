@@ -99,6 +99,9 @@ app.engine(
               }
               return result;
           },
+          dateToString: function (mongooseDate) {
+            return mongooseDate.toLocaleString("en-GB");
+          },
       
           eq: function (a, b) {
               return a === b;

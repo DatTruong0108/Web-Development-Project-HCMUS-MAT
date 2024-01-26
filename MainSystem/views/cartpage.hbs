@@ -227,12 +227,12 @@
         }
 
         // Event listener for the "Check Out" button
-    const checkOutButton = document.querySelector('.btn-cart a');
-    checkOutButton.addEventListener('click', function () {
-        const checkedBooks = cart.filter(book => {
-            const checkbox = bookList.querySelector(`input[value="${book.name}"]`);
-            return checkbox && checkbox.checked; 
-        });
+        const checkOutButton = document.querySelector('.btn-cart a');
+        checkOutButton.addEventListener('click', function () {
+            const checkedBooks = cart.filter(book => {
+                const checkbox = bookList.querySelector(`input[value="${book.name}"]`);
+                return checkbox && checkbox.checked; 
+            });
 
         // Perform the check if at least one checkbox is checked
          if (checkedBooks.length === 0 || !isAddressProvided()) {

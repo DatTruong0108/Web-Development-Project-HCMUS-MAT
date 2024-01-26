@@ -3,7 +3,9 @@ const fs = require('fs');
 const tbName = 'Order';
 
 module.exports=class OrderHistory{
-    constructor({listNames, listPrices, listQuantity, subTotal, shippingFee, date, status,total}){
+    constructor({id, listItems,listNames, listPrices, listQuantity, subTotal, shippingFee, date, status,total}){
+        this.id=id;
+        this.listItems=listItems;
         this.listNames = listNames;
         this.listPrices = listPrices;
         this.listQuantity = listQuantity;
