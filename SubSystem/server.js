@@ -20,6 +20,9 @@ const port=process.env.SUB_PORT || 3113;
 const db=require('../MainSystem/utils/db');
 const Account=require('../MainSystem/models/account.m');
 const payAccount=require('./models/payAccount')
+const Order=require('../MainSystem/models/Order');
+const OrderHistory=require('../MainSystem/models/OrderHistory');
+const Book=require('../MainSystem/models/Book');
 
 const fs = require('fs');
 //const route=require("./routes");
@@ -112,6 +115,38 @@ passport.use(
   })
 );
 
+const Handlebars = require('handlebars');
+
+Handlebars.registerHelper('formatDate', function(date) {
+    let formattedDate;
+    if(date){
+        formattedDate = new Date(date).toLocaleDateString('en-GB');
+    } else{
+        formattedDate = '';
+    }
+
+    return formattedDate;
+});
+
+Handlebars.registerHelper('getPriceQuantity', function(prices, quantities) {
+    let result = '';
+
+    if (prices && quantities && prices.length === quantities.length) {
+        for (let i = 0; i < prices.length; i++) {
+            result += `${prices[i]} x ${quantities[i]}`;
+            if (i < prices.length - 1) {
+                result += '<br>';
+            }
+        }
+    }
+
+    return new Handlebars.SafeString(result);
+});
+
+Handlebars.registerHelper('addOne', function(index) {
+    return index + 1;
+})
+
 app.use(passport.initialize());
 
 app.get('/home', passport.authenticate('jwt', { session: false }),async (req, res) => {
@@ -136,8 +171,6 @@ app.get('/back', passport.authenticate('jwt', { session: false }), (req, res) =>
   // Kiểm tra xác thực thành công, sau đó chuyển hướng đến Server 2
   res.redirect('https://localhost:3000/');
 });
-
-
 
 app.post('/check', async (req, res) => {
   try{
@@ -177,6 +210,112 @@ app.post('/create-account', passport.authenticate('jwt', { session: false }), as
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+app.get('/payment', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    // console.log("go to payment");
+    // console.log(req.user.ID);
+
+    let username;
+    let role;
+    const token = req.cookies.token;
+
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+      if(err) {
+        return res.status(401).json({ message: 'Token không hợp lệ.' });
+      }
+      else {
+        username = decoded.username;
+        role = decoded.role;
+      }
+    });
+
+    const account=await payAccount.get('id',req.user.ID);
+    if(!account) {
+      res.clearCookie('token');
+      return res.redirect('/home');
+    }
+
+    console.log(account.id);
+    
+    const list = await Order.findListOrder(account.id);
+    
+    // Tạo 1 listOrder mới
+    let listOrder = [];
+
+    for(const order of list) {
+      // lọc id sách tồn tại
+      const existingBookIds = [];
+
+      for(const itemId of order.listItems) {
+        const book = await Book.get("id", itemId);
+        if(book !== null) {
+          existingBookIds.push(itemId);
+        }
+      }
+
+      // Kiểm tra nếu có sách tồn tại thì thêm vào listOrder 
+      if(existingBookIds.length > 0) {
+        // Tạo các mảng để lưu thông tin của từng sách trong order
+        let listNames = [];
+        let listPrices = [];
+        let listQuantity = [];
+
+        // Lặp qua từng itemId trong existingBookIds để lấy thông tin và thêm vào các mảng
+        for(const itemId of existingBookIds) {
+          const book = await Book.get("id", itemId);
+
+          if(book !== null) {
+            listNames.push(book.name);
+            listPrices.push(book.price);
+            listQuantity.push(order.listQuantity[order.listItems.indexOf(itemId)]);
+          }
+        }
+
+        const filteredOrder = new OrderHistory({
+          id: order.id,
+          listNames: listNames,
+          listPrices: listPrices,
+          listQuantity: listQuantity,
+          userID: order.userID,
+          status: order.status,
+          subTotal: order.subTotal,
+          shippingFee: order.shippingFee,
+          date: order.date,
+          total: order.total
+        });
+        // console.log(filteredOrder.id);
+        listOrder.push(filteredOrder);
+      }
+    }
+
+    // Sắp xếp listOrder theo thứ tự giảm dần của date
+    listOrder.sort((a, b) => {
+      return new Date(b.date) - new Date(a.date);
+    });
+
+    return res.render('payment', {
+      listOrder: listOrder,
+      username: username,
+      account: account,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error in get payment.' });
+  }
+});
+
+app.post('/payment', async (req, res) => {
+  try {
+    console.log("go in to post payment");
+    console.log(req.body.order);
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error in post payment.' });
   }
 });
 
