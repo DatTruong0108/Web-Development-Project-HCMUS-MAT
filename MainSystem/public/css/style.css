@@ -4,6 +4,9 @@
 .app__body{
     min-height: 100vh;
 }
+.highlight {
+    background-color: #deab8f; /* Màu highlight bạn muốn sử dụng */
+}
 
 .roboto-font-size-18 {
     font-family: 'Roboto', sans-serif;
