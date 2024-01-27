@@ -65,6 +65,12 @@ app.engine(
                 }
                 return opts.inverse(this);
             },
+            ifNE: function (a,b, opts) {
+              if (a.toString()!=b.toString()) {
+                return opts.fn(this);
+              }
+              return opts.inverse(this);
+            },
             currentPage: function () {
               return this.currentPage;
             },

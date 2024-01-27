@@ -34,6 +34,7 @@
                             <option value="0" {{#ifE sortBy '0'}}selected{{/ifE}}>Order ID</option>
                             <option value="1" {{#ifE sortBy '1'}}selected{{/ifE}}>Customer ID</option>
                             <option value="2" {{#ifE sortBy '2'}}selected{{/ifE}}>Total Order Price</option>
+                            <option value="3" {{#ifE sortBy '3'}}selected{{/ifE}}>Date</option>
                         </select>
 
                     </div>
@@ -164,19 +165,26 @@
                                         </div>
                                     </td>
                                     <td>
+                                        {{#ifNE status "received"}}
+                                        {{#ifNE status "cancel"}}                                        
                                         <div class="container">
                                             <div class="row py-2">
-                                                {{#if active}}
-                                                    <button id="active-button" onclick="updateAccount('{{id}}')" type="button" class="btn btn-warning">Lock</button>
-                                                {{else}}
-                                                    <button id="active-button" onclick="updateAccount('{{id}}')" type="button" class="btn btn-success">Unclock</button>
-                                                {{/if}}
+                                                <div class="col-md-6">
+                                                    {{#ifE status "paid"}}
+                                                        <button id="active-button" onclick="updateShipping('{{id}}')" type="button" class="btn btn-success">Set Shipping</button>
+                                                    {{/ifE}}
+                                                    {{#ifE status "shipping"}}
+                                                        <button id="active-button" onclick="updateReceived('{{id}}')" type="button" class="btn btn-success">Set Received</button>
+                                                    {{/ifE}}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <button id="delete-button" onclick="openDeleteModal('{{id}}')" type="button" class="btn btn-danger py-2">Cancel</button>
+                                                </div>
+                                                
                                             </div>
-                                            <div class="row py-2">
-                                                <button id="delete-button" onclick="openDeleteModal('{{id}}')" type="button" class="btn btn-danger py-2">Delete</button>
-                                            </div>
+                                            
                                         </div>
-
+                                        {{/ifNE}}{{/ifNE}}
                                     </td>
                                 </tr>
                                 {{/each}}
@@ -254,7 +262,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <p>Bạn chắc chắn muốn xóa tài khoản này?</p>
+        <p>Bạn chắc chắn muốn hủy đơn hàng này?</p>
       </div>
       <div class="modal-footer">
         <button id="btn-delete-course" type="button" class="btn btn-danger">Xóa
@@ -291,7 +299,7 @@
         
         var customerID = $("#customerID").val();
         if (customerID=="") customerID="all";
-        var orderid = $("#orerID").val();
+        var orderid = $("#orderID").val();
         if (orderid=="") orderid="all";
         const balanceRange = $("#balanceRange").val();
         const sortBy = $("#sortBy").val();
@@ -339,15 +347,21 @@
        event.preventDefault();
       $('#delete-course-modal').modal('hide');
     });
-    function updateAccount(accountId){
+    function updateShipping(accountId){
         var updateForm = document.forms['update-form'];
-        updateForm.action = '/user-management/update/'+accountId+'?_method=POST';
+        updateForm.action = '/order-management/shipping/'+accountId+'?_method=POST';
         updateForm.submit();
     }
+    function updateReceived(accountId){
+        var updateForm = document.forms['update-form'];
+        updateForm.action = '/order-management/received/'+accountId+'?_method=POST';
+        updateForm.submit();
+    }
+    
     document.addEventListener('DOMContentLoaded', function() {
         var btnDeleteCourse=document.getElementById("btn-delete-course");
         btnDeleteCourse.onclick=function(){
-            deleteForm.action='/user-management/'+productIdToDelete+'?_method=DELETE'; 
+            deleteForm.action='/order-management/cancel/'+productIdToDelete+'?_method=POST'; 
             deleteForm.submit();
         } 
 
@@ -391,7 +405,7 @@
             const row = document.createElement('tr');
 
             // Thêm các ô dữ liệu vào dòng
-            const inhtml = `
+            var inhtml = `
                 <th scope="row">${index + 1}</th>
                 <td>${book.id}</td>
                 <td><div class="accordion fs-6" id="accordionPanelsStayOpenExample">
@@ -487,29 +501,53 @@
                                             </div>
                 </td>`                                   
                 ;
-            if(book.active){
-                inhtml += `<td>
-                    <div class="container">
-                        <div class="row py-2">
-                                <button id="active-button" onclick="updateAccount('${book.customer_id}')" type="button" class="btn btn-warning">Lock</button>
-                        </div>
-                        <div class="row py-2">
-                            <button id="delete-button" onclick="openDeleteModal('${book.customer_id}')" type="button" class="btn btn-danger py-2">Delete</button>
-                        </div>
-                    </div>
-                </td>`
-            }
-            else{
-                inhtml += `<td>
-                    <div class="container">
-                        <div class="row py-2">                      
-                                <button id="active-button" onclick="updateAccount('${book.customer_id}')" type="button" class="btn btn-success">Unclock</button>
-                        </div>
-                        <div class="row py-2">
-                            <button id="delete-button" onclick="openDeleteModal('${book.customer_id}')" type="button" class="btn btn-danger py-2">Delete</button>
-                        </div>
-                    </div>
-                </td>`
+            if(book.status != 'received' && book.status != 'cancel'){
+                if(book.status == "paid"){
+                    inhtml += `<td>
+                        <div class="container">
+                                            <div class="row py-2">
+                                                <div class="col-md-6">
+                                                        <button id="active-button" onclick="updateShipping('{{id}}')" type="button" class="btn btn-success">Set Shipping</button>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <button id="delete-button" onclick="openDeleteModal('{{id}}')" type="button" class="btn btn-danger py-2">Cancel</button>
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                    </td>`
+                }
+                if(book.status == "shipping"){
+                    inhtml += `<td>
+                        <div class="container">
+                                            <div class="row py-2">
+                                                <div class="col-md-6">
+                                                        <button id="active-button" onclick="updateReceived('{{id}}')" type="button" class="btn btn-success">Set Received</button>                                                </div>
+                                                <div class="col-md-6">
+                                                    <button id="delete-button" onclick="openDeleteModal('{{id}}')" type="button" class="btn btn-danger py-2">Cancel</button>
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                    </td>`
+                }
+                if(book.status == 'pending'){
+                    inhtml += `<td>
+                        <div class="container">
+                                            <div class="row py-2">
+                                                <div class="col-md-6">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <button id="delete-button" onclick="openDeleteModal('{{id}}')" type="button" class="btn btn-danger py-2">Cancel</button>
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                    </td>`
+                }
             }
             row.innerHTML = inhtml;
             // Thêm dòng vào tbody

@@ -110,7 +110,10 @@ module.exports=class Order{
             orderBy = 'ORDER BY "userID"';
             break;
         case '2':
-            orderBy = 'ORDER BY total';
+            orderBy = 'ORDER BY total DESC';
+            break;
+            case '3':
+            orderBy = 'ORDER BY date DESC';
             break;
         // Thêm các case khác nếu có nhiều trường hợp sắp xếp hơn
     }
@@ -183,6 +186,44 @@ static async getAllOrderFilterCount(id, name, range, s) {
     const result = await db.query(query);
     return result[0].total_count;
 }
+    static async UpdateStatusAccount(id) {
+        try {
+        // Get the current value of 'active' for the specified ID
+        const queryResult = await db.query('SELECT status FROM "Order" WHERE "id" = $1', [id]);
+
+        if (queryResult.rowCount === 0) {
+            throw new Error('Account not found'); // Handle case where account with specified ID does not exist
+        }
+
+        const currentActiveStatus = queryResult[0].status;
+        var newActiveStatus; // Toggle the value of 'active'
+        if(currentActiveStatus == 'paid'){
+            newActiveStatus = "shipping";
+        }
+        if(currentActiveStatus == 'shipping'){
+            newActiveStatus = "received";
+        }
+        // Update the 'active' field with the new value
+        await db.query('UPDATE "Order" SET status = $1 WHERE "id" = $2', [newActiveStatus, id]);
+
+        return true; // Return the new value of 'active'
+        } catch (error) {
+            throw (error);
+        }
+    }
+    static async CancelOrder(id) {
+        try {
+        
+        var newActiveStatus = "cancel"; // Toggle the value of 'active'
+        
+        // Update the 'active' field with the new value
+        await db.query('UPDATE "Order" SET status = "$1" WHERE "id" = $2', [newActiveStatus, id]);
+
+        return true; // Return the new value of 'active'
+        } catch (error) {
+            throw (error);
+        }
+    }
     static async getRevenue(startDate, endDate) {
         try {
           // Kết nối đến cơ sở dữ liệu

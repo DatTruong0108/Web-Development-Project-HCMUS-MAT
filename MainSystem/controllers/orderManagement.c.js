@@ -52,7 +52,7 @@ class userManagementController{
         const totalCustomers = await Order.getAllOrderCount();
         const totalPages = Math.ceil(totalCustomers / itemsPerPage);
         //const cateName = "all";
-        console.log(orders[0]);
+        //console.log(orders[0]);
         res.render('admin/orderManagement', { orders, currentPage, totalPages, user: req.user, role:role, balanceRange: '0', sortBy: '0' });
     }
 
@@ -68,6 +68,13 @@ class userManagementController{
             const totalPages = Math.ceil(totalBooks / itemsPerPage);
             //console.log(books[0]);
             //console.log(totalBooks);
+            orders.forEach(item => {
+                const year = item.date.getFullYear();
+                const month = (item.date.getMonth() + 1).toString().padStart(2, '0');
+                const day = item.date.getDate().toString().padStart(2, '0');
+                const formattedDate = `${year}/${month}/${day}`;
+                item.formattedDate=formattedDate;
+            });
             res.json({ orders, totalPages, currentPage });
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -101,6 +108,13 @@ class userManagementController{
             const totalPages = Math.ceil(totalBooks / itemsPerPage);
             //console.log(books[0]);
             //console.log(totalBooks);
+            orders.forEach(item => {
+                const year = item.date.getFullYear();
+                const month = (item.date.getMonth() + 1).toString().padStart(2, '0');
+                const day = item.date.getDate().toString().padStart(2, '0');
+                const formattedDate = `${year}/${month}/${day}`;
+                item.formattedDate=formattedDate;
+            });
             if(id ==="all") id="";
             if(orderID === "all") orderID="";
             res.render('admin/orderManagement', { orders, currentPage, totalPages, user: req.user, role:role, balanceRange: range, sortBy: s, customerID: id, orderID: orderID });
@@ -129,10 +143,10 @@ class userManagementController{
         const {id} = req.params;
 
         try {
-            const rs = await Account.UpdateStatusAccount(id);
+            const rs = await Order.UpdateStatusAccount(id);
            
             if(rs) {
-                res.redirect('/user-management');
+                res.redirect('/order-management');
             } else {
                 res.status(404).json({ error: 'Account not found' });
             }
@@ -140,7 +154,23 @@ class userManagementController{
             console.error('Error deleting Account:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
-    }         
+    }
+    async adminCancelOrder(req,res,next){ 
+        const {id} = req.params;
+
+        try {
+            const rs = await Order.CancelOrder(id);
+           
+            if(rs) {
+                res.redirect('/order-management');
+            } else {
+                res.status(404).json({ error: 'Account not found' });
+            }
+        } catch (error) {
+            console.error('Error deleting Account:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }     
 }
 
 module.exports=new userManagementController;
