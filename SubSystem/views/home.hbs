@@ -13,7 +13,39 @@
     </div>
 
     <div class="mt-4">
-        <h4>Lịch sử giao dịch</h4>
+        <h4 class="d-flex justify-content-center">Danh sách sổ</h4>
+        <div class="col-md-10 offset-md-1">
+          <div class="card mb-3">
+            <div class="card-body">
+              <table class="table table-striped table-hover table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Sub-Total</th>
+                    <th scope="col">Shipping Fee</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each listOrder}}
+                  <tr>
+                    <th scope="row">{{addOne @index}}</th>
+                    <td>{{id}}</td>
+                    <td>{{subTotal}}</td>
+                    <td>{{shippingFee}}</td>
+                    <td>{{formatDate date}}</td>
+                    <td>{{status}}</td>
+                    <td>{{total}}</td>
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
     </div>
 </div>
 

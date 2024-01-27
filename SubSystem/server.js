@@ -151,8 +151,14 @@ app.use(passport.initialize());
 
 app.get('/home', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const account = await payAccount.get('id', req.user.ID);
+  const list = await Order.findListOrder(req.user.ID);
+  // filter list which stauts === 'paid'
+  const listPaid = list.filter(item => item.status !== 'pending');
   if (account) {
-    res.render('home', { username: req.user.username, account: account })
+    if(listPaid.length > 0) {
+      res.render('home', { username: req.user.username, account: account, listOrder: listPaid })
+    }
+    else res.render('home', { username: req.user.username, account: account })
   }
 });
 // Route để đảm bảo người dùng đã xác thực
