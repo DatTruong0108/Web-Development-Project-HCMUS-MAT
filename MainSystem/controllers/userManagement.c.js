@@ -43,6 +43,16 @@ class userManagementController{
         //const totalBooks = await Book.getCount();
         const totalCustomers = await Account.getAllCustomerCount();
         const totalPages = Math.ceil(totalCustomers / itemsPerPage);
+        customers.forEach(item => {
+            if(item.dob){
+                const year = item.dob.getFullYear();
+                const month = (item.dob.getMonth() + 1).toString().padStart(2, '0');
+                const day = item.dob.getDate().toString().padStart(2, '0');
+                const formattedDate = `${year}/${month}/${day}`;
+                item.dobFormat=formattedDate;
+            };
+            
+        });
         //const cateName = "all";
         //console.log(customers[0]);
         res.render('admin/usersManagement', { customers, currentPage, totalPages, user: req.user, role:role, balanceRange: '0', sortBy: '0' });
@@ -58,6 +68,15 @@ class userManagementController{
             const books = await Account.getAllCustomerFilterWithPagination(id,name,range,s,currentPage,itemsPerPage);
             const totalBooks = await Account.getAllCustomerFilterCount(id,name,range,s);
             const totalPages = Math.ceil(totalBooks / itemsPerPage);
+            books.forEach(item => {
+                if(item.dob){
+                    const year = item.dob.getFullYear();
+                    const month = (item.dob.getMonth() + 1).toString().padStart(2, '0');
+                    const day = item.dob.getDate().toString().padStart(2, '0');
+                    const formattedDate = `${year}/${month}/${day}`;
+                    item.dobFormat=formattedDate;
+                };
+            });
             //console.log(books[0]);
             //console.log(totalBooks);
             res.json({ books, totalPages, currentPage });
@@ -93,6 +112,15 @@ class userManagementController{
             const totalPages = Math.ceil(totalBooks / itemsPerPage);
             //console.log(books[0]);
             //console.log(totalBooks);
+            customers.forEach(item => {
+                if(item.dob){
+                    const year = item.dob.getFullYear();
+                    const month = (item.dob.getMonth() + 1).toString().padStart(2, '0');
+                    const day = item.dob.getDate().toString().padStart(2, '0');
+                    const formattedDate = `${year}/${month}/${day}`;
+                    item.dobFormat=formattedDate;
+                };
+            });
             if(id ==="all") id="";
             if(name === "all") name="";
             res.render('admin/usersManagement', { customers, currentPage, totalPages, user: req.user, role:role, balanceRange: range, sortBy: s, customerID: id, customerName: name });
