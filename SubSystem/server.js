@@ -366,8 +366,14 @@ app.post('/payment', async (req, res) => {
 
     // Decrease sender's balance
     let account = await payAccount.get('id', id);
+    if(account.balance < total) {
+      return res.json({ 
+        error: 'Số dư tài khoản không đủ.\nVui lòng nạp thêm tiền!',
+        success: false
+      });
+    }
     const rs = await payAccount.updateBalance(account.balance - total, id);
-    account = await payAccount.get('id', id);
+    // account = await payAccount.get('id', id);
 
     //Increase receiver's balance
     let mainAccount = await payAccount.get('id', 1);
@@ -387,7 +393,10 @@ app.post('/payment', async (req, res) => {
     //Update order's status
     const order = await Order.getByID(order_id);
     if (order === null) {
-      return res.status(400).json({ error: 'Không tìm thấy đơn hàng.' });
+      return res.status(400).json({ 
+        success: false,
+        error: 'Không tìm thấy đơn hàng.'
+      });
     }
     const rs1 = await Order.updateStatus(order_id, "paid");
 
@@ -395,7 +404,10 @@ app.post('/payment', async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal server error in post payment.' });
+    res.status(500).json({ 
+      success: false,
+      error: 'Internal server error in post payment.'
+    });
   }
 });
 
