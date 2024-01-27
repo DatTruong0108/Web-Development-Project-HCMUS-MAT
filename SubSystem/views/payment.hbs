@@ -108,7 +108,7 @@
                         window.location.href = '/payment';
                         alert('Thanh toán thành công');
                     } else {
-                        alert('Thanh toán thất bại');
+                        alert(`${response.error}`);
                     }
                 },
                 error: function(xhr, status, error) {
