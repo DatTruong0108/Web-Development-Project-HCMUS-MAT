@@ -101,6 +101,13 @@
         const expirationDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // Cookie sẽ tồn tại trong 30 ngày
         document.cookie = `${name}=${value}; expires=${expirationDate.toUTCString()}; path=/`;
     }
+
+    // Hàm giải mã HTML entities
+    function decodeEntities(encodedString) {
+        const textArea = document.createElement('textarea');
+        textArea.innerHTML = encodedString;
+        return textArea.value;
+    }
     document.addEventListener('DOMContentLoaded', function () {
         const bookList = document.getElementById('bookList');
         const subtotalDisplay = document.getElementById('subtotal'); 
@@ -109,12 +116,12 @@
         const shippingFee = parsePrice(shippingFeeDisplay.textContent);
 
         // Lấy giỏ hàng từ cookies
-        let cart = getCookie("cart") ? JSON.parse(getCookie("cart")) : [];
+        let cart = getCookie("cart") ? JSON.parse(decodeEntities(getCookie("cart"))) : [];
         console.log(cart);
 
         function updateCart() {
             // Lưu giỏ hàng vào cookies
-            setCookie("cart", JSON.stringify(cart));
+            setCookie("cart", encodeURIComponent(JSON.stringify(cart)));
             displayCart(); // Hiển thị lại giỏ hàng
         }
 

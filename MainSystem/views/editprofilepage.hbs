@@ -25,13 +25,17 @@
                 <div class="mb-4 mt-4 ml-5 mr-5">
                     <label for="gender" class="form-label">Gender</label><br>
                     <select class="form-select" name="gender" aria-label="Default select example">
-                        <option selected value="{{gender}}">{{gender}}</option>
                         {{#if gender}}
                             {{#if (eq gender "female")}}
-                                <option value="male">male</option>
+                                <option value="male">Male</option>
+                                <option value="female" selected>Female</option>
                             {{else}}
-                                <option value="female">female</option>
+                                <option value="male" selected>Male</option>
+                                <option value="female">Female</option>
                             {{/if}}
+                        {{else}}
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
                         {{/if}}
                     </select>
                 </div>
