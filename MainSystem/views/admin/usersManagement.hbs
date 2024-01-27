@@ -33,7 +33,7 @@
                         <select name="sortBy" class="form-control" id="sortBy">
                             <option value="0" {{#ifE sortBy '0'}}selected{{/ifE}}>Customer ID</option>
                             <option value="1" {{#ifE sortBy '1'}}selected{{/ifE}}>Customer Name</option>
-                            <option value="3" {{#ifE sortBy '3'}}selected{{/ifE}}>Total Order Price</option>
+                            <option value="2" {{#ifE sortBy '2'}}selected{{/ifE}}>Total Order Price</option>
                         </select>
 
                     </div>
@@ -111,7 +111,7 @@
                                                     {{#each (range 1 4)}}
                                                         <li class="page-item">
                                                             <a class="page-link custom-pagination-background custom-page-number"
-                                                                href="javascript:void(0);" onclick="categoryType('{{cateName}}', {{this}})">
+                                                                href="javascript:void(0);" onclick="categoryType({{this}})">
                                                                 {{this}}
                                                             </a>
                                                         </li>
@@ -123,7 +123,7 @@
                                                     </li>
                                                     <li class="page-item">
                                                         <a class="page-link custom-pagination-background custom-page-number"
-                                                            href="javascript:void(0);" onclick="categoryType('{{cateName}}', {{totalPages}})">
+                                                            href="javascript:void(0);" onclick="categoryType({{totalPages}})">
                                                             {{totalPages}}
                                                         </a>
                                                     </li>
@@ -131,7 +131,7 @@
                                                     {{#each (range 1 totalPages)}}
                                                         <li class="page-item">
                                                             <a class="page-link custom-pagination-background custom-page-number"
-                                                                href="javascript:void(0);" onclick="categoryType('{{cateName}}', {{this}})">
+                                                                href="javascript:void(0);" onclick="categoryType({{this}})">
                                                                 {{this}}
                                                             </a>
                                                         </li>

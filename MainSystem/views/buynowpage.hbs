@@ -157,7 +157,7 @@
             currentQuantity++;
             quantityInput.value = currentQuantity;
             list[0].quantity = currentQuantity;
-            setCookie("list", JSON.stringify(list));
+            setCookie("list", encodeURIComponent(JSON.stringify(list)));
             updateUnitPrice();
             updateSubtotal();
         });
@@ -169,7 +169,7 @@
                 currentQuantity--;
                 quantityInput.value = currentQuantity;
                 list[0].quantity = currentQuantity;
-                setCookie("list", JSON.stringify(list));
+                setCookie("list", encodeURIComponent(JSON.stringify(list)));
                 updateUnitPrice();
                 updateSubtotal();
             } else {
