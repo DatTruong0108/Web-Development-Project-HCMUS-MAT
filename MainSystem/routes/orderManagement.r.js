@@ -9,6 +9,6 @@ route.get('/', orderManagement.index);
 route.get('/filter',orderManagement.getBooksByCategoryFilter);
 route.post('/shipping/:id', isAuthenticated, orderManagement.adminUpdateUser);
 route.post('/received/:id', isAuthenticated, orderManagement.adminUpdateUser);
-route.post('/cancel/:id', isAuthenticated, orderManagement.adminUpdateUser);
+route.post('/cancel/:id', isAuthenticated, orderManagement.adminCancelOrder);
 
 module.exports=route;

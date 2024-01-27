@@ -23,6 +23,7 @@ const payAccount = require('./models/payAccount')
 const Order = require('../MainSystem/models/Order');
 const OrderHistory = require('../MainSystem/models/OrderHistory');
 const Book = require('../MainSystem/models/Book');
+const Transaction=require('./models/Transaction')
 
 const fs = require('fs');
 //const route=require("./routes");
@@ -150,17 +151,30 @@ Handlebars.registerHelper('addOne', function (index) {
 app.use(passport.initialize());
 
 app.get('/home', passport.authenticate('jwt', { session: false }), async (req, res) => {
-  const account = await payAccount.get('id', req.user.ID);
-  const list = await Order.findListOrder(req.user.ID);
-  // filter list which stauts === 'paid'
-  const listPaid = list.filter(item => item.status !== 'pending');
-  if (account) {
-    if(listPaid.length > 0) {
-      res.render('home', { username: req.user.username, account: account, listOrder: listPaid })
+   const account = await payAccount.get('id', req.user.ID);
+   const outcome = await Transaction.search('senderID',req.user.ID);
+   const income=await Transaction.search('receiverID',req.user.ID);
+   const merge = outcome.concat(income);
+   // Sắp xếp mảng theo thuộc tính Date giảm dần
+   const list=merge.sort((a, b) => new Date(b.date) - new Date(a.date));
+   const listWithNewProperty = list.map(item => {
+    // Clone object to avoid modifying the original object
+    const newItem = { ...item };
+    if (newItem.senderID===account.id){
+       // Thêm thuộc tính mới
+       newItem.isSender = 1;
     }
-    else res.render('home', { username: req.user.username, account: account })
-  }
+    else newItem.isSender=0;
+    return newItem;
+    });
+   if (account) {
+     if(list.length > 0) {
+       res.render('home', { username: req.user.username, account: account,list:listWithNewProperty})
+     }
+     else res.render('home', { username: req.user.username, account: account })
+   }
 });
+
 // Route để đảm bảo người dùng đã xác thực
 app.get('/authenticate', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const account = await payAccount.get('id', req.user.ID);
@@ -348,17 +362,33 @@ app.post('/payment', async (req, res) => {
   try {
     const order_id = parseInt(req.body.order_id);
     const total = parseFloat(req.body.total);
-
     const id = parseInt(req.cookies.user);
+
+    // Decrease sender's balance
     let account = await payAccount.get('id', id);
     const rs = await payAccount.updateBalance(account.balance - total, id);
     account = await payAccount.get('id', id);
 
+    //Increase receiver's balance
+    let mainAccount = await payAccount.get('id', 1);
+    const rs2 = await payAccount.updateBalance(mainAccount.balance + total, 1);
+
+    const newTrans = new Transaction({
+      senderID: id,
+      receiverID: 1,
+      orderID: order_id,
+      amount: total,
+      content: `Payment for order ${order_id}`,
+      date: new Date().toISOString().split('T')[0]
+    });
+
+    const resu=await Transaction.insert(newTrans);
+
+    //Update order's status
     const order = await Order.getByID(order_id);
     if (order === null) {
       return res.status(400).json({ error: 'Không tìm thấy đơn hàng.' });
     }
-
     const rs1 = await Order.updateStatus(order_id, "paid");
 
     // Trả về kết quả thành công

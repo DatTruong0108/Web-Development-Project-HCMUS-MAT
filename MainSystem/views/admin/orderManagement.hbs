@@ -265,8 +265,7 @@
         <p>Bạn chắc chắn muốn hủy đơn hàng này?</p>
       </div>
       <div class="modal-footer">
-        <button id="btn-delete-course" type="button" class="btn btn-danger">Xóa
-          bỏ</button>
+        <button id="btn-delete-course" type="button" class="btn btn-danger">Xác nhận</button>
         <button
           type="button"
           class="btn btn-secondary"
@@ -361,8 +360,12 @@
     document.addEventListener('DOMContentLoaded', function() {
         var btnDeleteCourse=document.getElementById("btn-delete-course");
         btnDeleteCourse.onclick=function(){
+            console.log(productIdToDelete);
             deleteForm.action='/order-management/cancel/'+productIdToDelete+'?_method=POST'; 
             deleteForm.submit();
+
+            alert("Cancel successfully")
+
         } 
 
         const currentPage = '{{currentPage}}';

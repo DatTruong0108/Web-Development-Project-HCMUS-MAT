@@ -20,6 +20,7 @@
                 <span class="summary-text2">{{getPriceQuantity listPrices listQuantity}}</span>
             </div>
             <div class="col-2">
+                {{#ifE this.status "received"}}
                  {{#each listItems}}
                     <button data-toggle="modal"
                        data-target="#feedbackModal" data-id="{{this.id}}" style="background-color: #53a3c0;color:aliceblue; height:30px" class="btn-review btn pt-0">Review</button>
@@ -28,6 +29,7 @@
                         <br>
                     {{/unless}}
                 {{/each}}
+                {{/ifE}}
             </div>
         </div>
         <hr class="ml-4 mr-4 my-0">

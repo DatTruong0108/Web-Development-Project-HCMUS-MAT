@@ -13,7 +13,7 @@
     </div>
 
     <div class="mt-4">
-        <h4 class="d-flex justify-content-center">Danh sách sổ</h4>
+        <h4 class="d-flex justify-content-center">Lịch sử giao dịch</h4>      
         <div class="col-md-10 offset-md-1">
           <div class="card mb-3">
             <div class="card-body">
@@ -21,24 +21,28 @@
                 <thead>
                   <tr>
                     <th scope="col">STT</th>
-                    <th scope="col">Order ID</th>
-                    <th scope="col">Sub-Total</th>
-                    <th scope="col">Shipping Fee</th>
+                    <th scope="col">Transaction ID</th>
+                    <th scope="col">Balance</th>
+                    <th scope="col">Detail</th>
                     <th scope="col">Date</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Total</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {{#each listOrder}}
+                  {{#each list}}
                   <tr>
                     <th scope="row">{{addOne @index}}</th>
                     <td>{{id}}</td>
-                    <td>{{subTotal}}</td>
-                    <td>{{shippingFee}}</td>
+
+                    {{#ifE isSender 1}} 
+                         <td class="text-danger"><strong>- ${{amount}}</strong></td>
+                         <td>{{content}} to <strong>Account {{receiverID}}</strong></td>
+                    {{/ifE}}
+                    {{#ifE isSender 0}} 
+                         <td class="text-success"><strong>+ ${{amount}}</strong></td>
+                         <td>{{content}} from <strong>Account {{senderID}}</strong></td>
+                    {{/ifE}}
+
                     <td>{{formatDate date}}</td>
-                    <td>{{status}}</td>
-                    <td>{{total}}</td>
                   </tr>
                   {{/each}}
                 </tbody>
@@ -78,6 +82,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+   console.log(`{{account.id}}`)
    const cancelButton = document.querySelector('.modal .modal-footer .btn-secondary');
     cancelButton.addEventListener('click', function(event) {
        event.preventDefault();

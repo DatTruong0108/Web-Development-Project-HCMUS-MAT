@@ -217,7 +217,7 @@ static async getAllOrderFilterCount(id, name, range, s) {
         var newActiveStatus = "cancel"; // Toggle the value of 'active'
         
         // Update the 'active' field with the new value
-        await db.query('UPDATE "Order" SET status = "$1" WHERE "id" = $2', [newActiveStatus, id]);
+        await db.query('UPDATE "Order" SET status = $1 WHERE "id" = $2', [newActiveStatus, id]);
 
         return true; // Return the new value of 'active'
         } catch (error) {
