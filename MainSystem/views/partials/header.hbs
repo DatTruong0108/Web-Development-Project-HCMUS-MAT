@@ -61,6 +61,8 @@
   </div>
 </nav>
 
+
+
 <nav class="navbar navbar-expand-lg" style="background-color: #FAE6D4;">
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav mx-auto">
@@ -88,6 +90,15 @@
     {{/if}}
     </div>
   </div>
+
+  <div style="float: right;" class="header__right order-2">
+        <div class="form-check form-switch">
+         <input class="form-check-input" type="checkbox" role="switch" id="darkModeToggle" onclick="toggleDarkMode()">
+         <label class="form-check-label" for="darkModeToggle">
+         <i class="fas fa-sun"></i>
+         </label>
+       </div>
+     </div>
 </nav>
 
 <script>
@@ -99,4 +110,59 @@
   document.querySelector('.header__left.pointer').addEventListener('click', function() {
     window.location.href = '/';
   });
+
+  function setCookie(name, value, days) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  }
+
+  function getCookie(name) {
+    const keyValue = document.cookie.match(`(^|;) ?${name}=([^;]*)(;|$)`);
+    return keyValue ? keyValue[2] : null;
+  }
+
+
+  function toggleDarkMode() {
+    const body = document.body;
+    body.classList.toggle('dark-mode');
+
+    // Chọn phần tử label để thay đổi nội dung của nó
+    const label = document.querySelector('.form-check-label');
+
+    // Kiểm tra xem có dark-mode đang được bật hay không
+    const isDarkMode = body.classList.contains('dark-mode');
+
+    // Thay đổi nội dung của label dựa trên chế độ sáng hay tối
+    label.innerHTML = isDarkMode
+      ? '<i class="fas fa-moon"></i>' // Nếu dark-mode đang bật, hiển thị mặt trăng
+      : '<i class="fas fa-sun"></i>'; // Nếu dark-mode đang tắt, hiển thị mặt trời
+  }
+
+  const isDarkModeEnabled = getCookie('darkMode') === 'enabled';
+  const body = document.body;
+  body.classList.toggle('dark-mode', isDarkModeEnabled);
+
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  darkModeToggle.checked = isDarkModeEnabled;
+
+  // Chọn phần tử label để thay đổi nội dung của nó
+  const label = document.querySelector('.form-check-label');
+
+  // Kiểm tra xem dark-mode có đang được bật hay không
+  const isDarkMode = document.body.classList.contains('dark-mode');
+
+  // Thay đổi nội dung của label dựa trên chế độ sáng hay tối
+  if (isDarkMode) {
+    label.innerHTML = '<i class="fas fa-moon"></i>'; // Nếu dark-mode đang bật, hiển thị mặt trăng
+  } else {
+    label.innerHTML = '<i class="fas fa-sun"></i>'; // Nếu dark-mode đang tắt, hiển thị mặt trời
+  }
+
+  darkModeToggle.addEventListener('change', function() {
+    const isChecked = this.checked;
+    body.classList.toggle('dark-mode', isChecked);
+    setCookie('darkMode', isChecked ? 'enabled' : 'disabled', 365); // Lưu cookie trong 365 ngày
+  });
+
 </script>

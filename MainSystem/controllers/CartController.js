@@ -84,6 +84,12 @@ class CartController{
                 listQuantities.push(parseInt(obj.quantity));
             }
             console.log(listId);
+            const couponDisVal= parseFloat(req.cookies.couponDisVal);
+            const subTotal = parseFloat(req.cookies.subtotal);
+            const shippingFee = parseFloat(2);
+            var total = subTotal + shippingFee - couponDisVal;
+            
+            console.log(total);
             const newOrder=new Order({
                 listItems:listId,
                 listQuantity:listQuantities,
@@ -91,13 +97,15 @@ class CartController{
                 status:"pending",
                 subTotal: parseFloat(req.cookies.subtotal),
                 shippingFee:parseFloat(2),
-                total:parseFloat(req.cookies.subtotal)+parseFloat(2),
+                couponDisVal: parseFloat(req.cookies.couponDisVal),
+                total:total,
                 address: req.cookies.address,
                 phone:req.cookies.phone,
                 date:new Date(req.cookies.time)
             });
             const rs=await Order.insert(newOrder);
-
+            const couponID = req.cookies.couponID;
+            const rss = await Coupon.usedCoupon(couponID, req.user.ID);
             const cart=JSON.parse(req.cookies.cart);
             // Lấy danh sách các id từ mảng list
             const listIds = list.map(item => item.id);
@@ -105,7 +113,7 @@ class CartController{
             // Lọc các phần tử trong cart có id không trùng với id trong list
             const updatedCart = cart.filter(item => !listIds.includes(item.id));  
             res.cookie('cart', JSON.stringify(updatedCart), { maxAge: 86400000}); // Set maxAge in milliseconds
-            
+            res.clearCookie('couponDisVal')
             res.clearCookie('subtotal');
             res.clearCookie('address');
             res.clearCookie('time');

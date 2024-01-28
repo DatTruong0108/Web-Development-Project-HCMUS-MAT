@@ -429,6 +429,23 @@
     .feedback-img {
       width: 120px;
       height: 120px; }
+
+
+/* Dark mode */
+.dark-mode {
+  background-color: #222;
+  color: #fff;
+}
+
+.dark-mode .navbar-light {
+  background-color: #333 !important;
+}
+
+.dark-mode .navbar-light .navbar-nav .nav-link {
+  color: #fff !important;
+}
+
+
   
   
   

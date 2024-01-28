@@ -3,10 +3,10 @@
         <div class="col-md-3">
             <div class="card category-bg">
                 <div class="card-body">
-                    <h1 class="roboto-font-size-18 text-center">Category</h1>
+                    <h1 class="roboto-font-size-18 text-center" style="color: #000000;">Category</h1>
                     <hr class="black-hr">
                     {{#each catgories}}
-                    <a onclick="categoryType('{{name}}')" class="roboto-font-size-18 pointer">{{name}}</a><br>
+                    <a onclick="categoryType('{{name}}')" class="roboto-font-size-18 pointer" style="color: #000000;">{{name}}</a><br>
                     {{/each}}
                 </div>
             </div>
@@ -27,10 +27,10 @@
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title"><a style="color: #000000;" href="/book/{{id}}/view">{{name}}</a>
                                 </h5>
-                                <h6 class="card-title">{{author}}</h6>
+                                <h6 class="card-title" style="color: #000000;">{{author}}</h6>
                                 <div class="d-flex justify-content-between mt-auto">
-                                    <a class="card-text pointer">{{sold}} sold</a>
-                                    <a class="card-text font-weight-bold">{{price}}</a>
+                                    <a class="card-text pointer" style="color: #000000;">{{sold}} sold</a>
+                                    <a class="card-text font-weight-bold" style="color: #000000;">{{price}}</a>
                                 </div>
                             </div>
                         </div>
@@ -53,7 +53,7 @@
                             </a>
                         </li>
                         {{/each}}
-                        <a class="custom-pagination-background custom-page-number"> <span class="mr-2 ml-2">... </span></a>   
+                        <a class="custom-pagination-background custom-page-number"> <span class="mr-2 ml-2" style="color: #000000;">... </span></a>   
                         <li class="page-item">
                             <a class="page-link custom-pagination-background custom-page-number"
                                 href="javascript:void(0);" onclick="categoryType('{{cateName}}', {{totalPages}})">
@@ -190,10 +190,10 @@
                     </div>
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title"><a style="color: #000000;" href="/book/${book.id}/view">${book.name}</a></h5>
-                        <h6 class="card-title">${book.author}</h6>
+                        <h6 class="card-title" style="color: #000000;">${book.author}</h6>
                         <div class="d-flex justify-content-between mt-auto">
-                            <a class="card-text pointer">${book.sold} sold</a>
-                            <a class="card-text font-weight-bold">${book.price}</a>
+                            <a class="card-text pointer" style="color: #000000;">${book.sold} sold</a>
+                            <a class="card-text font-weight-bold" style="color: #000000;">${book.price}</a>
                         </div>
                     </div>
                 </div>
@@ -232,6 +232,7 @@
                 const link = document.createElement('span');
                 link.className = 'mr-2 ml-2';
                 link.textContent = '...';
+                link.style.color = 'black';
 
                 li.appendChild(link);
                 paginationContainer.appendChild(li);
@@ -292,6 +293,7 @@
                 const link = document.createElement('span');
                 link.className = 'mr-2 ml-2';
                 link.textContent = '...';
+                link.style.color = 'black';
 
                 li.appendChild(link);
                 paginationContainer.appendChild(li);
