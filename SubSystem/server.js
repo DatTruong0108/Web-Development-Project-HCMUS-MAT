@@ -171,14 +171,14 @@ function mergeAndRemoveDuplicates(arr) {
   return result;
 }
 
-app.get('/home', passport.authenticate('jwt', { session: false }), async (req, res) => {
-   const account = await payAccount.get('id', req.user.ID);
-   const outcome = await Transaction.search('senderID',req.user.ID);
-   const income=await Transaction.search('receiverID',req.user.ID);
+async function  getListTransaction(id){
+   const account = await payAccount.get('id', id);
+   const outcome = await Transaction.search('senderID',id);
+   const income=await Transaction.search('receiverID',id);
    const merge = outcome.concat(income);
    const merge1=mergeAndRemoveDuplicates(merge);
    // Sắp xếp mảng theo thuộc tính Date giảm dần
-   const list=merge1.sort((a, b) => new Date(b.date) - new Date(a.date));
+   const list=merge1.sort((a, b) => b.id-a.id);
    const listWithNewProperty = list.map(item => {
     // Clone object to avoid modifying the original object
     const newItem = { ...item };
@@ -187,11 +187,17 @@ app.get('/home', passport.authenticate('jwt', { session: false }), async (req, r
        newItem.isSender = 0;
     }
     else newItem.isSender=1;
-    return newItem;
+      return newItem;
     });
+    return listWithNewProperty;
+}
+
+app.get('/home', passport.authenticate('jwt', { session: false }), async (req, res) => {
+     const account = await payAccount.get('id', req.user.ID);
+  const listWithNewProperty=await getListTransaction(parseInt(req.user.ID));
  
    if (account) {
-     if(list.length > 0) {
+     if(listWithNewProperty.length > 0) {
        res.render('home', { username: req.user.username, account: account,list:listWithNewProperty})
      }
      else res.render('home', { username: req.user.username, account: account })
@@ -454,8 +460,10 @@ app.post('/addBalance', async (req, res) => {
 
     const resu=await Transaction.insert(newTrans);
 
+    const listTransaction=await getListTransaction(id);
+
     // Trả về kết quả thành công
-    res.status(200).json({ success: true, newBalance: account.balance });
+    res.status(200).json({ success: true, newBalance: account.balance,list:listTransaction });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error.' });

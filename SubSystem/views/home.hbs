@@ -29,6 +29,7 @@
                   </tr>
                 </thead>
                 <tbody>
+
                   {{#each list}}
                   <tr>
                     <th scope="row">{{addOne @index}}</th>
@@ -46,6 +47,7 @@
                     <td>{{formatDate date}}</td>
                   </tr>
                   {{/each}}
+
                 </tbody>
               </table>
             </div>
@@ -94,6 +96,7 @@
        event.preventDefault();
       $('#addBalanceModal').modal('hide');
     });
+
 
   
   $(document).ready(function () {

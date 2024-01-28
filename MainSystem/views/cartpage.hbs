@@ -170,16 +170,21 @@
         return textArea.value;
     }
     document.addEventListener('DOMContentLoaded', function () {
+        const coupon=`{{coupons.length}}`;
         const bookList = document.getElementById('bookList');
         const subtotalDisplay = document.getElementById('subtotal');
         const totalDisplay = document.getElementById('total');
         const couponDisplay = document.getElementById('couponVal');
         const shippingFeeDisplay = document.getElementById('shipfree');
         const shippingFee = parsePrice(shippingFeeDisplay.textContent);
-        const radiobox = document.querySelector('.custom-radio');
-        radiobox.addEventListener('change', function () {
-            updateSubtotal();
-        });
+        let radiobox; 
+        if (parseInt(coupon!=0)){
+            radiobox = document.querySelector('.custom-radio');
+            radiobox.addEventListener('change', function () {
+                    updateSubtotal();
+                });
+        }
+        
         // Lấy giỏ hàng từ cookies
         let cart = getCookie("cart") ? JSON.parse(decodeEntities(getCookie("cart"))) : [];
         console.log(cart);
