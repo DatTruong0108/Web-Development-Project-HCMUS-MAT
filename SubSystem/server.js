@@ -150,23 +150,46 @@ Handlebars.registerHelper('addOne', function (index) {
 
 app.use(passport.initialize());
 
+function mergeAndRemoveDuplicates(arr) {
+  // Sử dụng Set để theo dõi giá trị duy nhất của thuộc tính id
+  const uniqueIds = new Set();
+
+  // Sử dụng filter để loại bỏ các đối tượng có id trùng lặp
+  const result = arr.filter(obj => {
+    if (uniqueIds.has(obj.id)) {
+      // Đã gặp id trùng lặp, trả về false để loại bỏ đối tượng
+      return false;
+    }
+
+    // Thêm id vào Set để theo dõi giá trị duy nhất
+    uniqueIds.add(obj.id);
+
+    // Giữ lại đối tượng vì id chưa được gặp trước đó
+    return true;
+  });
+
+  return result;
+}
+
 app.get('/home', passport.authenticate('jwt', { session: false }), async (req, res) => {
    const account = await payAccount.get('id', req.user.ID);
    const outcome = await Transaction.search('senderID',req.user.ID);
    const income=await Transaction.search('receiverID',req.user.ID);
    const merge = outcome.concat(income);
+   const merge1=mergeAndRemoveDuplicates(merge);
    // Sắp xếp mảng theo thuộc tính Date giảm dần
-   const list=merge.sort((a, b) => new Date(b.date) - new Date(a.date));
+   const list=merge1.sort((a, b) => new Date(b.date) - new Date(a.date));
    const listWithNewProperty = list.map(item => {
     // Clone object to avoid modifying the original object
     const newItem = { ...item };
-    if (newItem.senderID===account.id){
+    if (newItem.receiverID==account.id){
        // Thêm thuộc tính mới
-       newItem.isSender = 1;
+       newItem.isSender = 0;
     }
-    else newItem.isSender=0;
+    else newItem.isSender=1;
     return newItem;
     });
+ 
    if (account) {
      if(list.length > 0) {
        res.render('home', { username: req.user.username, account: account,list:listWithNewProperty})
@@ -419,6 +442,17 @@ app.post('/addBalance', async (req, res) => {
     let account = await payAccount.get('id', id);
     const rs = await payAccount.updateBalance(balanceAmount + account.balance, id);
     account = await payAccount.get('id', id);
+
+    const newTrans = new Transaction({
+      senderID: id,
+      receiverID: id,
+      orderID: null,
+      amount: balanceAmount,
+      content: `Deposit`,
+      date: new Date().toISOString().split('T')[0]
+    });
+
+    const resu=await Transaction.insert(newTrans);
 
     // Trả về kết quả thành công
     res.status(200).json({ success: true, newBalance: account.balance });

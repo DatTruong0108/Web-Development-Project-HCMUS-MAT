@@ -9,7 +9,7 @@ const cookieParser = require("cookie-parser");
 route.use(cookieParser());
 const isAuthenticated=require('../middlewares/authenticate');
 
-route.post('/storeReview',BookController.storeReview);
+route.post('/storeReview',isAuthenticated,BookController.storeReview);
 
 route.put('/:id',upload.single('image'),BookController.update);
 route.delete('/:id',BookController.destroy);

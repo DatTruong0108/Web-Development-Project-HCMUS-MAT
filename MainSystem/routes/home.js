@@ -54,8 +54,8 @@ const isAuthenticated=require('../middlewares/authenticate')
 
 route.get('/profile',isAuthenticated,HomeController.profile);
 
-route.get('/orderHistory', HomeController.orderHistory);
-route.get('/profile',HomeController.profile);
+route.get('/orderHistory',isAuthenticated, HomeController.orderHistory);
+
 route.get('/',HomeController.index);
 
 route.post('/profile/edit',HomeController.profileEdit);
