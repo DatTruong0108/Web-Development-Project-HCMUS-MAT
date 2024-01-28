@@ -23,31 +23,31 @@
                                                         <div class="card card-list mt-4 mb-5">
                                                                 <div class="container mb-5 mt-2 " style="width: 500px;">
                                                                     <div class="mb-4 mt-4 ml-5 mr-5">
-                                                                        <label for="name" class="form-label">Coupon Name</label>
+                                                                        <label for="name" class="form-label" style="color: #000000;">Coupon Name</label>
                                                                         <input type="text" class="form-control" id="name" name="name">
                                                                     </div>
                                                                     <div class="mb-4 mt-4 ml-5 mr-5">
-                                                                        <label for="expireDate" class="form-label">ExpireDate</label>
+                                                                        <label for="expireDate" class="form-label" style="color: #000000;">ExpireDate</label>
                                                                         <input id="expireDate" name="expireDate" class="form-control" type="date">
                                                                     </div>
                                                                     <div class="mb-4 mt-4 ml-5 mr-5">
-                                                                        <label for="value" class="form-label">Value</label>
+                                                                        <label for="value" class="form-label" style="color: #000000;">Value</label>
                                                                         <input type="text" class="form-control" id="value" name="value">
                                                                     </div>
                                                                     <div class="mb-4 mt-4 ml-5 mr-5">
-                                                                        <label for="minorder" class="form-label">Min Order Price</label>
+                                                                        <label for="minorder" class="form-label" style="color: #000000;">Min Order Price</label>
                                                                         <input type="text" class="form-control" id="minorder" name="minorder">
                                                                     </div>
                                                                     <div class="mb-4 mt-4 ml-5 mr-5">
-                                                                        <label for="maxdiscount" class="form-label">Max Discount Value</label>
+                                                                        <label for="maxdiscount" class="form-label" style="color: #000000;">Max Discount Value</label>
                                                                         <input type="text" class="form-control" id="maxdiscount" name="maxdiscount">
                                                                     </div>
                                                                     <div class="mb-4 mt-4 ml-5 mr-5">
-                                                                        <label for="quantity" class="form-label">Quantity</label>
+                                                                        <label for="quantity" class="form-label" style="color: #000000;">Quantity</label>
                                                                         <input type="text" class="form-control" id="quantity" name="quantity">
                                                                     </div>
                                                                     <div class="mb-4 mt-4 ml-5 mr-5">
-                                                                        <label for="customers" class="form-label">Customers (blank = for everyone)</label>
+                                                                        <label for="customers" class="form-label" style="color: #000000;">Customers (blank = for everyone)</label>
                                                                         <input type="text" class="form-control" placeholder="ex: 1 2 3 4 " id="customers" name="customers">
                                                                     </div>
                                                                 </div>
@@ -84,7 +84,7 @@
                                 <tr>
                                     <th scope="row" style="color: #000000;">{{addOne @index}}</th>
                                     <td style="color: #000000;">{{id}}</td>
-                                    <td>
+                                    <td style="color: #000000;">
                                         {{name}}
                                     </td>
                                     <td>
@@ -104,7 +104,7 @@
                                                 id="panelsStayOpen-collapse{{@index}}i"
                                                 class="accordion-collapse collapse"
                                                 >
-                                                <div class="accordion-body">
+                                                <div class="accordion-body" style="color: #000000;">
                                                         Đơn hàng tối thiểu: {{minorder}}$<br>
                                                         Khuyến mãi tối đa: {{maxdiscount}}$<br>
                                                         Hạn sử dụng: {{formattedDate}}<br>
@@ -116,7 +116,7 @@
                                             </div>
                                         </div>
                                     </td>                               
-                                    <td>
+                                    <td style="color: #000000;">
                                         {{value}}%
                                     </td>
                                     <td>
