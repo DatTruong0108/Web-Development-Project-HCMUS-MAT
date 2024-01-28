@@ -300,7 +300,7 @@
             var rateInputID = "";
             var rateValue = 0;
 
-            if (checkedRadio.length > 0) {
+            if (checkedRadio && checkedRadio.length > 0) {
                 minOrderInputId = "minorder" + checkedRadio[0].value;
                 minOrderValue = document.getElementById(minOrderInputId).value;
                 maxDiscountInputId = "maxdiscount" + checkedRadio[0].value;
@@ -318,7 +318,11 @@
 
             const subtotal = checkedBooks.reduce((total, book) => total + book.total, 0);
             setCookie("subtotal", subtotal);
-            setCookie("couponID", checkedRadio[0].value);
+            if (checkedRadio && checkedRadio.length > 0) {
+                setCookie("couponID", checkedRadio[0].value);
+                // Now minOrderValue contains the value of the input element with the ID formed by concatenating "minorder" and the value of the checked radio button
+            }
+            
             var total = subtotal + shippingFee;
             var couponDisVal = 0;
             if (total >= minOrderValue) {
