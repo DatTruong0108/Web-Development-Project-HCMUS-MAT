@@ -12,7 +12,7 @@ module.exports = class Coupon {
     }
     static async getByCusID(id){
         try {
-            const query = 'SELECT * FROM "Coupon" WHERE $1 = ANY (customers) and quantity > 0';
+            const query = 'SELECT * FROM "Coupon" WHERE $1 = ANY (customers) and quantity > 0 AND "expireDate" > CURRENT_DATE';
             const result = await db.query(query, [id]);
             return result;
         } catch(error) {
