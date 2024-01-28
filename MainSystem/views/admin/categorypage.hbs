@@ -1,5 +1,5 @@
 <div class="container mt-5 mb-5">
-    <button class="btn btn-cart mb-4" onclick="window.location.href='/admin/category/add'">Add Category</button>
+    <button style=" background-color: #d1ae6d;color:aliceblue" class="btn-add-to-cart btn mb-4" onclick="window.location.href='/admin/category/add'">Add Category</button>
     <table class="table table-striped table-hover">
         <thead>
             <tr>
@@ -15,11 +15,11 @@
                 <td>{{name}}</td>
                 <td class="d-flex">
                     <form action='/admin/category/delete/{{id}}' method="post" enctype="application/json">
-                        <button type="submit" class="btn btn-danger mr-3">Delete</button>
+                        <button style="background-color: #ba3838;color:aliceblue" type="submit" class="btn btn-danger mr-3">Delete</button>
                     </form>
                     <form action='/admin/category/edit' method="get" enctype="application/json">
                         <input type="hidden" name="id" value="{{id}}">
-                        <button type="submit" class="btn btn-warning">Edit</button>
+                        <button style="background-color: #53a3c0;color:aliceblue" type="submit" class="btn">Edit</button>
                     </form>
                </td>
             </tr>

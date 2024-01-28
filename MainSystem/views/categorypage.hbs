@@ -53,7 +53,7 @@
                             </a>
                         </li>
                         {{/each}}
-                        <a class="custom-pagination-background custom-page-number"> <span class="mr-2 ml-2">... </span></a>   
+                        <a class="custom-pagination-background custom-page-number"> <span class="mr-2 ml-2" style="color: #000000;">... </span></a>   
                         <li class="page-item">
                             <a class="page-link custom-pagination-background custom-page-number"
                                 href="javascript:void(0);" onclick="categoryType('{{cateName}}', {{totalPages}})">
@@ -232,6 +232,7 @@
                 const link = document.createElement('span');
                 link.className = 'mr-2 ml-2';
                 link.textContent = '...';
+                link.style.color = 'black';
 
                 li.appendChild(link);
                 paginationContainer.appendChild(li);
@@ -292,6 +293,7 @@
                 const link = document.createElement('span');
                 link.className = 'mr-2 ml-2';
                 link.textContent = '...';
+                link.style.color = 'black';
 
                 li.appendChild(link);
                 paginationContainer.appendChild(li);
