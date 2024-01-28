@@ -56,22 +56,22 @@
                             <thead>
                                 <tr>
                                 <th scope="col" style="width:5%;"></th>
-                                <th scope="col" style="width:5%;">CustomerID</th>
-                                <th scope="col" style="width:20%;">Username</th>
-                                <th scope="col" style="width:20%;">Fullname</th>
-                                <th scope="col" style="width:20%;">Information</th>
-                                <th scope="col" style="width:5%;">Status</th>
-                                <th scope="col" style="width:10%;">Order</th>
+                                <th scope="col" style="width:5%; color: #000000;">CustomerID</th>
+                                <th scope="col" style="width:20%; color: #000000;">Username</th>
+                                <th scope="col" style="width:20%; color: #000000;">Fullname</th>
+                                <th scope="col" style="width:20%; color: #000000;">Information</th>
+                                <th scope="col" style="width:5%; color: #000000;">Status</th>
+                                <th scope="col" style="width:10%; color: #000000;">Order</th>
                                 <th scope="col" style="width:15%;"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {{#each customers}}
                                 <tr>
-                                    <th scope="row">{{addOne @index}}</th>
-                                    <td>{{customer_id}}</td>
-                                    <td>{{username}}</td>
-                                    <td>{{fullname}}</td>
+                                    <th scope="row" style="color: #000000;">{{addOne @index}}</th>
+                                    <td style="color: #000000;">{{customer_id}}</td>
+                                    <td style="color: #000000;">{{username}}</td>
+                                    <td style="color: #000000;">{{fullname}}</td>
                                     <td>
                                         <div class="accordion" id="accordionPanelsStayOpenExample">
                                             <div class="accordion-item">
@@ -92,18 +92,18 @@
                                                 >
                                                 <div class="accordion-body">
                                                     <ul>
-                                                        <li>Gender: {{gender}} </li>
-                                                        <li>Dob: {{dobFormat}} </li>
-                                                        <li>Email: {{email}} </li>
-                                                        <li>Address: {{address}}</li>
+                                                        <li style="color: #000000;">Gender: {{gender}} </li>
+                                                        <li style="color: #000000;">Dob: {{dobFormat}} </li>
+                                                        <li style="color: #000000;">Email: {{email}} </li>
+                                                        <li style="color: #000000;">Address: {{address}}</li>
                                                     </ul>                                                                                                          
                                                 </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{{active}}</td>
-                                    <td>{{total_order}}</td>
+                                    <td style="color: #000000;">{{active}}</td>
+                                    <td style="color: #000000;">{{total_order}}</td>
                                     <td>
                                         <div class="accordion" id="accordionPanelsStayOpenExample">
                                             <div class="accordion-item">
@@ -355,10 +355,10 @@
 
             // Thêm các ô dữ liệu vào dòng
             row.innerHTML = `
-                <th scope="row">${index + 1}</th>
-                <td>${book.customer_id}</td>
-                <td>${book.username}</td>
-                <td>${book.fullname}</td>
+                <th scope="row" style="color: #000000;">${index + 1}</th>
+                <td style="color: #000000;">${book.customer_id}</td>
+                <td style="color: #000000;">${book.username}</td>
+                <td style="color: #000000;">${book.fullname}</td>
                 <td>
                     <div class="accordion" id="accordionPanelsStayOpenExample">
                                             <div class="accordion-item">
@@ -379,18 +379,18 @@
                                                 >
                                                 <div class="accordion-body">
                                                     <ul>
-                                                        <li>Gender: ${book.gender} </li>
-                                                        <li>Dob: ${book.dobFormat} </li>
-                                                        <li>Email: ${book.email} </li>
-                                                        <li>Address: ${book.address}</li>
+                                                        <li style="color: #000000;">Gender: ${book.gender} </li>
+                                                        <li style="color: #000000;">Dob: ${book.dobFormat} </li>
+                                                        <li style="color: #000000;">Email: ${book.email} </li>
+                                                        <li style="color: #000000;">Address: ${book.address}</li>
                                                     </ul>                                                                                                          
                                                 </div>
                                                 </div>
                                             </div>
                                         </div>
                 </td>
-                <td>${book.active}</td>
-                <td>${book.total_order}</td>`
+                <td style="color: #000000;">${book.active}</td>
+                <td style="color: #000000;">${book.total_order}</td>`
                 ;
             if(book.active){
                 row.innerHTML += `<td>
