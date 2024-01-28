@@ -7,6 +7,8 @@ const accRouter = require('./account.r')
 const authRouter = require('./authAccount.r');
 const userManagementRouter = require('./userManagement.r');
 const orderManagement = require('./orderManagement.r');
+const couponManagement = require('./couponManagement.r');
+
 
 function route(app){
     app.use('/',homeRouter);
@@ -18,6 +20,7 @@ function route(app){
     app.use('/account', accRouter);
     app.use('/user-management',userManagementRouter);
     app.use('/order-management', orderManagement);
+    app.use('/coupon-management', couponManagement);
 }
 
 module.exports=route;

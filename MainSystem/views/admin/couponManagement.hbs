@@ -1,0 +1,587 @@
+<div class="container d-flex justify-content-center mt-5 mb-5">
+    <form id="filter-form">
+        <div class="row py-2 justify-content-center">
+                                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                                            <div class="accordion-item">
+                                                <button
+                                                    class="accordion-button collapsed"
+                                                    type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#panelsStayOpen-collapseu"
+                                                    aria-expanded="false"
+                                                    aria-controls="panelsStayOpen-collapseu"
+                                                >
+                                                  Add Coupon                                                 
+                                                </button>
+                                                
+                                                <div
+                                                id="panelsStayOpen-collapseu"
+                                                class="accordion-collapse collapse"
+                                                >
+                                                <div class="accordion-body">
+                                                    <div class="container" style="width: 600px;">
+                                                        <div class="card card-list mt-4 mb-5">
+                                                                <div class="container mb-5 mt-2 " style="width: 500px;">
+                                                                    <div class="mb-4 mt-4 ml-5 mr-5">
+                                                                        <label for="name" class="form-label">Coupon Name</label>
+                                                                        <input type="text" class="form-control" id="name" name="name">
+                                                                    </div>
+                                                                    <div class="mb-4 mt-4 ml-5 mr-5">
+                                                                        <label for="expireDate" class="form-label">ExpireDate</label>
+                                                                        <input id="expireDate" name="expireDate" class="form-control" type="date">
+                                                                    </div>
+                                                                    <div class="mb-4 mt-4 ml-5 mr-5">
+                                                                        <label for="value" class="form-label">Value</label>
+                                                                        <input type="text" class="form-control" id="value" name="value">
+                                                                    </div>
+                                                                    <div class="mb-4 mt-4 ml-5 mr-5">
+                                                                        <label for="minorder" class="form-label">Min Order Price</label>
+                                                                        <input type="text" class="form-control" id="minorder" name="minorder">
+                                                                    </div>
+                                                                    <div class="mb-4 mt-4 ml-5 mr-5">
+                                                                        <label for="maxdiscount" class="form-label">Max Discount Value</label>
+                                                                        <input type="text" class="form-control" id="maxdiscount" name="maxdiscount">
+                                                                    </div>
+                                                                    <div class="mb-4 mt-4 ml-5 mr-5">
+                                                                        <label for="quantity" class="form-label">Quantity</label>
+                                                                        <input type="text" class="form-control" id="quantity" name="quantity">
+                                                                    </div>
+                                                                    <div class="mb-4 mt-4 ml-5 mr-5">
+                                                                        <label for="customers" class="form-label">Customers (blank = for everyone)</label>
+                                                                        <input type="text" class="form-control" placeholder="ex: 1 2 3 4 " id="customers" name="customers">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="container text-center mb-5">
+                                                                    <div id="form-message2" class="mt-2 mb-2"></div>
+                                                                    <button type="button" onclick="addCoupon()" class="btn btn-block btn-upload mx-auto">Save</button>
+                                                                </div>
+                                                        </div>
+                                                    </div>
+                                                             </div>                                           
+                                                </div>
+                                                </div>
+                                            </div>
+        </div>
+
+        <div class="row py-2">
+            <h2 class="d-flex justify-content-center">Order List</h2>
+            <div class="col-md-12 offset-md-0">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <table id="customer-list" class="table table-striped table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                <th scope="col" style="width: 5%;"></th>
+                                <th scope="col" style="width: 5%; color: #000000;">Coupon ID</th>
+                                <th scope="col" style="width: 20%; color: #000000;">Coupon Name</th>
+                                <th scope="col" style="width: 35%; color: #000000;">Detail</th>
+                                <th scope="col" style="width: 15%; color: #000000;">Coupon Value</th>
+                                <th scope="col" style="width: 20%;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each coupons}}
+                                <tr>
+                                    <th scope="row" style="color: #000000;">{{addOne @index}}</th>
+                                    <td style="color: #000000;">{{id}}</td>
+                                    <td>
+                                        {{name}}
+                                    </td>
+                                    <td>
+                                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                                            <div class="accordion-item">
+                                                <button
+                                                    class="accordion-button collapsed"
+                                                    type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#panelsStayOpen-collapse{{@index}}i"
+                                                    aria-expanded="false"
+                                                    aria-controls="panelsStayOpen-collapse{{@index}}i"
+                                                >
+                                                    View Detail
+                                                </button>
+                                                <div
+                                                id="panelsStayOpen-collapse{{@index}}i"
+                                                class="accordion-collapse collapse"
+                                                >
+                                                <div class="accordion-body">
+                                                        Đơn hàng tối thiểu: {{minorder}}$<br>
+                                                        Khuyến mãi tối đa: {{maxdiscount}}$<br>
+                                                        Hạn sử dụng: {{formattedDate}}<br>
+                                                        Số lượng: {{quantity}} <br>
+                                                        Đối tượng sử dụng (customer_id): {{customers}}
+
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>                               
+                                    <td>
+                                        {{value}}%
+                                    </td>
+                                    <td>
+                                                                            
+                                        <div class="container">
+                                            <div class="row py-2">
+                                                    <button id="delete-button" onclick="openDeleteModal('{{id}}')" type="button" class="btn btn-danger py-2">Delete</button>                                                
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                                        <nav aria-label="Page navigation example">
+                                            <ul class="pagination justify-content-center">
+                                                <li class="page-item">
+                                                    <a class="page-link custom-pagination-background custom-page-number"
+                                                        href="javascript:void(0);">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </a>
+                                                </li>
+                                                {{#if (gte totalPages 5)}}
+                                                    {{#each (range 1 4)}}
+                                                        <li class="page-item">
+                                                            <a class="page-link custom-pagination-background custom-page-number"
+                                                                href="javascript:void(0);" onclick="categoryType({{this}})">
+                                                                {{this}}
+                                                            </a>
+                                                        </li>
+                                                    {{/each}}
+                                                    <li class="page-item">
+                                                        <a class="page-link custom-pagination-background custom-page-number">
+                                                            <span class="mr-2 ml-2">... </span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <a class="page-link custom-pagination-background custom-page-number"
+                                                            href="javascript:void(0);" onclick="categoryType( {{totalPages}})">
+                                                            {{totalPages}}
+                                                        </a>
+                                                    </li>
+                                                {{else}}
+                                                    {{#each (range 1 totalPages)}}
+                                                        <li class="page-item">
+                                                            <a class="page-link custom-pagination-background custom-page-number"
+                                                                href="javascript:void(0);" onclick="categoryType({{this}})">
+                                                                {{this}}
+                                                            </a>
+                                                        </li>
+                                                    {{/each}}
+                                                {{/if}}
+                                                <li class="page-item">
+                                                    <a class="page-link custom-pagination-background custom-page-number"
+                                                        href="javascript:void(0);">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                        </table>
+                        <p class="result-message"></p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<!-- Modal -->
+<div id="delete-course-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn chắc chắn muốn hủy Coupon này?</p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-delete-course" type="button" class="btn btn-danger">Xác nhận</button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+        >Hủy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form method="POST" name="delete-form"></form>
+
+<form method="POST" name="add-form"></form>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+{{!-- <script>
+    $(document).ready(function() {
+        $('#add-form').on('submit', function(e) {
+            e.preventDefault(); // Ngăn chặn form gửi thông tin mặc định
+            // Gửi yêu cầu Ajax để kiểm tra validate
+            // Lấy giá trị từ các trường nhập liệu
+            var name = $('#name').val();
+            var expireDate = $('#expireDate').val();
+            var value = $('#value').val();
+            var minorder = $('#minorder').val();
+            var maxdiscount = $('#maxdiscount').val();
+            var quantity = $('#quantity').val();
+            var customers = $('#customers').val();
+            $.ajax({
+                url: 'https://localhost:3000/order-management/add', // Địa chỉ endpoint để kiểm tra validate
+                method: 'POST',
+                data: {
+                    name: name,
+                    expireDate: expireDate,
+                    value: value,
+                    minorder: minorder,
+                    maxdiscount: maxdiscount,
+                    quantity: quantity,
+                    customers: customers
+                },
+                dataType: 'json',
+                success: function(response) {
+                    // Xử lý kết quả trả về từ server sau khi kiểm tra validate
+                    if (response.isValid) {
+                        $('#form-message2').text("Success");
+                        $('#name').val('');
+                        $('#expireDate').val('');
+                        $('#value').val('');
+                        $('#minorder').val('');
+                        $('#maxdiscount').val('');
+                        $('#quantity').val('');
+                        $('#customers').val('');
+                        // Nếu thông tin hợp lệ, tiến hành đăng ký
+                        updateBookList(response.coupons);
+
+                        // Cập nhật phân trang
+                        updatePagination(response.totalPages, response.page);
+                    } else {
+                        // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
+                        $('#form-message2').text(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Xử lý lỗi nếu có
+                    console.error(error);
+                }
+            });
+        });
+    });
+
+</script> --}}
+<script>
+    function subtractOne(currentPage) {
+        if(currentPage === 1){
+            return currentPage;
+        }
+        return currentPage - 1;
+    }
+
+    function addinOne(currentPage, totalPages) {
+        if(currentPage === totalPages){
+            return currentPage;
+        }
+        return currentPage + 1;
+    }
+    function categoryType(page) {
+        
+        
+        const params = new URLSearchParams({
+            page: page
+        });
+
+        const url = `/coupon-management/ajax?${params.toString()}`;
+        //const url = `/user-management/ajax/id=${customerID}&name=${customerName}&range=${balanceRange}&s=${sortBy}&page=${page}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                // Xử lý dữ liệu trả về, ví dụ cập nhật danh sách sách trên trang
+                updateBookList(data.coupons);
+
+                // Cập nhật phân trang
+                updatePagination(data.totalPages, page);
+
+                // Cập nhật đường dẫn mà không load lại trang
+                const newUrl = `/coupon-management/filter?page=${page}`;
+                history.pushState({ page: page }, '', newUrl);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    var productIdToDelete;
+    var deleteForm=document.forms['delete-form'];
+    function openDeleteModal(productId) {
+        $('#delete-course-modal').modal('show');
+        // Set the productId to use when confirming deletion
+        productIdToDelete = productId;
+    }
+
+    const cancelButton = document.querySelector('.modal .modal-footer .btn-secondary');
+    cancelButton.addEventListener('click', function(event) {
+       event.preventDefault();
+      $('#delete-course-modal').modal('hide');
+    })
+    const closeButton = document.querySelector('.close');
+    closeButton.addEventListener('click', function(event) {
+       event.preventDefault();
+      $('#delete-course-modal').modal('hide');
+    });
+    function addCoupon(){
+        var name = $('#name').val();
+            var expireDate = $('#expireDate').val();
+            var value = $('#value').val();
+            var minorder = $('#minorder').val();
+            var maxdiscount = $('#maxdiscount').val();
+            var quantity = $('#quantity').val();
+            var customers = $('#customers').val();
+            $.ajax({
+                url: 'https://localhost:3000/coupon-management/add', // Địa chỉ endpoint để kiểm tra validate
+                method: 'POST',
+                data: {
+                    name: name,
+                    expireDate: expireDate,
+                    value: value,
+                    minorder: minorder,
+                    maxdiscount: maxdiscount,
+                    quantity: quantity,
+                    customers: customers
+                },
+                dataType: 'json',
+                success: function(response) {
+                    // Xử lý kết quả trả về từ server sau khi kiểm tra validate
+                    if (response.isValid) {
+                        $('#form-message2').text("Success");
+                        $('#name').val('');
+                        $('#expireDate').val('');
+                        $('#value').val('');
+                        $('#minorder').val('');
+                        $('#maxdiscount').val('');
+                        $('#quantity').val('');
+                        $('#customers').val('');
+                        // Nếu thông tin hợp lệ, tiến hành đăng ký
+                        updateBookList(response.coupons);
+
+                        // Cập nhật phân trang
+                        updatePagination(response.totalPages, response.page);
+                    } else {
+                        console.log(response.message);
+                        // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
+                        $('#form-message2').text(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Xử lý lỗi nếu có
+                    console.error(error);
+                }
+            });
+    }
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var btnDeleteCourse=document.getElementById("btn-delete-course");
+        btnDeleteCourse.onclick=function(){
+            console.log(productIdToDelete);
+            deleteForm.action='/coupon-management/'+productIdToDelete+'?_method=DELETE'; 
+            deleteForm.submit();
+        } 
+
+        const currentPage = '{{currentPage}}';
+        const totalPages = '{{totalPages}}';
+        
+        document.querySelectorAll('.page-link').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const page = this.textContent.trim();
+                categoryType(page);
+            });
+        });
+
+        // Thêm xử lý sự kiện cho nút "Previous"
+        const prevButton = document.querySelector('.pagination .page-item:first-child .page-link');
+        prevButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            categoryType(subtractOne('{{currentPage}}'));
+        });
+
+        // Thêm xử lý sự kiện cho nút "Next"
+        const nextButton = document.querySelector('.pagination .page-item:last-child .page-link');
+        nextButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            categoryType(addinOne(currentPage, totalPages));
+        }); 
+    });
+    
+
+    function updateBookList(books) {
+        const tableBody = document.querySelector('#customer-list tbody');
+
+        // Xóa tất cả các phần tử con trong container
+        
+       tableBody.innerHTML = '';
+
+        // Thêm sách mới vào container
+        books.forEach((book, index) => {
+            // Tạo một dòng mới
+            const row = document.createElement('tr');
+
+            // Thêm các ô dữ liệu vào dòng
+            var inhtml = `
+                <th scope="row" style="color: #000000;">${index + 1}</th>
+                                    <td style="color: #000000;">${book.id}</td>
+                                    <td>
+                                        ${book.name}
+                                    </td>
+                                    <td>
+                                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                                            <div class="accordion-item">
+                                                <button
+                                                    class="accordion-button collapsed"
+                                                    type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#panelsStayOpen-collapse${index}i"
+                                                    aria-expanded="false"
+                                                    aria-controls="panelsStayOpen-collapse${index}i"
+                                                >
+                                                    View Detail
+                                                </button>
+                                                <div
+                                                id="panelsStayOpen-collapse${index}i"
+                                                class="accordion-collapse collapse"
+                                                >
+                                                <div class="accordion-body">
+                                                        Đơn hàng tối thiểu: ${book.minorder}$<br>
+                                                        Khuyến mãi tối đa: ${book.maxdiscount}$<br>
+                                                        Hạn sử dụng: ${book.formattedDate}<br>
+                                                        Số lượng: ${book.quantity} <br>
+                                                        Đối tượng sử dụng (customer_id): ${book.customers}
+
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>                               
+                                    <td>
+                                        ${book.value}%
+                                    </td>
+                                    <td>
+                                                                            
+                                        <div class="container">
+                                            <div class="row py-2">
+                                                    <button id="delete-button" onclick="openDeleteModal('${book.id}')" type="button" class="btn btn-danger py-2">Delete</button>                                                
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                    </td>`;
+                
+            
+            row.innerHTML = inhtml;
+            // Thêm dòng vào tbody
+            tableBody.appendChild(row);
+        });
+    }
+
+    function updatePagination(totalPages, currentPage) {
+        
+        const paginationContainer = document.querySelector('.pagination');
+        const pageNumbers = generatePageNumbers(currentPage, totalPages);
+
+        // Xóa tất cả các phần tử con trong container
+        while (paginationContainer.firstChild) {
+            paginationContainer.removeChild(paginationContainer.firstChild);
+        }
+
+        // Thêm nút "Previous"
+        const prevLi = document.createElement('li');
+        prevLi.className = 'page-item';
+        const prevLink = document.createElement('a');
+        prevLink.className = 'page-link custom-pagination-background custom-page-number';
+        prevLink.href = `javascript:void(0);`;
+        prevLink.textContent = '«';
+        const prePage = subtractOne(currentPage)
+        prevLink.onclick = () => categoryType(prePage);
+        prevLi.appendChild(prevLink);
+        paginationContainer.appendChild(prevLi);
+
+        // Thêm các nút phân trang mới vào container
+        for (let i = 0; i < pageNumbers.length; i++) {
+            if (pageNumbers[i] === 0){
+                const li = document.createElement('a');
+                li.className = 'custom-pagination-background custom-page-number';
+                
+                const link = document.createElement('span');
+                link.className = 'mr-2 ml-2';
+                link.textContent = '...';
+
+                li.appendChild(link);
+                paginationContainer.appendChild(li);
+            } else {
+                const li = document.createElement('li');
+                li.className = 'page-item';
+
+                const link = document.createElement('a');
+                link.className = 'page-link custom-pagination-background custom-page-number';
+                link.href = `javascript:void(0);`;
+                link.textContent = pageNumbers[i];
+                link.onclick = () => categoryType(pageNumbers[i]);
+
+                li.appendChild(link);
+                paginationContainer.appendChild(li);
+            }
+        }
+
+        // Thêm nút "Next"
+        const nextLi = document.createElement('li');
+        nextLi.className = 'page-item';
+        const nextLink = document.createElement('a');
+        nextLink.className = 'page-link custom-pagination-background custom-page-number';
+        nextLink.href = `javascript:void(0);`;
+        nextLink.textContent = '»';
+        nextLink.onclick = () => categoryType(addinOne(currentPage, totalPages));
+        nextLi.appendChild(nextLink);
+        paginationContainer.appendChild(nextLi);
+    }
+
+    function generatePageNumbers(currentPage, totalPages) {
+        const pageNumbers = [];
+        if (totalPages <= 5){
+            for (let i = 1; i <= totalPages; i++) {
+                pageNumbers.push(i);
+            }
+        } else {
+            if (currentPage <= 3){
+                for (let i = 1; i <= 4; i++) {
+                    pageNumbers.push(i);
+                }
+                pageNumbers.push(0);
+                pageNumbers.push(totalPages);
+            } else if (currentPage >= totalPages - 2) {
+                pageNumbers.push(1);
+                pageNumbers.push(0);
+                for (let i = totalPages - 3; i <= totalPages; i++) {
+                    pageNumbers.push(i);
+                }
+            } else {
+                pageNumbers.push(1);
+                pageNumbers.push(0);
+                for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                    pageNumbers.push(i);
+                }
+                pageNumbers.push(0);
+                pageNumbers.push(totalPages);
+            }
+        }
+        return pageNumbers;
+    }
+</script>
