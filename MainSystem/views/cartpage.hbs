@@ -20,6 +20,74 @@
 
         </div>
     </div>
+    <div class="card card-list mt-4">
+        <div class="row ml-4 mr-4 mt-4">
+            <div class="col-5 text-center">
+                <h1 class="title-font">COUPON</h1>
+            </div>
+            <div class="col-5 text-center">
+                <h1 class="title-font">DETAIL</h1>
+            </div>
+            <div class="col-2 text-center">
+                <h1 class="title-font">VALUE</h1>
+            </div>
+        </div>
+        <hr class="line ml-4 mr-4">
+        <div id="couponList" class="ml-4 mr-4">
+            
+            {{#each coupons}}
+            <div class="row custom-row-cp">
+                    <div class="col-5">
+                        <div class="row d-flex align-items-center justify-content-center">
+                            <div class="form-check mr-3 mb-4">
+                                <input class="form-check-input custom-radio" type="radio" value="{{id}}">
+                                <input type = "hidden" id = "rate{{id}}" value = {{value}} />
+                                <input type = "hidden" id = "minorder{{id}}" value = {{minorder}} />
+                                <input type = "hidden" id = "maxdiscount{{id}}" value = {{maxdiscount}} />
+                            </div>
+                            <h1 class="namebook-font namebook">{{name}}</h1>
+                        </div>
+                    </div>
+                    <div class="col-5 text-center">
+                        <div class="row d-flex align-items-center justify-content-center">
+                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                                            <div class="accordion-item">
+                                                <button
+                                                    class="accordion-button collapsed"
+                                                    type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#panelsStayOpen-collapse{{@index}}u"
+                                                    aria-expanded="false"
+                                                    aria-controls="panelsStayOpen-collapse{{@index}}u"
+                                                >
+                                                    View Detail                                               
+                                                </button>
+                                                
+                                                <div
+                                                id="panelsStayOpen-collapse{{@index}}u"
+                                                class="accordion-collapse collapse"
+                                                >
+                                                <div class="accordion-body">
+                                                    <br>
+                                                        Đơn hàng tối thiểu: {{minorder}}$<br>
+                                                        Khuyến mãi tối đa: {{maxdiscount}}$<br>
+                                                        Hạn sử dụng: {{formattedDate}}<br>
+                                                        Số lượng có hạn!
+                                                    </p>                                                                                                    
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                        </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <p>{{value}}%</p>
+                    </div>
+                    </div>
+                    <hr class="line">
+            {{/each}}
+        </div>
+    </div>
     <div class="row justify-content-between mt-4 mr-5">
         <div class="col-6">
             <div class="card card-total mt-4 pl-4 pt-4 pr-4 pb-2">
@@ -61,7 +129,7 @@
                             <p class="checkout-font ml-5" style="color: #000000;">Coupon</p>
                         </div>
                         <div class="col-6 text-right">
-                            <p class="checkout-font mr-5" style="color: #000000;">No</p>
+                            <p id="couponVal" class="checkout-font mr-5">$0</p>
                         </div>
                     </div>
                     <hr class="my-0">
@@ -113,9 +181,13 @@
         const bookList = document.getElementById('bookList');
         const subtotalDisplay = document.getElementById('subtotal'); 
         const totalDisplay = document.getElementById('total');
+        const couponDisplay = document.getElementById('couponVal');
         const shippingFeeDisplay = document.getElementById('shipfree');
         const shippingFee = parsePrice(shippingFeeDisplay.textContent);
-
+        const radiobox = document.querySelector('.custom-radio');
+        radiobox.addEventListener('change', function () {
+                    updateSubtotal();
+                });
         // Lấy giỏ hàng từ cookies
         let cart = getCookie("cart") ? JSON.parse(decodeEntities(getCookie("cart"))) : [];
         console.log(cart);
@@ -135,7 +207,7 @@
                     <div class="col-5">
                         <div class="row d-flex align-items-center justify-content-center">
                             <div class="form-check mr-3 mb-4">
-                                <input class="form-check-input custom-checkbox" type="checkbox" value="${book.name}" id="checkPayment">
+                                <input class="form-check-input custom-checkbox" type="checkbox" value="${book.name}">
                             </div>
                             <div class="mr-4">
                                 <img src="${book.image}" class="img-thumbnail rounded" alt="${book.name}"
@@ -153,7 +225,7 @@
                                 <div class="input-group-prepend">
                                     <button class="btn btn-outline-secondary minusBtn" type="button">-</button>
                                 </div>
-                                <input type="text" class="form-control text-center custom-input" style="color: #000000;" value="${book.quantity}" id="quantityInput" disabled>
+                                <input type="text" class="form-control text-center custom-input" style="color: #000000;" value="${book.quantity}" name="quantityInput" disabled>
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary plusBtn" type="button">+</button>
                                 </div>
@@ -162,7 +234,7 @@
                         </div>
                     </div>
                     <div class="col-2 text-center">
-                        <p style="color: #000000;">$${book.total}</p>
+                        <p style="color: #000000;">$${book.total.toFixed(2)}</p>
                     </div>
                 `;
                 bookList.appendChild(card);
@@ -175,9 +247,10 @@
                 // Gán sự kiện cho nút "+" và "-" tương ứng với sách
                 const plusBtn = card.querySelector('.plusBtn');
                 const minusBtn = card.querySelector('.minusBtn');
-                const quantityInput = card.querySelector('#quantityInput');
+                const quantityInput = card.querySelector('input[name="quantityInput"]');
                 const trashBtn = card.querySelector('.trashBtn');
                 const checkbox = card.querySelector('.custom-checkbox');
+                
 
                 plusBtn.addEventListener('click', function () {
                     book.quantity++;
@@ -211,6 +284,8 @@
                 checkbox.addEventListener('change', function () {
                     updateSubtotal();
                 });
+
+                
             });
         }
 
@@ -219,65 +294,94 @@
                 const checkbox = bookList.querySelector(`input[value="${book.name}"]`);
                 return checkbox && checkbox.checked; 
             });
+            
+            const checkedRadio = Array.from(document.querySelectorAll('input[type="radio"]:checked'));
+            var minOrderInputId = "";
+            var minOrderValue = 0;
+            var maxDiscountInputId = "";
+            var maxDiscountValue = 0;
+            var rateInputID = "";
+            var rateValue = 0;
+
+            if (checkedRadio.length > 0) {
+                minOrderInputId = "minorder" + checkedRadio[0].value;
+                minOrderValue = document.getElementById(minOrderInputId).value;
+                maxDiscountInputId = "maxdiscount" + checkedRadio[0].value;
+                maxDiscountValue = document.getElementById(maxDiscountInputId).value;
+                rateInputID = "rate" + checkedRadio[0].value;
+                rateValue = document.getElementById(rateInputID).value;
+                // Now minOrderValue contains the value of the input element with the ID formed by concatenating "minorder" and the value of the checked radio button
+            }
+
+            console.log(minOrderValue);
+            console.log(maxDiscountValue);
+            console.log(rateValue);
 
             setCookie("list", JSON.stringify(checkedBooks));
 
             const subtotal = checkedBooks.reduce((total, book) => total + book.total, 0);
             setCookie("subtotal", subtotal);
-            const total = subtotal + shippingFee;
-
+            setCookie("couponID", checkedRadio[0].value);
+            var total = subtotal + shippingFee;
+            var couponDisVal = 0; 
+            if(total >= minOrderValue){
+                couponDisVal = Math.min(maxDiscountValue, total*parseFloat(rateValue)/100);
+                setCookie("couponDisVal", couponDisVal);
+                total = total - couponDisVal;
+            }
+            console.log(total);
             subtotalDisplay.textContent = `$${subtotal.toFixed(2)}`;
             totalDisplay.textContent = `$${total.toFixed(2)}`;
-
+            couponDisplay.textContent = `-$${couponDisVal.toFixed(2)}`;
               // Enable or disable the "Check Out" button based on whether any checkbox is checked
               const checkOutButton = document.querySelector('.btn-cart a');
               checkOutButton.disabled = checkedBooks.length === 0 || !isAddressProvided();
+            }
+
+            // Event listener for the "Check Out" button
+            const checkOutButton = document.querySelector('.btn-cart a');
+            checkOutButton.addEventListener('click', function () {
+                const checkedBooks = cart.filter(book => {
+                    const checkbox = bookList.querySelector(`input[value="${book.name}"]`);
+                    return checkbox && checkbox.checked; 
+                });
+
+            // Perform the check if at least one checkbox is checked
+            if (checkedBooks.length === 0 || !isAddressProvided()) {
+                if (checkedBooks.length===0){
+                    alert('Please select at least one item to check out.');    
+                }
+                else{
+                    alert('Please enter address and phone number.'); 
+                }
+                
+                return;
+            }
+
+            const inputAddress = document.getElementById('inputAddress').value;
+            const inputPhone = document.getElementById('inputPhone').value;
+
+            setCookie("address",inputAddress);
+            setCookie("phone",inputPhone);
+            setCookie("time",new Date().toISOString().split('T')[0]);
+
+            // Proceed with the checkout process
+            window.location.href = '/cart/order'; // Redirect to the checkout page
+        });
+
+        function isAddressProvided() {
+            const inputAddress = document.getElementById('inputAddress');
+            const inputPhone = document.getElementById('inputPhone');
+            return inputAddress.value.trim() !== '' && inputPhone.value.trim() !== '';
         }
 
-        // Event listener for the "Check Out" button
-        const checkOutButton = document.querySelector('.btn-cart a');
-        checkOutButton.addEventListener('click', function () {
-            const checkedBooks = cart.filter(book => {
-                const checkbox = bookList.querySelector(`input[value="${book.name}"]`);
-                return checkbox && checkbox.checked; 
-            });
-
-        // Perform the check if at least one checkbox is checked
-         if (checkedBooks.length === 0 || !isAddressProvided()) {
-            if (checkedBooks.length===0){
-                alert('Please select at least one item to check out.');    
-            }
-            else{
-                alert('Please enter address and phone number.'); 
-            }
-             
-            return;
+        function isAddressProvided() {
+            const inputAddress = document.getElementById('inputAddress');
+            const inputPhone = document.getElementById('inputPhone');
+            return inputAddress.value.trim() !== '' && inputPhone.value.trim() !== '';
         }
 
-        const inputAddress = document.getElementById('inputAddress').value;
-        const inputPhone = document.getElementById('inputPhone').value;
-
-        setCookie("address",inputAddress);
-        setCookie("phone",inputPhone);
-        setCookie("time",new Date().toISOString().split('T')[0]);
-
-        // Proceed with the checkout process
-        window.location.href = '/cart/order'; // Redirect to the checkout page
-    });
-
-    function isAddressProvided() {
-        const inputAddress = document.getElementById('inputAddress');
-        const inputPhone = document.getElementById('inputPhone');
-        return inputAddress.value.trim() !== '' && inputPhone.value.trim() !== '';
-    }
-
-    function isAddressProvided() {
-        const inputAddress = document.getElementById('inputAddress');
-        const inputPhone = document.getElementById('inputPhone');
-        return inputAddress.value.trim() !== '' && inputPhone.value.trim() !== '';
-    }
-
-        displayCart();
-        updateSubtotal();
+            displayCart();
+            updateSubtotal();
     });
 </script>
