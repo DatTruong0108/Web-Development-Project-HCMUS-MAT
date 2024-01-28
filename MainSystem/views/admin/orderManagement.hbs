@@ -57,20 +57,20 @@
                             <thead>
                                 <tr>
                                 <th scope="col" style="width: 5%;"></th>
-                                <th scope="col" style="width: 5%;">OrderID</th>
-                                <th scope="col" style="width: 15%;">CustomerID</th>
-                                <th scope="col" style="width: 15%;">Items</th>
-                                <th scope="col" style="width: 10%;">Date</th>
-                                <th scope="col" style="width: 10%;">Status</th>
-                                <th scope="col" style="width: 15%;">Total Order Price</th>
+                                <th scope="col" style="width: 5%; color: #000000;">OrderID</th>
+                                <th scope="col" style="width: 15%; color: #000000;">CustomerID</th>
+                                <th scope="col" style="width: 15%; color: #000000;">Items</th>
+                                <th scope="col" style="width: 10%; color: #000000;">Date</th>
+                                <th scope="col" style="width: 10%; color: #000000;">Status</th>
+                                <th scope="col" style="width: 15%; color: #000000;">Total Order Price</th>
                                 <th scope="col" style="width: 25%;"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {{#each orders}}
                                 <tr>
-                                    <th scope="row">{{addOne @index}}</th>
-                                    <td>{{id}}</td>
+                                    <th scope="row" style="color: #000000;">{{addOne @index}}</th>
+                                    <td style="color: #000000;">{{id}}</td>
                                     <td>
                                         <div class="accordion" id="accordionPanelsStayOpenExample">
                                             <div class="accordion-item">
@@ -118,11 +118,11 @@
                                                 >
                                                 <div class="accordion-body">
                                                     <ul>
-                                                        <li>
+                                                        <li style="color: #000000;">
                                                             <b>BookID-Quantity</b>
                                                         </li>
                                                         {{#each listItems}}
-                                                        <li>
+                                                        <li style="color: #000000;">
                                                             ID:{{this}} - SL:{{lookup ../listQuantity @index}}
                                                             {{#unless @last}}, {{/unless}}
                                                         </li> 
@@ -133,8 +133,8 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{{formattedDate}}</td>
-                                    <td>{{status}}</td>                                   
+                                    <td style="color: #000000;">{{formattedDate}}</td>
+                                    <td style="color: #000000;">{{status}}</td>                                   
                                     <td>
                                         <div class="accordion" id="accordionPanelsStayOpenExample">
                                             <div class="accordion-item">
@@ -409,8 +409,8 @@
 
             // Thêm các ô dữ liệu vào dòng
             var inhtml = `
-                <th scope="row">${index + 1}</th>
-                <td>${book.id}</td>
+                <th scope="row" style="color: #000000;">${index + 1}</th>
+                <td style="color: #000000;">${book.id}</td>
                 <td><div class="accordion fs-6" id="accordionPanelsStayOpenExample">
                                             <div class="accordion-item">
                                                 <button
@@ -457,12 +457,12 @@
                                                 >
                                                 <div class="accordion-body">
                                                     <ul>
-                                                        <li>
+                                                        <li style="color: #000000;">
                                                             <b>BookID-Quantity</b>
                                                         </li>`;
                 book.listItems.forEach((item,index)=> {
                     inhtml += `
-                                                        <li>
+                                                        <li style="color: #000000;">
                                                             ID:${item} - SL: ${book.listQuantity[index]}
                                                         </li> 
                     `
@@ -473,8 +473,8 @@
                                             </div>
                                         </div>
                 </td>
-                <td>${book.formattedDate}</td>
-                <td>${book.status}</td>
+                <td style="color: #000000;">${book.formattedDate}</td>
+                <td style="color: #000000;">${book.status}</td>
                 <td>
                                         <div class="accordion" id="accordionPanelsStayOpenExample">
                                             <div class="accordion-item">
@@ -493,7 +493,7 @@
                                                 class="accordion-collapse collapse"
                                                 >
                                                 <div class="accordion-body">
-                                                    <ul>
+                                                    <ul style="color: #000000;">
                                                         <li>Price: ${book.subTotal}</li>
                                                         <li>Shipping fee: ${book.shippingFee}  </li>
                                                     </ul>
@@ -506,14 +506,14 @@
                 ;
             if(book.status != 'received' && book.status != 'cancel'){
                 if(book.status == "paid"){
-                    inhtml += `<td>
+                    inhtml += `<td style="color: #000000;">
                         <div class="container">
                                             <div class="row py-2">
                                                 <div class="col-md-6">
-                                                        <button id="active-button" onclick="updateShipping('{{id}}')" type="button" class="btn btn-success">Set Shipping</button>
+                                                        <button id="active-button" onclick="updateShipping('${book.id}')" type="button" class="btn btn-success">Set Shipping</button>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <button id="delete-button" onclick="openDeleteModal('{{id}}')" type="button" class="btn btn-danger py-2">Cancel</button>
+                                                    <button id="delete-button" onclick="openDeleteModal('${book.id}')" type="button" class="btn btn-danger py-2">Cancel</button>
                                                 </div>
                                                 
                                             </div>
@@ -522,13 +522,13 @@
                     </td>`
                 }
                 if(book.status == "shipping"){
-                    inhtml += `<td>
+                    inhtml += `<td style="color: #000000;">
                         <div class="container">
                                             <div class="row py-2">
                                                 <div class="col-md-6">
-                                                        <button id="active-button" onclick="updateReceived('{{id}}')" type="button" class="btn btn-success">Set Received</button>                                                </div>
+                                                        <button id="active-button" onclick="updateReceived('${book.id}')" type="button" class="btn btn-success">Set Received</button>                                                </div>
                                                 <div class="col-md-6">
-                                                    <button id="delete-button" onclick="openDeleteModal('{{id}}')" type="button" class="btn btn-danger py-2">Cancel</button>
+                                                    <button id="delete-button" onclick="openDeleteModal('${book.id}')" type="button" class="btn btn-danger py-2">Cancel</button>
                                                 </div>
                                                 
                                             </div>
@@ -537,13 +537,13 @@
                     </td>`
                 }
                 if(book.status == 'pending'){
-                    inhtml += `<td>
+                    inhtml += `<td style="color: #000000;">
                         <div class="container">
                                             <div class="row py-2">
                                                 <div class="col-md-6">
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <button id="delete-button" onclick="openDeleteModal('{{id}}')" type="button" class="btn btn-danger py-2">Cancel</button>
+                                                    <button id="delete-button" onclick="openDeleteModal('${book.id}')" type="button" class="btn btn-danger py-2">Cancel</button>
                                                 </div>
                                                 
                                             </div>

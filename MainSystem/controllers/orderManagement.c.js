@@ -146,6 +146,18 @@ class userManagementController{
 
         try {
             const rs = await Order.UpdateStatusAccount(id);
+            const order=await Order.getByID(id);
+            
+            if (order.status="received"){  
+                const listItems=order.listItems;
+                const listQuantity=order.listQuantity;
+                console.log(listItems);
+                console.log(listQuantity);
+                for (let i=0; i<listItems.length; i++){
+                    const book=await Book.get('id',listItems[i]);
+                    await Book.updateQuantities(book.sold+listQuantity[i],listItems[i]);
+                }           
+             }
            
             if(rs) {
                 res.redirect('/order-management');

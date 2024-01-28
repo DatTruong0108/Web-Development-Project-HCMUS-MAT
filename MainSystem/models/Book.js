@@ -268,4 +268,10 @@ module.exports=class Book{
             throw error;
         }
     }
+
+    static async updateQuantities(balance,id){
+        let rs=await db.update(tbName,'sold',balance,'id',id);
+        return rs;
+    }
+
 }

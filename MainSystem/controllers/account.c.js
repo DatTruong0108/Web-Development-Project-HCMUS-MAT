@@ -76,9 +76,17 @@ module.exports = {
               return res.json({ isValid: false, message: "Lỗi hệ thống khi đăng nhập" });
             }
             console.log(user);
+            const account=await Account.findAccountById(user.ID);
+            if (account.active===false){
+                return res.json({
+                    isValid: false,
+                    message: "Tài khoản của bạn đã bị block!",
+                  });
+            }
             const admin = await Account.findAdmin(user.ID);
             const us=  await Account.findCustomer(user.ID);
             var token;
+            
             if (admin){
                  token = jwt.sign({ username: user.username,role:"admin" }, process.env.SECRET_KEY,{expiresIn: 86400000});
             }
