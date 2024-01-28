@@ -19,6 +19,9 @@ module.exports = async function AuthenticateMiddleware(req, res, next) {
     });
     
     const account = await Account.findAccount(username);
+    if (account.active===false){
+        return res.redirect('/account/signin');
+    }
     req.user=account;
     req.role=role;
 
