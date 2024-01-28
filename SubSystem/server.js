@@ -323,51 +323,62 @@ app.get('/payment', passport.authenticate('jwt', { session: false }), async (req
     // Tạo 1 listOrder mới
     let listOrder = [];
 
+    // Hàm so sánh để sắp xếp mảng order
+    function compareOrderByStatus(a, b) {
+      // Đưa các order có status là 'pending' lên đầu
+      if (a.status === 'pending' && b.status !== 'pending') {
+        return -1;
+      } else if (a.status !== 'pending' && b.status === 'pending') {
+        return 1;
+      } else {
+        // Giữ nguyên thứ tự nếu status không phải 'pending'
+        return 0;
+      }
+    }
+
     for (const order of list) {
-      if (order.status === 'pending') {
-        // lọc id sách tồn tại
-        const existingBookIds = [];
+      // lọc id sách tồn tại
+      const existingBookIds = [];
 
-        for (const itemId of order.listItems) {
+      for (const itemId of order.listItems) {
+        const book = await Book.get("id", itemId);
+        if (book !== null) {
+          existingBookIds.push(itemId);
+        }
+      }
+
+      // Kiểm tra nếu có sách tồn tại thì thêm vào listOrder 
+      if (existingBookIds.length > 0) {
+        // Tạo các mảng để lưu thông tin của từng sách trong order
+        let listNames = [];
+        let listPrices = [];
+        let listQuantity = [];
+
+        // Lặp qua từng itemId trong existingBookIds để lấy thông tin và thêm vào các mảng
+        for (const itemId of existingBookIds) {
           const book = await Book.get("id", itemId);
+
           if (book !== null) {
-            existingBookIds.push(itemId);
+            listNames.push(book.name);
+            listPrices.push(book.price);
+            listQuantity.push(order.listQuantity[order.listItems.indexOf(itemId)]);
           }
         }
 
-        // Kiểm tra nếu có sách tồn tại thì thêm vào listOrder 
-        if (existingBookIds.length > 0) {
-          // Tạo các mảng để lưu thông tin của từng sách trong order
-          let listNames = [];
-          let listPrices = [];
-          let listQuantity = [];
-
-          // Lặp qua từng itemId trong existingBookIds để lấy thông tin và thêm vào các mảng
-          for (const itemId of existingBookIds) {
-            const book = await Book.get("id", itemId);
-
-            if (book !== null) {
-              listNames.push(book.name);
-              listPrices.push(book.price);
-              listQuantity.push(order.listQuantity[order.listItems.indexOf(itemId)]);
-            }
-          }
-
-          const filteredOrder = new OrderHistory({
-            id: order.id,
-            listNames: listNames,
-            listPrices: listPrices,
-            listQuantity: listQuantity,
-            userID: order.userID,
-            status: order.status,
-            subTotal: order.subTotal,
-            shippingFee: order.shippingFee,
-            date: order.date,
-            total: order.total
-          });
-          // console.log(filteredOrder.id);
-          listOrder.push(filteredOrder);
-        }
+        const filteredOrder = new OrderHistory({
+          id: order.id,
+          listNames: listNames,
+          listPrices: listPrices,
+          listQuantity: listQuantity,
+          userID: order.userID,
+          status: order.status,
+          subTotal: order.subTotal,
+          shippingFee: order.shippingFee,
+          date: order.date,
+          total: order.total
+        });
+        // console.log(filteredOrder.id);
+        listOrder.push(filteredOrder);
       }
     }
 
@@ -375,6 +386,9 @@ app.get('/payment', passport.authenticate('jwt', { session: false }), async (req
     listOrder.sort((a, b) => {
       return new Date(b.date) - new Date(a.date);
     });
+
+    // Sắp xếp listOrder bằng cách sử dụng hàm so sánh
+    listOrder.sort(compareOrderByStatus);
 
     return res.render('payment', {
       listOrder: listOrder,
