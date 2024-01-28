@@ -208,6 +208,10 @@ class userManagementController{
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }     
+
+    async checkout(req,res,next){
+        res.redirect('https://localhost:3113/authenticate-payment');
+    }
 }
 
 module.exports=new userManagementController;
