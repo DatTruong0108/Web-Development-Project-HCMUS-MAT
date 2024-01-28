@@ -11,10 +11,12 @@
                     <p>{{book.description}}</p>
                     <div class="d-flex justify-content-between align-items-center">
                        <p style="font-size: 2em;"><strong>{{book.price}}</strong></p>
+                       {{#unless admin}}
                        <div class="btn-group">
                         <button style="background-color: #ba3838;;" class="btn-add-to-cart btn " onclick="addToCart('{{book.id}}')">Add to Cart</button>
                         <button style="background-color: #ba3838;;" class="btn-add-to-cart btn " onclick="buyNow('{{book.id}}')">Buy Now</button>
-                       </div>         
+                       </div>    
+                       {{/unless}}     
                     </div>
                     <hr>
                     <p><strong>{{book.sold}}</strong> sold</p>

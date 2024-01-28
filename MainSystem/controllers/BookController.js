@@ -65,6 +65,74 @@ class BookController {
         }
     }
 
+    async viewDetail(req, res, next) {
+        const token = req.cookies.token;
+        let username;
+        let role;
+        let avatar;
+
+        if (token)
+        {
+        jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: "Token không hợp lệ." });
+            } else {
+                username = decoded.username;
+                role=decoded.role;
+            }
+           });
+           const account = await Account.findAccount(username);
+           const customer = await Account.findCustomer(account.ID);
+           avatar = customer.avatar;
+           req.user=account;
+        }
+        const bookId = req.params.id;
+        const rs = await Book.get('id', bookId);
+
+        if (rs) {
+            const catId = rs.catID;
+            const relevant = await Book.search('catID', catId);
+            const result=await Review.search('bookID',bookId);
+            res.render('book/view', { book: rs, related: relevant, user: req.user, role: role, avatar,reviews:result });
+        }
+        else {
+            res.send('No book found');
+        }
+    }
+
+    async viewAdmin(req, res, next) {
+        const token = req.cookies.token;
+        let username;
+        let role;
+
+        if (token)
+        {
+        jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: "Token không hợp lệ." });
+            } else {
+                username = decoded.username;
+                role=decoded.role;
+            }
+           });
+           const account = await Account.findAccount(username);
+           const admin = await Account.findAdmin(account.ID);
+          req.user=account;
+        }
+        const bookId = req.params.id;
+        const rs = await Book.get('id', bookId);
+
+        if (rs) {
+            const catId = rs.catID;
+            const relevant = await Book.search('catID', catId);
+            const result=await Review.search('bookID',bookId);
+            res.render('book/view', { book: rs, related: relevant, admin: req.user, role: role,reviews:result });
+        }
+        else {
+            res.send('No book found');
+        }
+    }
+
     async search(req, res, next) {
         const token = req.cookies.token;
         let username;

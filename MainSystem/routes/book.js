@@ -18,6 +18,7 @@ route.post('/store',upload.single('image'),BookController.store);
 route.get('/create',isAuthenticated,BookController.create);
 route.get('/:id/edit',isAuthenticated,BookController.edit);
 
+route.get('/:id/viewAdmin',BookController.viewAdmin);
 route.get('/:id/view',BookController.viewDetail);
 route.get('/search/paginate',BookController.paginateSearchResults);
 route.post('/search',BookController.search);
