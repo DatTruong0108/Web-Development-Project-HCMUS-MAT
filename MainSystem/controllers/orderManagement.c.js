@@ -193,7 +193,7 @@ class userManagementController{
                 // const rs2 = await payAccount.updateBalance(account.balance + order.total,order.userID);
                 // const resu=await Transaction.insert(newTrans);   
                 // rs = await Order.CancelOrder(id);
-                rs = await DoTrans.transaction(mainAccount.balance, account.balance, order.total, order.userID, newTrans,id);
+                rs = await DoTrans.transaction(mainAccount.balance, account.balance, order.total, order.userID, newTrans,id, "cancel");
             }
             else{
                 rs = await Order.CancelOrder(id);

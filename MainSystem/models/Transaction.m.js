@@ -6,9 +6,8 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 module.exports = {
-    transaction: async(adBalance, cusBalance, total, cusID, trans, id) =>{
+    transaction: async(adBalance, cusBalance, total, cusID, trans, id, newStatus) =>{
         try {
-            console.log(total);
             const highestIdQuery = 'SELECT MAX(id) AS maxid FROM "Transaction"';
             const highestIdResult = await db.query(highestIdQuery);
             const maxId = parseInt(highestIdResult[0].maxid) || 1;
@@ -38,7 +37,7 @@ module.exports = {
                 text: `
                 UPDATE "Order" SET status = $1 WHERE "id" = $2
                 `,
-                values: ["cancel", id]
+                values: [newStatus, id]
             };
             const rs = db.execTrans(query1,query2,query3,query4);
             return true;

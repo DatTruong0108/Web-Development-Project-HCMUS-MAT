@@ -10,7 +10,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const jwt = require('jsonwebtoken');
 const bcryptH = require('./helpers/bcrypt.h');
-
+const DoTrans = require('../MainSystem/models/Transaction.m');
 const https = require('https');
 const bodyparser = require("body-parser");
 
@@ -401,11 +401,9 @@ app.post('/payment', async (req, res) => {
         success: false
       });
     }
-    const rs = await payAccount.updateBalance(account.balance - total, id);
 
     //Increase receiver's balance
     let mainAccount = await payAccount.get('id', 1);
-    const rs2 = await payAccount.updateBalance(mainAccount.balance + total, 1);
 
     const newTrans = new Transaction({
       senderID: id,
@@ -415,10 +413,6 @@ app.post('/payment', async (req, res) => {
       content: `Payment for order ${order_id}`,
       date: new Date().toISOString().split('T')[0]
     });
-
-    const resu=await Transaction.insert(newTrans);
-
-    //Update order's status
     const order = await Order.getByID(order_id);
     if (order === null) {
       return res.status(400).json({ 
@@ -426,8 +420,15 @@ app.post('/payment', async (req, res) => {
         error: 'Không tìm thấy đơn hàng.'
       });
     }
-    const rs1 = await Order.updateStatus(order_id, "paid");
 
+    // const rs = await payAccount.updateBalance(account.balance - total, id);
+
+    // const rs2 = await payAccount.updateBalance(mainAccount.balance + total, 1);
+
+    // const resu=await Transaction.insert(newTrans);
+    
+    // const rs1 = await Order.updateStatus(order_id, "paid");
+    const resul = await DoTrans.transaction(mainAccount.balance, account.balance, -total, id, newTrans, order_id, "paid" );
     // Trả về kết quả thành công
     res.json({ success: true });
   } catch (error) {
