@@ -39,7 +39,7 @@
                 <div class="col-5">
                     <div class="row d-flex align-items-center justify-content-center">
                         <div class="form-check mr-3 mb-4">
-                            <input class="form-check-input custom-radio" type="radio" value="{{id}}">
+                            <input class="form-check-input custom-radio" id="cou{{id}}" name="couponRadio" type="radio" value="{{id}}">
                             <input type="hidden" id="rate{{id}}" value={{value}} />
                             <input type="hidden" id="minorder{{id}}" value={{minorder}} />
                             <input type="hidden" id="maxdiscount{{id}}" value={{maxdiscount}} />
@@ -171,6 +171,7 @@
     }
     document.addEventListener('DOMContentLoaded', function () {
         const coupon=`{{coupons.length}}`;
+        console.log(coupon);
         const bookList = document.getElementById('bookList');
         const subtotalDisplay = document.getElementById('subtotal');
         const totalDisplay = document.getElementById('total');
@@ -178,11 +179,17 @@
         const shippingFeeDisplay = document.getElementById('shipfree');
         const shippingFee = parsePrice(shippingFeeDisplay.textContent);
         let radiobox; 
-        if (parseInt(coupon!=0)){
-            radiobox = document.querySelector('.custom-radio');
-            radiobox.addEventListener('change', function () {
+        if (parseInt(coupon)!=0){
+            console.log("hi");
+            radiobox = document.querySelectorAll('input[name="couponRadio"]');
+            {{!-- radiobox.addEventListener('change', function () {
+                    updateSubtotal();
+                }); --}}
+                document.querySelectorAll('input[name="couponRadio"]').forEach( (rad) => {
+                    rad.addEventListener('change', function () {
                     updateSubtotal();
                 });
+                })
         }
         
         // Lấy giỏ hàng từ cookies
