@@ -373,7 +373,6 @@ app.post('/payment', async (req, res) => {
       });
     }
     const rs = await payAccount.updateBalance(account.balance - total, id);
-    // account = await payAccount.get('id', id);
 
     //Increase receiver's balance
     let mainAccount = await payAccount.get('id', 1);

@@ -1,8 +1,9 @@
-<div class="row py-2">
-    <div class="col-4 offset-4">
-        <div class="card align-items-center">
-            <form id="signin-form" name="signin-form">
-                <div class="mb-3">
+<div class="container-fluid h-100 mt-4">
+  <div class="row h-100 justify-content-center align-items-center mt-4">
+    <div class="col-lg-4 col-md-6 col-sm-8">
+      <div class="card align-items-center">
+            <form style="width:70%" id="signin-form" name="signin-form">
+                <div class="mb-3 mt-4">
                     <label for="username" class="form-label">Username</label>
                     <input autofocus type="text" class="form-control" id="username">
                 </div>
@@ -10,8 +11,8 @@
                     <label for="exampleInputPassword1" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password">
                 </div> 
-                <div class="mb-3">
-                    <button type="button" class="gsi-material-button" id="google-signin-button">
+                <div style="width:100%" class="mb-3 mt-4">
+                    <button style="width:100%"  type="button" class="gsi-material-button" id="google-signin-button">
                         <div class="gsi-material-button-state"></div>
                         <div class="gsi-material-button-content-wrapper">
                             <div class="gsi-material-button-icon">
@@ -28,19 +29,20 @@
                         </div>
                     </button>
                 </div> 
-                <div class="mb-3" >
-                    <button type="button" class="gsi-material-button fb-login-button" id="facebook-signin-button" data-width="" data-size="" data-button-type="" data-layout="" data-auto-logout-link="false" data-use-continue-as="false">
+                <div style="width:100%"  class="mb-3" >
+                    <button style="width:100%"  type="button" class="gsi-material-button fb-login-button" id="facebook-signin-button" data-width="" data-size="" data-button-type="" data-layout="" data-auto-logout-link="false" data-use-continue-as="false">
                         Sign in with Facebook
                     </button>
                 </div>
-                <div class="form-group mt-2 d-flex flex-column align-items-center">
-                    <div id="form-message"></div>
-                    <button type="submit" class="btn btn-warning">Submit</button>
+                <div class="form-group mt-4 d-flex flex-column align-items-center">
+                    <div id="form-message mt-2 mb-2"></div>
+                    <button style="background-color: #ba3838" type="submit" class="btn btn-warning text-light">Sign Up</button>
                 </div>         
 
             </form>
         </div>
     </div>
+</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
