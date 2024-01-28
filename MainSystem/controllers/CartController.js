@@ -4,6 +4,7 @@ const Category=require('../models/Category')
 const Order=require('../models/Order')
 const Account=require('../models/account.m')
 const jwt = require('jsonwebtoken')
+const Coupon = require('../models/Coupon.m')
 
 class CartController{
     async index(req,res,next){ 
@@ -11,6 +12,7 @@ class CartController{
         let username;
         let role;
         let avatar;
+        let coupons;
         if (token)
         {
          jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
@@ -22,12 +24,20 @@ class CartController{
             }
            });
            const account = await Account.findAccount(username);
+           coupons = await Coupon.getByCusID(account.ID);
            const customer = await Account.findCustomer(account.ID);
            avatar = customer.avatar;
            req.user=account;
         }
-
-        res.render('cartpage', { user: req.user, role:role, avatar });
+        coupons.forEach(item => {
+            const year = item.expireDate.getFullYear();
+            const month = (item.expireDate.getMonth() + 1).toString().padStart(2, '0');
+            const day = item.expireDate.getDate().toString().padStart(2, '0');
+            const formattedDate = `${year}/${month}/${day}`;
+            item.formattedDate=formattedDate;
+        });
+        const couponsJson = JSON.stringify(coupons);
+        res.render('cartpage', { user: req.user, role:role, avatar, coupons, couponsJson });
     }
 
     async buyNow(req,res,next){ 

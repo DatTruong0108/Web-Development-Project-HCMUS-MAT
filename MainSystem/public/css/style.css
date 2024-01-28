@@ -189,12 +189,19 @@
     justify-content: space-between;
     height: 200px; /* Chiều cao cố định của hàng */
 }
-
+.custom-row-cp {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .custom-checkbox {
     width: 1.4rem; 
     height: 1.4rem; 
 }
-
+.custom-radio {
+  width: 1.4rem; 
+  height: 1.4rem; 
+}
 .card-total{
     width: 24rem; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
