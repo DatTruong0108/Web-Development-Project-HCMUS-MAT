@@ -45,7 +45,9 @@ qXS/Otfr0EQbCkrePNLlpoZK7NviwQryfnbSmo4zFQkfD1eGfQ==
 
 
 const db=pgp(cn);
-
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 module.exports={
     getAll: async (tbName)=>{
@@ -243,4 +245,30 @@ module.exports={
             dbcn.done();
           }
     }, 
+    execTrans: async (query1, query2, query3, query4) => {
+        let dbcn = null;
+        try {
+            dbcn = await db.connect();
+            //const data = await dbcn.query(query, values);
+            //return data;
+            await dbcn.query('BEGIN');
+            
+            const rs1 = await dbcn.query(query1);
+            const rs2 = await dbcn.query(query2);
+            const rs3 = await dbcn.query(query3);
+            const rs4 = await dbcn.query(query4);
+
+            await dbcn.query('COMMIT');
+        } catch (error) {
+            if (dbcn) {
+                await dbcn.query('ROLLBACK');
+            }
+            throw error;
+        } finally {
+            if (dbcn) {
+                dbcn.done();
+            }
+        }
+    },
+
 }

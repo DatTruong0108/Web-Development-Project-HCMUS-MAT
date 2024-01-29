@@ -7,6 +7,7 @@ const Handlebars = require('handlebars');
 const Order = require('../models/Order')
 const Transaction=require('../../SubSystem/models/Transaction');
 const payAccount=require('../../SubSystem/models/payAccount')
+const DoTrans = require('../models/Transaction.m');
 
 Handlebars.registerHelper('gte', function (a, b, options) {
     if (a > b) {
@@ -170,32 +171,33 @@ class userManagementController{
         }
     }
     async adminCancelOrder(req,res,next){ 
-        const {id} = req.params;
-
-        const order=await Order.getByID(parseInt(id));
-        if (order.status=="paid" || order.status=="shipping"){
-          let mainAccount = await payAccount.get('id', 1);
-          const rs = await payAccount.updateBalance(mainAccount.balance - order.total, 1);
-
-         //Increase receiver's balance
-          let account = await payAccount.get('id',order.userID);
-          const rs2 = await payAccount.updateBalance(account.balance + order.total,order.userID);
-
-          const newTrans = new Transaction({
-           senderID: 1,
-           receiverID:order.userID,
-           orderID: id,
-           amount: order.total,
-           content: `Refund for order ${id}`,
-           date: new Date().toISOString().split('T')[0]
-           });
-
-          const resu=await Transaction.insert(newTrans);   
-        }
-
         try {
-            const rs = await Order.CancelOrder(id);
-            
+            const {id} = req.params;
+
+            const order=await Order.getByID(parseInt(id));
+            var rs = false;
+            if (order.status=="paid" || order.status=="shipping"){
+                let mainAccount = await payAccount.get('id', 1);
+                let account = await payAccount.get('id',order.userID);
+                const newTrans = new Transaction({
+                    senderID: 1,
+                    receiverID:order.userID,
+                    orderID: id,
+                    amount: order.total,
+                    content: `Refund for order ${id}`,
+                    date: new Date().toISOString().split('T')[0]
+                });
+
+
+                // const rs1 = await payAccount.updateBalance(mainAccount.balance - order.total, 1);
+                // const rs2 = await payAccount.updateBalance(account.balance + order.total,order.userID);
+                // const resu=await Transaction.insert(newTrans);   
+                // rs = await Order.CancelOrder(id);
+                rs = await DoTrans.transaction(mainAccount.balance, account.balance, order.total, order.userID, newTrans,id, "cancel");
+            }
+            else{
+                rs = await Order.CancelOrder(id);
+            }
             if(rs) {
                 res.redirect('/order-management');
             } else {
@@ -206,6 +208,10 @@ class userManagementController{
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }     
+
+    async checkout(req,res,next){
+        res.redirect('https://localhost:3113/authenticate-payment');
+    }
 }
 
 module.exports=new userManagementController;

@@ -83,7 +83,9 @@
                 <span class="summary-text2">${{total}}</span>
             </div>
         </div>
+        {{#ifE this.status "pending"}}
         <button class="btn btn-success btn-payment" id="btn-payment-{{id}}">Thanh toán hóa đơn #{{id}}</button>
+        {{/ifE}}
     </div>
     {{/each}}
 </div>
@@ -107,6 +109,8 @@
                     if (response.success) {
                         window.location.href = '/payment';
                         alert('Thanh toán thành công');
+                        console.log( response.balance);
+                        $(".balance-value strong").text("$ " + response.balance);
                     } else {
                         alert(`${response.error}`);
                     }
