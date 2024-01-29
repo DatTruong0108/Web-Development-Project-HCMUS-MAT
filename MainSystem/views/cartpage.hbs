@@ -186,7 +186,7 @@
         const shippingFeeDisplay = document.getElementById('shipfree');
         const shippingFee = parsePrice(shippingFeeDisplay.textContent);
         let radiobox; 
-        if (parseInt(coupon!=0)){
+        if (parseInt(coupon)!=0){
             radiobox = document.querySelector('.custom-radio');
             radiobox.addEventListener('change', function () {
                     updateSubtotal();
