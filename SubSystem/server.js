@@ -443,8 +443,9 @@ app.post('/payment', async (req, res) => {
     
     // const rs1 = await Order.updateStatus(order_id, "paid");
     const resul = await DoTrans.transaction(mainAccount.balance, account.balance, -total, id, newTrans, order_id, "paid" );
+    const rs2=await payAccount.get('id',parseInt(id));
     // Trả về kết quả thành công
-    res.json({ success: true });
+    res.json({ success: true,balance:rs2.balance });
   } catch (error) {
     console.error(error);
     res.status(500).json({ 

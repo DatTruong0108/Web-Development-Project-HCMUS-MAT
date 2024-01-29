@@ -157,6 +157,22 @@ class HomeController {
             return new Date(b.date) - new Date(a.date);
         });
 
+        // Hàm so sánh đơn hàng dựa trên trạng thái
+        const compareOrders = (a, b) => {
+            // Đặt trạng thái "pending" lên đầu
+            if (a.status === "pending" && b.status !== "pending") {
+                return -1;
+            } else if (a.status !== "pending" && b.status === "pending") {
+                return 1;
+            } else {
+                // Nếu cả hai đều có trạng thái giống nhau, sắp xếp theo ngày giảm dần
+                return new Date(b.date) - new Date(a.date);
+            }
+        };
+
+        // Sắp xếp listOrder sử dụng hàm so sánh
+        listOrder.sort(compareOrders);
+
         res.render('orderhistorypage', { avatar, user:account, role: role, listOrder });    
     }
 

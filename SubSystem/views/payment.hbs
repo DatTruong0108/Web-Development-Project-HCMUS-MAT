@@ -109,6 +109,8 @@
                     if (response.success) {
                         window.location.href = '/payment';
                         alert('Thanh toán thành công');
+                        console.log( response.balance);
+                        $(".balance-value strong").text("$ " + response.balance);
                     } else {
                         alert(`${response.error}`);
                     }
