@@ -45,9 +45,12 @@ qXS/Otfr0EQbCkrePNLlpoZK7NviwQryfnbSmo4zFQkfD1eGfQ==
 
 
 const db=pgp(cn);
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+
+const { exec } = require('child_process');
+const util = require('util');
+
+const promisifiedExec = util.promisify(exec);
+// Hàm tạo sao lưu
 
 module.exports={
     getAll: async (tbName)=>{
@@ -63,7 +66,46 @@ module.exports={
                 dbcn.done();
             }
     },
-
+    backupDatabase: async () => {
+        try {
+        //   // Di chuyển đến thư mục gốc
+        //   await promisifiedExec('cd /');
+      
+        //   // Di chuyển đến thư mục chứa lệnh pg_dump
+        //   await promisifiedExec('cd C:\\Program Files\\PostgreSQL\\16\\bin');
+      
+          // Thực hiện lệnh backup sử dụng pg_dump
+          const { stdout: backupOutput, stderr: backupError } = await promisifiedExec('"C:\\Program Files\\PostgreSQL\\16\\bin\\pg_dump" postgresql://avnadmin:AVNS_9Jf5H9LYPUyFQTZxndF@pg-172025d4-phamvananhthu-390e.a.aivencloud.com:28184/BookStore > D:\\backup.sql');
+      
+          if (backupError) {
+            console.error(`Lỗi khi thực hiện lệnh backup: ${backupError}`);
+          } else {
+            console.log(`Kết quả của lệnh backup: ${backupOutput}`);
+          }
+        } catch (error) {
+          console.error(`Lỗi khi thực hiện lệnh: ${error.message}`);
+        }
+      },
+    restoreDatabase: async () => {
+        try {
+        //   // Di chuyển đến thư mục gốc
+        //   await promisifiedExec('cd /');
+      
+        //   // Di chuyển đến thư mục chứa lệnh psql
+        //   await promisifiedExec('cd C:\\Program Files\\PostgreSQL\\16\\bin');
+      
+          // Thực hiện lệnh restore sử dụng psql
+          const { stdout: restoreOutput, stderr: restoreError } = await promisifiedExec('"C:\\Program Files\\PostgreSQL\\16\\bin\\psql" postgresql://avnadmin:AVNS_9Jf5H9LYPUyFQTZxndF@pg-172025d4-phamvananhthu-390e.a.aivencloud.com:28184/BookStore < D:/backup.sql');
+      
+        //   if (restoreError) {
+        //     console.error(`Lỗi khi thực hiện lệnh restore: ${restoreError}`);
+        //   } else {
+        //     console.log(`Kết quả của lệnh restore: ${restoreOutput}`);
+        //   }
+        } catch (error) {
+          console.error(`Lỗi khi thực hiện lệnh: ${error.message}`);
+        }
+    },
     get: async(tbName,clName, value)=>{
         let dbcn=null;
         try {
@@ -197,6 +239,7 @@ module.exports={
     deleteCategory: async (tbName, id) => {
         let dbcn = null;
         try {
+            await backupDatabase()
             dbcn = await db.connect();
             const query = `DELETE FROM $1:name WHERE id = $2 RETURNING *;`;
             const values = [tbName, id];

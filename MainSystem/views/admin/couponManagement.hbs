@@ -1,5 +1,6 @@
 <div class="container d-flex justify-content-center mt-5 mb-5">
     <form id="filter-form">
+        <button type="button" onclick="restoreDb()" style=" background-color: #d1ae6d;color:aliceblue" class="btn-add-to-cart btn mb-4"><a style="color: #ffffff;">Restore</a></button>
         <div class="row py-2 justify-content-center">
                                         <div class="accordion" id="accordionPanelsStayOpenExample">
                                             <div class="accordion-item">
@@ -220,7 +221,7 @@
 </div>
 
 <form method="POST" name="delete-form"></form>
-
+<form method="POST" action="/coupon-management/restore" name="restore-form"></form>
 <form method="POST" name="add-form"></form>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
@@ -281,6 +282,10 @@
 
 </script> --}}
 <script>
+    function restoreDb(){
+        var restoreForm=document.forms['restore-form'];
+        restoreForm.submit();
+    }
     function subtractOne(currentPage) {
         if(currentPage === 1){
             return currentPage;
@@ -584,4 +589,5 @@
         }
         return pageNumbers;
     }
+
 </script>

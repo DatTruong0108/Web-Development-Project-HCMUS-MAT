@@ -1,3 +1,4 @@
+const { query } = require('express');
 const db = require('../utils/db')
 
 module.exports = class Coupon {
@@ -66,7 +67,8 @@ module.exports = class Coupon {
     static async DeleteCoupon(id) {
         try {
             await db.query('BEGIN');
-      
+            await db.backupDatabase();
+
             // Delete from Account table
             await db.query('DELETE FROM "Coupon" WHERE "id" = $1', [id]);
                   
@@ -74,6 +76,7 @@ module.exports = class Coupon {
             return true; // Return true if both deletions were successful
               
           } catch (e) {
+            console.error(e);
             await db.query('ROLLBACK');
             return false;
           }
@@ -124,6 +127,17 @@ module.exports = class Coupon {
             console.error(error);
             throw error;
             }
+    }
+    static async RestoreCoupon() {
+        try{
+            const tablename = "Coupon";
+            var query = `DROP TABLE IF EXISTS "${tablename}";`;
+            await db.query(query);
+            await db.restoreDatabase();
+            return true;
+        }catch(error){
+            console.error(error);
+            throw error;
         }
-      
+    }
 }

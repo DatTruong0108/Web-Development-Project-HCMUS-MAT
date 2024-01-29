@@ -6,6 +6,7 @@ route.use(cookieParser());
 const isAuthenticated=require('../middlewares/authenticate')
 const revenueController = require('../controllers/revenue.c');
 const AdminController=require('../controllers/AdminController');
+const BookController = require('../controllers/BookController');
 
 route.get('/category/edit', isAuthenticated, AdminController.adminEditCatePage);
 route.get('/category/add', isAuthenticated, AdminController.adminAddCatePage);
@@ -18,5 +19,6 @@ route.get('/ajax/:categoryName/:page?',isAuthenticated, AdminController.getBooks
 route.get('/showProducts',isAuthenticated, AdminController.showProducts);
 route.get('/revenue', isAuthenticated, revenueController.getRevenue);
 route.post('/revenue', isAuthenticated, revenueController.postRevenue);
+route.post('/restore', isAuthenticated, BookController.adminRestoreBook);
 
 module.exports=route;

@@ -271,7 +271,20 @@ class BookController {
         const rs=Book.delete(req.params.id);
         res.redirect('/admin/showProducts');
     }
-
+    async adminRestoreBook(req,res,next){ 
+        try {
+            const rs = await Book.RestoreBook();
+            
+            if(rs) {
+                res.redirect('/admin/showProducts');
+            } else {
+                res.status(404).json({ error: 'Account not found' });
+            }
+        } catch (error) {
+            console.error('Error deleting Account:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
     async filterAllPaginate(req, res, next) {
         const itemsPerPage = 8;
         const page = req.params.page || 1;

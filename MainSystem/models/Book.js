@@ -16,10 +16,22 @@ module.exports=class Book{
     }
 
     static async delete(id){
+        await db.backupDatabase();
         const rs=await db.delete(tbName,'id',id);
         return rs;
     }
-
+    static async RestoreBook() {
+        try{
+            const tablename = "Book";
+            var query = `DROP TABLE IF EXISTS "${tablename}";`;
+            await db.query(query);
+            await db.restoreDatabase();
+            return true;
+        }catch(error){
+            console.error(error);
+            throw error;
+        }
+    }
     static async getAll() {
         const data = await db.getAll(tbName);
         return data;

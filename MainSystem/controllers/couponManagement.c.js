@@ -129,7 +129,21 @@ class userManagementController{
 
         try {
             const rs = await Coupon.DeleteCoupon(id);
-           
+            
+            if(rs) {
+                res.redirect('/coupon-management');
+            } else {
+                res.status(404).json({ error: 'Account not found' });
+            }
+        } catch (error) {
+            console.error('Error deleting Account:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+    async adminRestoreCoupon(req,res,next){ 
+        try {
+            const rs = await Coupon.RestoreCoupon();
+            
             if(rs) {
                 res.redirect('/coupon-management');
             } else {

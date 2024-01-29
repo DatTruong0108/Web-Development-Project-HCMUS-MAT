@@ -9,5 +9,6 @@ route.get('/', userManagementController.index);
 route.get('/filter',userManagementController.getBooksByCategoryFilter);
 route.delete('/:id', isAuthenticated, userManagementController.adminDeleteCoupon);
 route.post('/add', isAuthenticated, userManagementController.adminAddCoupon);
+route.post('/restore', isAuthenticated, userManagementController.adminRestoreCoupon);
 
 module.exports=route;

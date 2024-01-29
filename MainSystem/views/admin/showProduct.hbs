@@ -1,6 +1,8 @@
 
 <div class="container mt-5">   
     <button style=" background-color: #d1ae6d;color:aliceblue" class="btn-add-to-cart btn mb-4"><a style="color: #ffffff;" href="/book/create">Add Product</a></button>
+    <button type="button" onclick="restoreDb()" style=" background-color: #d1ae6d;color:aliceblue" class="btn-add-to-cart btn mb-4"><a style="color: #ffffff;">Restore</a></button>
+
     <div class="row">
         <div class="col-md-3">
             <div class="card category-bg">
@@ -93,9 +95,13 @@
 </div>
 
 <form method="POST" name="delete-form"></form>
+<form method="POST" action="/admin/restore" name="restore-form"></form>
 
 <script>
-
+    function restoreDb(){
+        var restoreForm=document.forms['restore-form'];
+        restoreForm.submit();
+    }
     var productIdToDelete;
     var deleteForm=document.forms['delete-form'];
     function openDeleteModal(productId) {
